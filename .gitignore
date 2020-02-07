@@ -157,3 +157,9 @@ pythontex-files-*/
 
 # Latexian
 TSWLatexianTemp*
+# VIM
+*~
+*.swp
+*.swo
+
+*.pdf
