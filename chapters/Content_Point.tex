@@ -50,19 +50,19 @@ Idris\cite{brady2013idris}, MCMQ\cite{ioannidis2019extracting} 等是先驱。
 
 本文认为，最易于分析且能够允许软件开发的形式系统就是 $\lambda$ 演算
 \cite{sorensen2006lecturesC1, barendregt1984lambda, pierce2002typesC59}，
-而最易于证明的形式系统是经典高阶逻辑（Classical High Order Logic）
+而最易于证明的形式系统是经典逻辑（Classical Logic）或者说高阶逻辑（High Order Logic）
 \cite{constructive_classic_logic}，
 此处经典旨在区别于新兴的直觉逻辑（Intuitionistic Logic），
 \cite{girard1989proofsC3, sorensen2006lecturesC2}，
-而经典高阶逻辑仍然是目前数学领域的主流。
+而经典高阶逻辑仍然是目前数学领域的主流，这两者实际指代同一事物。
 
 尤其是，目前大量的数学形式化证明工具已成熟，
 特别是已有40年历史的交互式定理证明工具（Interactive Theorem Prover），
 提供了有效的形式化分析与证明的手段。
 HOL 理论证明器（HOL Theorem Prover）是其中的先行者，并活跃地发展至今，
-已广泛应用于学界的各个领域，其提供了一套基于经典高阶逻辑的形式化证明系统。
+已广泛应用于学界的各个领域，其提供了一套基于经典逻辑的形式化证明系统。
 
-本文的思路是，在交互式理论证明器提供的经典高阶逻辑的证明系统上
+本文的思路是，在交互式理论证明器提供的经典逻辑的证明系统上
 再构造一个简单类型$\lambda$演算（$\lamst$演算）的子形式系统，
 并巧妙地设定将其构造成用于软件开发的抽象机器，
 令此抽象机可用于软件开发，又能使用外层的证明系统对内层的抽象机进行分析与证明。
@@ -151,7 +151,6 @@ $\lamst$为上标而$\mathrm{HOL}$为下标意味着在经典逻辑构建的简�
 也意味着大量的工作。
 
 \section{具体工作内容与章节安排}
-
 
 不同于Agda, Idris 仅仅是基于新型的依赖类型系统设计一门编程语言，更不同于
 MCMQ 仅仅是一个编译器。

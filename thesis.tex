@@ -10,12 +10,17 @@
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
 %\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
+\usepackage{amssymb}
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
 \newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
 \newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
+\newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}}}
 \newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}{-}\mathrm{WASM}}}
 \newcommand{\mbar}[0]{\ensuremath{\ |\ }}
+\newcommand{\phety}[0]{\ensuremath{\mathrm{ph}}}
 
 
 
@@ -136,6 +141,7 @@
 	\input{./chapters/Content_Point.tex}
 	\input{./chapters/Attention.tex}
 	\input{./chapters/RequiredTheory.tex}
+	\input{./chapters/AmL.def.tex}
 	\input{./chapters/abstract_machine.tex}
 	
 	\ZJUbackmatter

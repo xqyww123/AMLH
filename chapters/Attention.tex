@@ -1,5 +1,20 @@
-\section{记号与注意事项}
+\section{记号与混淆区分}
 
-本工作在形式系统的记号上继承 Greg 在 \textit{An introduction to substructural logics} 
-第二章前几节形式定义的表达方式\cite{restall2002introduction}，
-本文不再赘述，如有需要可自行查阅。
+本工作在形式系统的记号上使用逻辑学领域通用的记号，来自计算机科学或其他学科的读者
+可以参考Greg 在 \textit{An introduction to substructural logics} 
+第二章前几节形式定义的表达方式\cite{restall2002introduction}。
+
+首先是证明系统（Proof System）的区分，一些计算机领域可能将其指代证明用的软件系统而
+被误解。证明系统是逻辑学下证明理论中清晰而确定的概念。
+本文不尝试定义如此基础的理论概念而仅留下参考文献\cite{restall2002introductionP31}。
+简单来说，证明系统是一种由一组公理与一组推导规则构成的形式系统。
+
+缩写 HOL 既代表高阶逻辑（High Order Logic）也代表 HOL交互式定理证明器
+（Higher Order Logic Interactive Theorem Prover），同时也表示HOL证明器上所使用
+的HOL逻辑，一种高阶逻辑的修改版本。
+必须区分HOL逻辑与高阶逻辑，HOL逻辑是HOL定理证明器上所使用的形式化的证明系统，
+这一证明系统非常类似高阶逻辑但并不完全等同，这就是普通的一个证明系统，仅仅是跟高阶逻辑
+相似，而HOL定理证明器上的证明亦仅是此证明系统上的形式证明。
+一个例子是，HOL逻辑这一证明系统上无法良好地定义 NaN ，而可以证明 $0 \div 0 = 0$
+
+

@@ -238,6 +238,7 @@
 \newtheorem{defin}{定义~}[chapter]
 \newtheorem{theo}{定理~}[chapter]
 \newtheorem{pro}{证明~}[chapter]
+\newtheorem{example}{样例~}[chapter]
 
 % 制作封面的命令
 \newcommand\makeCoverPage{%

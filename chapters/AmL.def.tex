@@ -1,0 +1,124 @@
+\section{无状态$\aml$的形式定义}
+
+\begin{defin}[$\aml$] 基于定义\ref{Def.slam}，$\aml$是$\lamst$的应用。
+\begin{enumerate}
+  \item 设定类型变量集
+  \[ U_{\mathrm{A}} = \{ \mathrm{phenomenon} \} \]
+  即$\aml$的类型变量集只有一个类型变量 $\mathrm{phenomenon}$。
+  因 $\mathrm{phenomenon}$ 过长在以下的论述中将其简写为 $\mathrm{ph}$。
+  根据公式\ref{Pi}求得对应的
+    \[\Pi_\mathrm{A} \Coloneqq U_\mathrm{A} \mbar
+        (\Pi_\mathrm{A} \rightarrow \Pi_\mathrm{A})\]
+\item 定义字符串集合 $Const_\mathrm{V}$ 表示常量符号。
+
+    \begin{equation}
+    Const_\mathrm{V} = \{ \mathbf{Const}\ x\ b \mbar x, y \in \mathbb{N} \land x < 2^y \}
+    \end{equation}
+  且 $Const_\mathrm{V}$ 不与 $V$ 重合，即 $Const_\mathrm{V} \cap V = \emptyset$。
+  定义常量集$Const$ 为满足如下语法的字符串集合。
+        \[ Const \Coloneqq Const_\mathrm{V} : \mathrm{phenomenon} \]
+  字符串 $\mathbf{Const}\ x\ b : \mathrm{phenomenon}$ 表示以$b$个二进制位表示的数值 $x$。
+\item 定义一个可自由设定的有限字符串集合 $P_\mathrm{V}$ 为基元指令的符号集，
+    且 $P_\mathrm{V}$ 不与 $V$ 或$Const_\mathrm{V}$重合。
+    定义 $P_\mathrm{V}$ 到 $\Pi$ 的函数 $\mathcal{T}$ 为各个基元指令的类型。
+    定义基元指令集$P$。
+    \begin{equation}
+    P = \{x:\mathcal{T}(x) \mbar x \in P_\mathrm{V} \}
+    \end{equation}
+\item 定义$\aml$ 的符号集 $V_\mathrm{A}$
+    \[ V_\mathrm{A} = V \cup P_\mathrm{V} \cup Const_\mathrm{V} \]
+其中 $V$ 是 $\lamst$ 的符号集 $\{v_0, v_1, \cdots\}$
+\item $\lambda$表达式 $\Lambda_\mathrm{A}$ 
+    \[ \Lambda_\mathrm{A} = V_\mathrm{A} \mbar V_\mathrm{A}\ V_\mathrm{A} \mbar \lambda
+        V\ V_\mathrm{A} \] 
+    同样简写 $\lambda x_1\ \lambda x_2\ \cdots\ \lambda x_n\ y$ 为
+    $\lambda x_1\ x_2\ \cdots\ x_n.\ y$
+\item 上下文集合 $C_\mathrm{A} = \powerset \{x:\tau\ |\ x \in V,
+    \tau \in \Pi_\mathrm{A}\}$ 定义不变，
+    语言的定义 $L_\mathrm{A} ::= \Lambda_\mathrm{A} : \Pi_\mathrm{A}$ 也不变。
+    并且有 $P \subseteq L_\mathrm{A}$，$Const \subseteq L_\mathrm{A}$
+\item 最后定义 $C_\mathrm{A} \times L_\mathrm{A}$ 上的二元关系 $\vdash_\mathrm{A}$
+
+\hfill
+
+\begin{minipage}[b]{0.5\linewidth}
+\begin{prooftree}
+    \AxiomC{$\ $} \RightLabel{(参数公理)}
+    \UnaryInfC{$\Gamma, x : \tau \vdash_\mathrm{A} x : \tau$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth}
+\begin{prooftree}
+\AxiomC{$\ $} \RightLabel{当 $p \in P$ \quad (基元公理）}
+\UnaryInfC{$\Gamma \vdash_\mathrm{A} p$}
+\end{prooftree}
+\end{minipage}%
+
+\begin{prooftree}
+    \AxiomC{$\ $}\RightLabel{当 $x < 2^b$ \quad (常量公理）} 
+    \UnaryInfC{$\Gamma \vdash_\mathrm{A} \mathbf{Const}\ x\ b : \mathrm{phenomenon}$}
+\end{prooftree}
+
+\begin{minipage}[b]{0.45\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma, x : \sigma \vdash_\mathrm{A} M : \tau$}
+\RightLabel{(抽象规则)}
+\UnaryInfC{$\Gamma \vdash_\mathrm{A} \lambda x\ M : \sigma \leftarrow \tau$}
+\end{prooftree}
+\end{minipage}
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash_\mathrm{A} M : \sigma \leftarrow \tau$}
+\RightLabel{(组合规则)}
+\AxiomC{$\Gamma \vdash_\mathrm{A} N : \sigma$}
+\BinaryInfC{$\Gamma \vdash_\mathrm{A} M N : \tau$}
+\end{prooftree}
+\end{minipage}
+
+$\aml$就是三元组$(\Lambda_\mathrm{A},\Pi_\mathrm{A},\vdash_\mathrm{A})$。
+
+\end{enumerate}
+\end{defin}
+
+此后 $\vdash_\mathrm{A}$ 直接写作 $\vdash$，读者可根据上下文所论述的形式系统确定具体指代的是哪个二元关系。
+
+$\aml$ 可以用来构建程序，并模拟纯计算程序的运行。
+
+\begin{example} 下面是一个 $\aml$上的程序示例，其中
+$\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指令。
+
+\[ \lambda x\ y.\ \mathbf{Add}\ x\ y : \phety \rightarrow \phety
+  \rightarrow \phety\]
+
+由如下推导过程而来。
+
+\begin{prooftree}
+%\AxiomC{$x : \phety, y : \phety \vdash x$}
+\AxiomC{$\ $}
+\RightLabel{(基元公理)}
+\UnaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add} : \phety \rightarrow
+  \phety \rightarrow \phety$}
+\AxiomC{$\ $}
+\RightLabel{(参数公理)}
+\UnaryInfC{$x : \phety, y : \phety \vdash x : \phety$}
+\RightLabel{(组合规则)}
+\BinaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add}\ x : \phety \rightarrow \phety$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$\cdots$}
+\UnaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add}\ x : \phety \rightarrow \phety$}
+\AxiomC{$\ $}
+\RightLabel{(参数公理)}
+\UnaryInfC{$x : \phety, y : \phety \vdash y : \phety$}
+\RightLabel{(组合规则)}
+\BinaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add}\ x\ y : \phety$}
+\RightLabel{(抽象规则)}
+\UnaryInfC{$x : \phety \vdash \lambda y\ \mathbf{Add}\ x\ y  : \phety \rightarrow \phety$}
+\RightLabel{(抽象规则)}
+\UnaryInfC{$\vdash \lambda x\ y.\ \mathbf{Add}\ x\ y  : \phety \rightarrow \phety
+  \rightarrow \phety$}
+\end{prooftree}
+
+\end{example}
+

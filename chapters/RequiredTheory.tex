@@ -1,4 +1,4 @@
-\chapter{必要的理论基础}
+\chapter{必要的理论基础与工程工具介绍}
 
 \amlh 是 \HOL 上的 \lamst 演算，
 正式论述前有必要事先引入 \lamst 演算的正式定义与 \HOL 交互式定理证明器的证明系统。
@@ -9,7 +9,6 @@ Sørensen 在其讲义中对$\lambda$演算的形式定义非常简洁，本节�
 \cite{sorensen2006lecturesC1}。
 
 \begin{defin}[$\lamst$演算] \label{Def.slam}
- $\lamst$ 是一个形式系统。
 \begin{enumerate}
 \item $V$为无穷的字母表，表示符号。
 
@@ -23,6 +22,9 @@ V = \{v_0,v_1,\cdots\}
 \Lambda \Coloneqq V\ |\ (\Lambda\ \Lambda)\ |\ (\lambda V \ \Lambda)
 \end{equation}
 
+简写 $\lambda x_1\ \lambda x_2\ \cdots\ \lambda x_n\ y$ 为
+    $\lambda x_1\ x_2\ \cdots\ x_n.\ y$
+
 \item 集合$U$是另一个无穷的字母表，表示类型变量集（type variables）。
 
 \begin{equation}
@@ -35,46 +37,36 @@ U = \{\alpha,\beta,\cdots\}
  \Pi \Coloneqq U\ |\ (\Pi \rightarrow \Pi)
 \end{equation}
 
-\item 集合 $C$ 表示上下文，
-对应形式系统中推论（consecution）\cite{restall2002introductionP35}中
-的前提（antecedent），定义为如下形式。
+\item 集合$L$ 表示 $\lamst$ 上的语言 。
+
+    \[ L ::= \Lambda : \Pi \]
+
+\item 集合 $C$ 表示上下文，是由语法$V : \Pi$定义的字符串集合的幂集。
 
 \begin{equation}
-    C ::= <empty> \mbar V : \Pi \mbar C ; C
+    C = \powerset \{x:\tau\ |\ x \in V, \tau \in \Pi\}
 \end{equation}
 
-\item 形式系统中的主要对象推论（consecution）$S$，定义为如下形式。
+即$C$ 是所有具有如下形式的集合。
 
-\begin{equation}
-    S ::= C \vdash \Lambda : \Pi
-\end{equation}
+        \[ \{x_1:\tau_1, \cdots, x_n : \tau_n\} \]
 
-\item 接下来定义形式系统的规则。
+其中 $x_1,\cdots,x_n \in V$，$\tau_1,\cdots,\tau_n \in \Pi$。
 
-首先引入三个结构化规则，是变量上下文的交换律与结合律。
+\item 定义上下文$\Gamma = \{x_1:\tau_1,\cdots,x_n:\tau_n\}$ 的符号域 $\mathrm{dom}$
 
-\begin{minipage}[b]{0.3\linewidth}
-\begin{prooftree}
-    \AxiomC{$X;(Y;Z) \vdash v:\tau$}
-    \RightLabel{(B)}
-    \UnaryInfC{$(X;Y);Z \vdash v:\tau$}
-\end{prooftree}
-\end{minipage}%
-\begin{minipage}[b]{0.3\linewidth}
-\begin{prooftree}
-    \AxiomC{$(X;Y);Z \vdash v:\tau$}
-    \RightLabel{(C)}
-    \UnaryInfC{$(X;Z);Y \vdash v:\tau$}
-\end{prooftree}
-\end{minipage}
-\begin{minipage}[b]{0.3\linewidth}
-\begin{prooftree}
-    \AxiomC{$X;Y \vdash v:\tau$}
-    \RightLabel{(CI)}
-    \UnaryInfC{$Y;X \vdash v:\tau$}
-\end{prooftree}
-\end{minipage}
+\[ \mathrm{dom}(\Gamma) = \{x_1,\cdots,x_n\}\]
 
+将$\Gamma_1 \cup \Gamma_2$ 写作 $\Gamma_1, \Gamma_2$ 当
+        $\mathrm{dom}(\Gamma_1) \cap \mathrm{dom}(\Gamma_2)$ 时。
+
+\item 定义上下文$\Gamma = \{x_1:\tau_1,\cdots,x_n:\tau_n\}$ 的类型域 $\rvert \Gamma \lvert$
+
+\[ \lvert \Gamma \rvert = \{\tau_1,\cdots,\tau_n\}\]
+
+\item 由如下规则定义$C \times L$ 上的二元关系 $\vdash$
+
+\hfill
 
 \begin{minipage}[b]{0.2\linewidth}
 \begin{prooftree}
@@ -98,27 +90,24 @@ U = \{\alpha,\beta,\cdots\}
 
 \hfill
 
-其中第一条与第三条规则中 $x \notin \mathrm{dom}(\Gamma)$ 
-
 \item 简单类型$\lambda$演算$\lamst$就是三元组 $(\Lambda, \Pi, \vdash)$
 
 \end{enumerate}
 \end{defin}
 
-\subsection{细粒度抽象机}
+\section{定理证明工具}
 
-\begin{defin}[细粒度抽象机] 基于定义\ref{Def.slam}，细粒度抽象机是简单类型$\lambda$演算
-的应用。
-\begin{enumerate}
-  \item 保留 $V$， $\Lambda$ 不变
-  \begin{align}
-   & V_\mathrm{f} = V & \Lambda_\mathrm{f} = \Lambda
-  \end{align}
-  \item 令
-  \[ U_{\mathrm{f}} = \{ \mathrm{phenomenon} \} \]
-  即细粒度抽象机的类型变量集只有一个类型变量 $\mathrm{phenomenon}$，
-  根据\ref{Pi}求得对应的 $\Pi_\mathrm{f}$
-\end{enumerate}
-\end{defin}
+定理证明工具（Theorem Prover）是一个发展已久的领域，有众多优秀的成果。
+著名的工具包括 HOL 系列，Coq\cite{coq.itp}，PVS\cite{pvs.itp}，Twelf\cite{twelf.itp}，
+ACL2\cite{acl2.itp}，Isabelle/HOL\cite{isabelle.itp}。
+其中 HOL 系列起源于 1972年 Robin Milner 的 LCF 程序\cite{milner1972logic}，
+经过近半个世纪的发展已经演化出诸多版本与分支，HOL Light\cite{hol.light.itp}，
+HOL4\cite{hol4.itp} 等是其中的佼佼者。
+
+本工作使用 HOL4 作为定理证明器。
+
+HOL4 是一种交互式定理证明工具，允许用户交互式地决定证明策略而后基于策略进行自动证明，
+故而是一种半自动工具。而数学上已知不存在一个确定的算法解决任意的问题，故而不可能有
+完全自动的证明工具，故而必须通过半自动的方式届由用户决定的策略完成证明。
 
 
