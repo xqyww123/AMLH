@@ -1,9 +1,15 @@
+BUILD_DIR:=/tmp/thesis
+
 all:
-	xelatex thesis 2>&1 > /dev/null
-	makeindex thesis.idx 2>&1 > /dev/null
-	bibtex thesis 2>&1 > /dev/null
-	xelatex thesis 2>&1 > /dev/null
-	xelatex thesis 2>&1 > /dev/null
+	rsync . $(BUILD_DIR) --exclude=.git -r
+	(cd $(BUILD_DIR) && make thesis)
+
+thesis:
+	xelatex thesis 
+	makeindex thesis.idx
+	bibtex thesis || true
+	xelatex thesis
+	xelatex thesis
 
 clean:
 	rm -f *.aux *.bbl *.blg *.idx *.ilg *.ind *.lof *.log *.lot *.out *.toc

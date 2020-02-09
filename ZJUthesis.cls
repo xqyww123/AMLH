@@ -18,7 +18,7 @@
 % 2009/09/13的v0.94及之后版本提供了hyperref的支持，直接写入选项即可
 \LoadClass[cs4size,a4paper,fancyhdr,hyperref]{ctexbook}[2009/09/13]
 %% math packages 数学公式包，非数学系可无视之
-\RequirePackage{amsmath,amsthm,amsfonts,amssymb,bm}
+\RequirePackage{amsmath,amsthm,amsfonts,amssymb,bm,mathtools}
 % 更好的支持分段函数的宏包，可以对每个情况编号
 \RequirePackage[subnum]{cases}
 %% graphicx packages，psgrag用于修改eps图中的信息，但与dvipdfm不兼容

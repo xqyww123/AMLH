@@ -5,6 +5,19 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{ctex-xecjk-winfonts.def}
+\usepackage{tikz-network}
+\usepackage{bussproofs}
+\allowdisplaybreaks
+%\usepackage[mathscr]{euscript}
+%\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
+\newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
+\newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
+\newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
+\newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}}}
+\newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}{-}\mathrm{WASM}}}
+\newcommand{\mbar}[0]{\ensuremath{\ |\ }}
+
+
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
@@ -31,21 +44,21 @@
 	%\SecretLevel{}
 	
 	% 学号
-	\PersonalID{12345667}
+	\PersonalID{21721306}
 	
-	\title[]{这是论文的第一行题目}
+	\title[]{基于经典逻辑上抽象机器的形式化方法}
 	% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
-	\titletl{第二行}
+    %\titletl{第二行}
 	
 	%英文题目
-	\Etitle{first line}
+	\Etitle{A formal method via abstract machine}
 	% 如果一行写不下，同中文题目设定，一行写不下则写两行，不需要就注释掉
-	\Etitletl{second line}
+	\Etitletl{on classical logic}
 	%\Etitletll{An Oriental View}s
 	
 	% 作者
-	\author{华\ \ 生}
-	\Eauthor{sheng hua}
+	\author{徐启源}
+	\Eauthor{Qiyuan Xu}
 	
 	\degree{硕士}
 	\Edegree{Master of Engineering}
@@ -61,7 +74,7 @@
 	\major{计算机应用技术} \Emajor{Computer Application Technology}
 	
 	% 研究方向
-	\researchdm{计算机图形学} \Eresearchdm{Computer Graphics}
+	\researchdm{形式化方法} \Eresearchdm{Formal Method}
 	
 	% 所属学院
 	\institute{计算机科学与技术学院} \Einstitute{College of Computer Science and Techonology}
@@ -119,21 +132,17 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\ZJUmainmatter
 	
-	\input{./chapters/chap1}
-	
-	\input{./chapters/chap2}
-	
-	\input{./chapters/chap3}
-	
-	\input{./chapters/chap4}
-	
-	\input{./chapters/chap5}
+	\input{./chapters/Ch.Background.tex}
+	\input{./chapters/Content_Point.tex}
+	\input{./chapters/Attention.tex}
+	\input{./chapters/RequiredTheory.tex}
+	\input{./chapters/abstract_machine.tex}
 	
 	\ZJUbackmatter
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 参考文献
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUthesisbib{thesisbib}
+	\ZJUthesisbib{bib}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 发表论文目录

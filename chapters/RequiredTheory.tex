@@ -1,0 +1,124 @@
+\chapter{必要的理论基础}
+
+\amlh 是 \HOL 上的 \lamst 演算，
+正式论述前有必要事先引入 \lamst 演算的正式定义与 \HOL 交互式定理证明器的证明系统。
+
+\section{\lamst 演算引论}
+
+Sørensen 在其讲义中对$\lambda$演算的形式定义非常简洁，本节主要基于此讲义第一章与第三章
+\cite{sorensen2006lecturesC1}。
+
+\begin{defin}[$\lamst$演算] \label{Def.slam}
+ $\lamst$ 是一个形式系统。
+\begin{enumerate}
+\item $V$为无穷的字母表，表示符号。
+
+\begin{equation}
+V = \{v_0,v_1,\cdots\}
+\end{equation}
+
+\item 字符串集合 $\Lambda$ 是 $\lambda$ 演算上的表达式，由如下语法定义。
+
+\begin{equation}
+\Lambda \Coloneqq V\ |\ (\Lambda\ \Lambda)\ |\ (\lambda V \ \Lambda)
+\end{equation}
+
+\item 集合$U$是另一个无穷的字母表，表示类型变量集（type variables）。
+
+\begin{equation}
+U = \{\alpha,\beta,\cdots\} 
+\end{equation}
+
+\item 字符串集合 $\Pi$ 表示简单类型。
+
+\begin{equation} \label{Pi}
+ \Pi \Coloneqq U\ |\ (\Pi \rightarrow \Pi)
+\end{equation}
+
+\item 集合 $C$ 表示上下文，
+对应形式系统中推论（consecution）\cite{restall2002introductionP35}中
+的前提（antecedent），定义为如下形式。
+
+\begin{equation}
+    C ::= <empty> \mbar V : \Pi \mbar C ; C
+\end{equation}
+
+\item 形式系统中的主要对象推论（consecution）$S$，定义为如下形式。
+
+\begin{equation}
+    S ::= C \vdash \Lambda : \Pi
+\end{equation}
+
+\item 接下来定义形式系统的规则。
+
+首先引入三个结构化规则，是变量上下文的交换律与结合律。
+
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+    \AxiomC{$X;(Y;Z) \vdash v:\tau$}
+    \RightLabel{(B)}
+    \UnaryInfC{$(X;Y);Z \vdash v:\tau$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+    \AxiomC{$(X;Y);Z \vdash v:\tau$}
+    \RightLabel{(C)}
+    \UnaryInfC{$(X;Z);Y \vdash v:\tau$}
+\end{prooftree}
+\end{minipage}
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+    \AxiomC{$X;Y \vdash v:\tau$}
+    \RightLabel{(CI)}
+    \UnaryInfC{$Y;X \vdash v:\tau$}
+\end{prooftree}
+\end{minipage}
+
+
+\begin{minipage}[b]{0.2\linewidth}
+\begin{prooftree}
+\AxiomC{$\ $}
+\UnaryInfC{$\Gamma, x : \tau \vdash x : \tau$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma, x : \sigma \vdash M : \tau$}
+\UnaryInfC{$\Gamma \vdash \lambda x. M : \sigma \leftarrow \tau$}
+\end{prooftree}
+\end{minipage}
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash M : \sigma \leftarrow \tau$}
+\AxiomC{$\Gamma \vdash N : \sigma$}
+\BinaryInfC{$\Gamma \vdash M N : \tau$}
+\end{prooftree}
+\end{minipage}
+
+\hfill
+
+其中第一条与第三条规则中 $x \notin \mathrm{dom}(\Gamma)$ 
+
+\item 简单类型$\lambda$演算$\lamst$就是三元组 $(\Lambda, \Pi, \vdash)$
+
+\end{enumerate}
+\end{defin}
+
+\subsection{细粒度抽象机}
+
+\begin{defin}[细粒度抽象机] 基于定义\ref{Def.slam}，细粒度抽象机是简单类型$\lambda$演算
+的应用。
+\begin{enumerate}
+  \item 保留 $V$， $\Lambda$ 不变
+  \begin{align}
+   & V_\mathrm{f} = V & \Lambda_\mathrm{f} = \Lambda
+  \end{align}
+  \item 令
+  \[ U_{\mathrm{f}} = \{ \mathrm{phenomenon} \} \]
+  即细粒度抽象机的类型变量集只有一个类型变量 $\mathrm{phenomenon}$，
+  根据\ref{Pi}求得对应的 $\Pi_\mathrm{f}$
+\end{enumerate}
+\end{defin}
+
+
