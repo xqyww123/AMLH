@@ -1,7 +1,10 @@
 \chapter{必要的理论基础与工程工具介绍}
 
+
 \amlh 是 \HOL 上的 \lamst 演算，
 正式论述前有必要事先引入 \lamst 演算的正式定义与 \HOL 交互式定理证明器的证明系统。
+
+\input{./chapters/Attention.tex}
 
 \section{\lamst 演算引论}
 
@@ -16,7 +19,7 @@ Sørensen 在其讲义中对$\lambda$演算的形式定义非常简洁，本节�
 V = \{v_0,v_1,\cdots\}
 \end{equation}
 
-\item 字符串集合 $\Lambda$ 是 $\lambda$ 演算上的表达式，由如下语法定义。
+\item 字符串集合 $\Lambda$ 是 $\lambda$ 演算上的表达式（$\lambda$ term），由如下语法定义。
 
 \begin{equation}
 \Lambda \Coloneqq V\ |\ (\Lambda\ \Lambda)\ |\ (\lambda V \ \Lambda)
@@ -90,14 +93,16 @@ U = \{\alpha,\beta,\cdots\}
 
 \hfill
 
-\item 简单类型$\lambda$演算$\lamst$就是三元组 $(\Lambda, \Pi, \vdash)$
-
 \end{enumerate}
+
+简单类型$\lambda$演算$\lamst$就是三元组 $(\Lambda, \Pi, \vdash)$
+
 \end{defin}
 
 \section{定理证明工具}
 
-定理证明工具（Theorem Prover）是一个发展已久的领域，有众多优秀的成果。
+定理证明工具（Theorem Prover）是一个发展已久的领域，有众多优秀的成果
+\cite{nawaz2019survey}。
 著名的工具包括 HOL 系列，Coq\cite{coq.itp}，PVS\cite{pvs.itp}，Twelf\cite{twelf.itp}，
 ACL2\cite{acl2.itp}，Isabelle/HOL\cite{isabelle.itp}。
 其中 HOL 系列起源于 1972年 Robin Milner 的 LCF 程序\cite{milner1972logic}，
@@ -109,5 +114,96 @@ HOL4\cite{hol4.itp} 等是其中的佼佼者。
 HOL4 是一种交互式定理证明工具，允许用户交互式地决定证明策略而后基于策略进行自动证明，
 故而是一种半自动工具。而数学上已知不存在一个确定的算法解决任意的问题，故而不可能有
 完全自动的证明工具，故而必须通过半自动的方式届由用户决定的策略完成证明。
+个定理证明器得出的结论是正确的”。
+
+
+\subsection{de Burijn 标准}
+
+机器证明界一个重要的问题是，“如何相信一个定理证明器得出的结论是正确的”，机器证明的正确性。
+即所谓 \textit{de Burijn criterion} （de Burijn 标准），若一个定理证明器的结果，
+可以被一个独立的简单的方式验证，例如使用一个小的程序或者人工地手算地验证，
+那么此定理证明器满足 de Burijn 标准 \cite{barendregt2002autarkic,nawaz2019survey}。
+
+通常的观点认为，HOL系列以及其中的 HOL4 是满足 de Burijn 标准的\cite{nawaz2019survey}。
+HOL 系列内部使用一个微小的“核”（kernel）程序，决定了基元推理过程，
+一如证明系统中的基元规则，而一切证明与推理过程都是基元推理过程的复合，
+一如证明系统中对基元规则的复合。于是所有的推理与证明都经由这个微小的核，
+复制核程序或者人工模拟核的运算就可以独立验证任何定理证明器得出的结论。
+
+\subsection{HOL 逻辑概述}
+
+HOL 逻辑是 HOL 定理证明器上的证明系统，而 $\amlh$ 构建在 HOL 逻辑上，故有必要介绍 HOL逻辑。
+
+HOL 逻辑的详细定义非常复杂，参见 HOL 系统描述\cite{norrish2019hol}，这里仅简单概要
+为描述本文工作必须的基础。
+
+\begin{defin}[HOL 逻辑上的项与类型]
+    集合 $\mathrm{V}_\mathrm{H}$ 表示 HOL 逻辑上的项（term），每一个项
+    $t \in \mathrm{V}_\mathrm{H}$ 拥有确定的类型 $\mathcal{T}(t)$，所有的类型构成集合
+    $\mathrm{T}_\mathrm{H}$
+\end{defin}
+
+一般使用英文字母$t_1,t_2,\cdots$表示项变量，$x_1,x_2,\cdots$表示量词内的项变量，
+而以小写希腊字母$\alpha,\beta,\cdots$
+表示类型变量。如非必要，表示时一般省略项的类型。
+
+HOL 逻辑上的推理由一系列规则构成，以下是部分本文需要使用的规则。
+
+\begin{defin}[HOL 逻辑上的部分推理规则]
+
+\hfill
+
+\begin{minipage}[b]{0.5\linewidth}
+\begin{prooftree}
+    \AxiomC{$ \Gamma_1 \vdash t_1 \Rightarrow t_2 $}
+    \AxiomC{$\Gamma_2 \vdash t_1 $}
+    \RightLabel{(MP)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.3\linewidth}
+\begin{prooftree}
+    \AxiomC{$ \Gamma_1 \vdash t_1 = t_2 $}
+    \AxiomC{$\Gamma_2 \vdash t_1 $}
+    \RightLabel{(EQ\_MP)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$}
+\end{prooftree}
+\end{minipage}
+
+\begin{prooftree}
+    \AxiomC{$ \Gamma_1 \vdash \forall x_1\cdots x_n.\ t_1 \Rightarrow t_2 $}
+    \AxiomC{$\Gamma_2 \vdash t_1 $}
+    \RightLabel{(MATCH\_MP)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash \forall x_a\cdots x_k.\ t_2$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$\ $}
+    \RightLabel{(ASSUME)}
+    \UnaryInfC{$ t \vdash t$}
+\end{prooftree}
+
+\end{defin}
+
+HOL 定理证明器是基于 SML 语言（标准元语言，Standard Meta Language）实现的，
+包括定义、推理、证明在内的操作都需要通过 SML 程序完成。
+以下介绍本文构造HOL逻辑上定义的记号，以及这些记号到 SML 代码的对应。
+
+\begin{defin}[用于定义HOL逻辑上新的类型的记号] 使用如下文法表示 HOL 逻辑上的新的类型定义的构造。
+    \[ \begin{split} 
+        type\_name\ ::= \ & Constructor1\ arg1_1\ \cdots\ arg1_i \mbar \cdots \\
+                        \mbar & ConstructorN\ argN_1\ \cdots\ argN_k
+    \end{split} \]
+\end{defin}
+
+$Constructor1 \cdots ConstructorN$ 表示构造函数的名称，$arg1_1 \cdots arg1_i \cdots argN_k$
+均为类型，表示对应构造函数的参数的类型，即各构造函数具有如下类型。
+
+\begin{gather*}
+    Constructor1 :\ arg1_1 \rightarrow arg1_2 \cdots \rightarrow arg1_i \rightarrow type\_name \\
+    \cdots \\
+    ConstructorN :\ argN_1 \rightarrow argN_2 \cdots \rightarrow argN_k \rightarrow type\_name
+\end{gather*}
+
 
 
