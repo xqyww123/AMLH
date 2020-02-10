@@ -1,10 +1,11 @@
-\section{无状态$\aml$的形式定义}
+\section{抽象机$\amlN$的形式定义}
 
-\begin{defin}[$\aml$] 基于定义\ref{Def.slam}，$\aml$是$\lamst$的应用。
+\begin{defin}[$\amlN$] \label{Def.aml}
+    基于定义\ref{Def.slam}，$\amlN$是$\lamst$的应用。
 \begin{enumerate}
   \item 设定类型变量集
   \[ U_{\mathrm{A}} = \{ \mathrm{phenomenon} \} \]
-  即$\aml$的类型变量集只有一个类型变量 $\mathrm{phenomenon}$。
+  即$\amlN$的类型变量集只有一个类型变量 $\mathrm{phenomenon}$。
   因 $\mathrm{phenomenon}$ 过长在以下的论述中将其简写为 $\mathrm{ph}$。
   根据公式\ref{Pi}求得对应的
     \[\Pi_\mathrm{A} \Coloneqq U_\mathrm{A} \mbar
@@ -25,7 +26,7 @@
     \begin{equation}
     P = \{x:\mathcal{T}(x) \mbar x \in P_\mathrm{V} \}
     \end{equation}
-\item 定义$\aml$ 的符号集 $V_\mathrm{A}$
+\item 定义$\amlN$ 的符号集 $V_\mathrm{A}$
     \[ V_\mathrm{A} = V \cup P_\mathrm{V} \cup Const_\mathrm{V} \]
 其中 $V$ 是 $\lamst$ 的符号集 $\{v_0, v_1, \cdots\}$
 \item $\lambda$表达式 $\Lambda_\mathrm{A}$ 
@@ -75,16 +76,16 @@
 \end{prooftree}
 \end{minipage}
 
-$\aml$就是三元组$(\Lambda_\mathrm{A},\Pi_\mathrm{A},\vdash_\mathrm{A})$。
+抽象机 $\amlN$就是三元组$(\Lambda_\mathrm{A},\Pi_\mathrm{A},\vdash_\mathrm{A})$。
 
 \end{enumerate}
 \end{defin}
 
 此后 $\vdash_\mathrm{A}$ 直接写作 $\vdash$，读者可根据上下文所论述的形式系统确定具体指代的是哪个二元关系。
 
-$\aml$ 可以用来构建程序，并模拟纯计算程序的运行。
+$\amlN$ 可以用来构建程序，并模拟纯计算程序的运行。
 
-\begin{example} 下面是一个 $\aml$上的程序示例，其中
+\begin{example} 下面是一个 $\amlN$上的程序示例，其中
 $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指令。
 
 \[ \lambda x\ y.\ \mathbf{Add}\ x\ y : \phety \rightarrow \phety
@@ -121,4 +122,51 @@ $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指
 \end{prooftree}
 
 \end{example}
+
+\subsection{抽象机$\amlhF$的形式定义}
+
+对 $\amlN$ 在 HOL 上的实现首先从细粒度也是低抽象层级的 $\amlhF$ 开始。
+
+$\amlN$ 中的类型 phenomenon 由 HOL 中的类型实现，$\amlN$ 中的表达式（term）由 HOL 
+中的表达式表达，也就意味着 $\amlh$ 是 HOL 逻辑的子形式系统。
+
+\[ \amlh \subseteq \HOL \]
+
+\begin{defin}[$\amlhF$的phenomenon类型在HOL上的实现]
+    \begin{equation}
+        \begin{split}
+            \mathrm{phenoval} \Coloneqq\ & \mathbf{PhenoVal}\ \natn\ \natn \\
+            \mathrm{history} \Coloneqq\ & \cdots \\
+            \mathrm{phenomenon} \Coloneqq\ & \mathbf{Phenomenon}\ \mathrm{phenoval}\ 
+                \mathrm{history}
+        \end{split}
+    \end{equation}
+\end{defin}
+
+history 设计对系统状态的建模，暂且搁置而在？？？节论述。
+$\natn$ 是自然数类型。$\mathrm{phenoval}$ 表示一切抽象机上的数值，
+$\mathbf{PhenoVal}\ x\ b$ 在 $x < 2^b$ 时表示$b$个二进制位且数值为$x$的值。
+
+\begin{defin}[phenoval 有效性]
+    \begin{equation}
+        \mathbf{VALID\_PHV}\ (\mathbf{PhenoVal}\ x\ b) \coloneqq x < 2^b
+    \end{equation}
+\end{defin}
+
+\begin{defin}[phenomenon 有效性]
+    \begin{equation}
+        \mathbf{VALID\_PHE}\ (\mathbf{Phenomenon}\ v\ h) \coloneqq \mathbf{VALID\_PHV}
+        \ v \land \mathbf{VALID\_HIS}\ h
+    \end{equation}
+    其中 $\mathbf{VALID\_HIS}$ 为history的有效性谓词，在？？？节详细论述。
+\end{defin}
+
+\begin{defin}[$\amlhF$ 上 $\mathbf{Const}$ 的定义]
+    \begin{equation}
+        \mathbf{Const}\ x\ b \coloneqq \mathbf{Phenomenon}\ (\mathbf{PhenoVal}\ x\ b)\ \mathbf{HGenerator}
+    \end{equation}
+    其中 $\mathbf{HGenerator}$ 在？？？节定义。
+\end{defin}
+
+定义 \ref{Def.aml} 中的常量公理即可由 $\mathbf{Const}$ 实现。
 

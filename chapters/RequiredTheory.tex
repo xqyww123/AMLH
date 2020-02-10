@@ -137,15 +137,15 @@ HOL 逻辑是 HOL 定理证明器上的证明系统，而 $\amlh$ 构建在 HOL 
 HOL 逻辑的详细定义非常复杂，参见 HOL 系统描述\cite{norrish2019hol}，这里仅简单概要
 为描述本文工作必须的基础。
 
-\begin{defin}[HOL 逻辑上的项与类型]
-    集合 $\mathrm{V}_\mathrm{H}$ 表示 HOL 逻辑上的项（term），每一个项
+\begin{defin}[HOL 逻辑上的表达式与类型]
+    集合 $\mathrm{V}_\mathrm{H}$ 表示 HOL 逻辑上的表达式（term），每一个表达式
     $t \in \mathrm{V}_\mathrm{H}$ 拥有确定的类型 $\mathcal{T}(t)$，所有的类型构成集合
     $\mathrm{T}_\mathrm{H}$
 \end{defin}
 
-一般使用英文字母$t_1,t_2,\cdots$表示项变量，$x_1,x_2,\cdots$表示量词内的项变量，
+一般使用英文字母$t_1,t_2,\cdots$表示变量，$x_1,x_2,\cdots$表示量词内的变量，
 而以小写希腊字母$\alpha,\beta,\cdots$
-表示类型变量。如非必要，表示时一般省略项的类型。
+表示类型变量。如非必要，表示时一般省略表达式的类型。
 
 HOL 逻辑上的推理由一系列规则构成，以下是部分本文需要使用的规则。
 
@@ -205,5 +205,32 @@ $Constructor1 \cdots ConstructorN$ 表示构造函数的名称，$arg1_1 \cdots 
     ConstructorN :\ argN_1 \rightarrow argN_2 \cdots \rightarrow argN_k \rightarrow type\_name
 \end{gather*}
 
+这一记号对应的 SML 代码是：
 
+\begin{lstlisting}[language=ML]
+val _ = Datatype `type_name = Constructor1 arg11 ... arg1i | ...
+                   | ConstructorN argN1 ... argNk`;
+\end{lstlisting}
 
+然后是值与函数的定义。
+
+\begin{defin}[用于定义HOL逻辑上值与函数的记号]
+    \[ \begin{split}
+        & value \coloneqq expression \\
+        & function\ x_1\ \cdots\ x_n \coloneqq expression
+    \end{split}   \]
+
+其中 $x_1\cdots x_n$ 为参数符号。可以显示地指定参数类型：
+    \[ 
+        function\ (x_1:\tau_1) \cdots\ (x_n:\tau_n) \coloneqq expression
+    \]
+\end{defin}
+
+不造成混淆的情况下可以省略类型指示。
+
+以上对应的 SML 代码是：
+
+\begin{lstlisting}[language=ML]
+val value_def = Define `value = expression`;
+val func_def = Define `function x1 ... xn = expression`;
+\end{lstlisting}
