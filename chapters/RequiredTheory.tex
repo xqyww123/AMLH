@@ -22,7 +22,7 @@ V = \{v_0,v_1,\cdots\}
 \item 字符串集合 $\Lambda$ 是 $\lambda$ 演算上的表达式（$\lambda$ term），由如下语法定义。
 
 \begin{equation}
-\Lambda \Coloneqq V\ |\ (\Lambda\ \Lambda)\ |\ (\lambda V \ \Lambda)
+\Lambda = \bnf{V\ |\ (\Lambda\ \Lambda)\ |\ (\lambda V \ \Lambda)}
 \end{equation}
 
 简写 $\lambda x_1\ \lambda x_2\ \cdots\ \lambda x_n\ y$ 为
@@ -37,17 +37,13 @@ U = \{\alpha,\beta,\cdots\}
 \item 字符串集合 $\Pi$ 表示简单类型。
 
 \begin{equation} \label{Pi}
- \Pi \Coloneqq U\ |\ (\Pi \rightarrow \Pi)
+    \Pi = \bnf{U\ |\ (\Pi \rightarrow \Pi)}
 \end{equation}
-
-\item 集合$L$ 表示 $\lamst$ 上的语言 。
-
-    \[ L ::= \Lambda : \Pi \]
 
 \item 集合 $C$ 表示上下文，是由语法$V : \Pi$定义的字符串集合的幂集。
 
 \begin{equation}
-    C = \powerset \{x:\tau\ |\ x \in V, \tau \in \Pi\}
+    C = \powerset \bnf{V:\Pi}
 \end{equation}
 
 即$C$ 是所有具有如下形式的集合。

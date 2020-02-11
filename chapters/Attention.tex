@@ -18,4 +18,14 @@
 一个例子是，HOL逻辑这一证明系统上无法良好地定义 NaN ，而可以证明 $0 \div 0 = 0$，参见
 John Harrison 的文章 \cite{harrison1993constructing}。
 
+最后形式系统相关的论述经常需要字符串的操作与 BNF 语法，又需要与集合论结合。
+本文使用下划线记号$\underline{\mathrm{some}\ text}$ 表示字符串，以斜体表示其中的变量，
+而正体表示字面量。
+例如 $a, b$ 均为 $\underline{a\ \mathrm{and}\ b}$ 中的变量。
+额外的， $a$ 与 $\underline{a}$ 等价，都可以表示字符串变量 $a$，
+记号$\bnf{BNF}$ 表示满足 BNF 语法 $BNF$ 的字符串构成的集合。
+例如$\bnf{A:B}$ 表示 $\{\underline{a:b} \mbar a \in A \land b \in B\}$
+
+再一些额外的记号表示常用的字符串连接词。记号 $a:b$ 表示 $\underline{a:b}$，
+记号 $\lambda a\ b$表示 $\underline{\lambda a\ b}$。
 

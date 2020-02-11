@@ -1,23 +1,25 @@
-\section{抽象机$\amlN$的形式定义}
+\section{抽象机$\aml$的形式定义}
 
-\begin{defin}[$\amlN$] \label{Def.aml}
-    基于定义\ref{Def.slam}，$\amlN$是$\lamst$的应用。
+\begin{defin}[$\aml$] \label{Def.aml}
+    基于定义\ref{Def.slam}，$\aml$是$\lamst$的应用。
 \begin{enumerate}
   \item 设定类型变量集
   \[ U_{\mathrm{A}} = \{ \mathrm{phenomenon} \} \]
-  即$\amlN$的类型变量集只有一个类型变量 $\mathrm{phenomenon}$。
+  即$\aml$的类型变量集只有一个类型变量 $\mathrm{phenomenon}$。
   因 $\mathrm{phenomenon}$ 过长在以下的论述中将其简写为 $\mathrm{ph}$。
   根据公式\ref{Pi}求得对应的
-    \[\Pi_\mathrm{A} \Coloneqq U_\mathrm{A} \mbar
-        (\Pi_\mathrm{A} \rightarrow \Pi_\mathrm{A})\]
-\item 定义字符串集合 $Const_\mathrm{V}$ 表示常量符号。
+    \[\Pi_\mathrm{A} = \bnf{U_\mathrm{A} \mbar
+        (\Pi_\mathrm{A} \rightarrow \Pi_\mathrm{A})}\]
+\item 定义函数$\mathrm{Const}$以构造常量符号，字符串集合 $Const_\mathrm{V}$ 表示常量符号集。
 
-    \begin{equation}
+\begin{gather} 
+    \mathbf{Const}\ x\ b \coloneqq \underline{\mathrm{Const}\ x\ b} \\
     Const_\mathrm{V} = \{ \mathbf{Const}\ x\ b \mbar x, y \in \mathbb{N} \land x < 2^y \}
-    \end{equation}
+\end{gather}
+
   且 $Const_\mathrm{V}$ 不与 $V$ 重合，即 $Const_\mathrm{V} \cap V = \emptyset$。
   定义常量集$Const$ 为满足如下语法的字符串集合。
-        \[ Const \Coloneqq Const_\mathrm{V} : \mathrm{phenomenon} \]
+        \[ Const = \bnf{Const_\mathrm{V} : \mathrm{phenomenon}} \]
   字符串 $\mathbf{Const}\ x\ b : \mathrm{phenomenon}$ 表示以$b$个二进制位表示的数值 $x$。
 \item 定义一个可自由设定的有限字符串集合 $P_\mathrm{V}$ 为基元指令的符号集，
     且 $P_\mathrm{V}$ 不与 $V$ 或$Const_\mathrm{V}$重合。
@@ -26,12 +28,12 @@
     \begin{equation}
     P = \{x:\mathcal{T}(x) \mbar x \in P_\mathrm{V} \}
     \end{equation}
-\item 定义$\amlN$ 的符号集 $V_\mathrm{A}$
+\item 定义$\aml$ 的符号集 $V_\mathrm{A}$
     \[ V_\mathrm{A} = V \cup P_\mathrm{V} \cup Const_\mathrm{V} \]
 其中 $V$ 是 $\lamst$ 的符号集 $\{v_0, v_1, \cdots\}$
 \item $\lambda$表达式 $\Lambda_\mathrm{A}$ 
-    \[ \Lambda_\mathrm{A} = V_\mathrm{A} \mbar V_\mathrm{A}\ V_\mathrm{A} \mbar \lambda
-        V\ V_\mathrm{A} \] 
+    \[ \Lambda_\mathrm{A} = \bnf{
+        V_\mathrm{A} \mbar V_\mathrm{A}\ V_\mathrm{A} \mbar \lambda V\ V_\mathrm{A}} \] 
     同样简写 $\lambda x_1\ \lambda x_2\ \cdots\ \lambda x_n\ y$ 为
     $\lambda x_1\ x_2\ \cdots\ x_n.\ y$
 \item 上下文集合 $C_\mathrm{A} = \powerset \{x:\tau\ |\ x \in V,
@@ -76,16 +78,16 @@
 \end{prooftree}
 \end{minipage}
 
-抽象机 $\amlN$就是三元组$(\Lambda_\mathrm{A},\Pi_\mathrm{A},\vdash_\mathrm{A})$。
+抽象机 $\aml$就是三元组$(\Lambda_\mathrm{A},\Pi_\mathrm{A},\vdash_\mathrm{A})$。
 
 \end{enumerate}
 \end{defin}
 
 此后 $\vdash_\mathrm{A}$ 直接写作 $\vdash$，读者可根据上下文所论述的形式系统确定具体指代的是哪个二元关系。
 
-$\amlN$ 可以用来构建程序，并模拟纯计算程序的运行。
+$\aml$ 可以用来构建程序，并模拟纯计算程序的运行。
 
-\begin{example} 下面是一个 $\amlN$上的程序示例，其中
+\begin{example} 下面是一个 $\aml$上的程序示例，其中
 $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指令。
 
 \[ \lambda x\ y.\ \mathbf{Add}\ x\ y : \phety \rightarrow \phety
@@ -123,11 +125,68 @@ $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指
 
 \end{example}
 
+$\aml$ 揭示了 \ref{Sec.Overview} 节中叙述的抽象机的大概轮廓与基元指令集的具体方式。
+
+一个关键思想是，$\aml$ 上的一切计算都是对 phenomenon 这一个类型的操作，
+% All calculation on $aml$ are operations to the \mathit{phenomenon}.
+$\aml$ 上计算的客体是 phenomenon 类型。
+% The object of calculation on $\aml$ is \mathit{phenomenon}.
+phenomenon 意为“现象”，是哲学上的术语，与其对应的是本质（essence）。
+所谓
+
+\begin{center}
+    透过现象看本质。
+\end{center}
+
+计算机上，计算的客体只是一种东西，数字。
+计算机一定是对数字进行计算的设备，计算机中的一切的存在形式也都是数字，无论其被用户或
+程序编写者赋予意义是某个学生的分数还是某个字符的编号，其表现都是简单的数字。
+
+但计算机上的运算是人为构造的，是以特定的意义而设计实现的，
+数值计算根本上是为了背后的意义而对数字的计算只是为了在机器上得以将设计意义实现
+而不得已构造的表象。
+重要的是数值计算背后承载的意义，而失去了意义，纯粹的计算毫无意义。
+在这点上，计算机世界的本体论是彻底的二元的，计算客体是现象，计算对应的意义是本质。
+故而以 phenomenon 命名 $\aml$ 的计算客体是恰当的。
+
+对于计算机，计算客体是数字。但对于$\aml$，计算客体 phenomenon 可以
+不是数字。虽然phenomenon主要是基于数字类型，但这里有抽象的空间。
+在？？？节的实现中可以看到，抽象级别的不同可以导致计算客体的不同，
+进而可以适当地设定 phenomenon 类型的具体结构以影响整个 $\aml$。
+在最低级别的抽象中，计算客体是数字故而phenomenon 类型就是数字；
+在细粒度也是低抽象级别的$\amlhF$中，计算客体是确定大小的数字，是一组一组
+确定数目的二进制位，phenomenon 是数字与其二进制位数的二元组；
+在粗粒度也是高抽象级别的$\amlhC$中，计算客体是数字与数字之间届由引用联接构成的复杂数据结构
+，phenomenon 类型所表达的是确定数目的二进制位组加上这些位组间届由指针相连成的结构，
+这样就非常有效地解决了指针的问题并允许复杂数据结构的有效处理。
+
+而现象对应的本质，是由 $\amlh$ 上非常巧妙的类型系统体现的。
+
+\subsection{$\amlh$的形式定义}
+
+$\aml$ 只是纯粹基于字符串的形式系统。仅有的字符串理论实在太过单薄，更多巧妙的设计无以构建。
+
+接下来本文论述 HOL 上的 $\aml$ 即 $\amlh$，在 HOL 的范畴下，包括自然数理论、
+高阶逻辑理论等众多数学工具得以使用，允许构建非常巧妙而强大的类型系统。
+
+此处的 HOL 是双关语，即表示高阶逻辑，又表示 HOL 定理证明器上的形式逻辑即 HOL 逻辑。
+高阶逻辑与 HOL 定理证明器的逻辑是如此接近，而 $\amlh$ 对数理工具的应用并不严苛，
+事实上对于 $\amlh$ 这两者都可行而不需要区分开来。
+
+
+\begin{defin}[解释] 给定集合 $S$，$S$ 到  
+\end{defin}
+
+\begin{defin}[超越关系] 定义关系
+\end{defin}
+
+
+
 \subsection{抽象机$\amlhF$的形式定义}
 
-对 $\amlN$ 在 HOL 上的实现首先从细粒度也是低抽象层级的 $\amlhF$ 开始。
+对 $\aml$ 在 HOL 上的实现首先从细粒度也是低抽象层级的 $\amlhF$ 开始。
 
-$\amlN$ 中的类型 phenomenon 由 HOL 中的类型实现，$\amlN$ 中的表达式（term）由 HOL 
+$\aml$ 中的类型 phenomenon 由 HOL 中的类型实现，$\aml$ 中的表达式（term）由 HOL 
 中的表达式表达，也就意味着 $\amlh$ 是 HOL 逻辑的子形式系统。
 
 \[ \amlh \subseteq \HOL \]
