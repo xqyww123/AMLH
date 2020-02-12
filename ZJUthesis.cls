@@ -236,8 +236,9 @@
 \theoremstyle{ZJUtheorem}
 \newtheorem{hypo}{假设~}[chapter]
 \newtheorem{defin}{定义~}[chapter]
+\newtheorem{notation}{记号~}[chapter]
 \newtheorem{theo}{定理~}[chapter]
-\newtheorem{pro}{证明~}[chapter]
+\newtheorem{prove}{证明~}[chapter]
 \newtheorem{example}{样例~}[chapter]
 
 % 制作封面的命令
