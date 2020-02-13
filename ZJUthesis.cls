@@ -240,6 +240,7 @@
 \newtheorem{theo}{定理~}[chapter]
 \newtheorem{prove}{证明~}[chapter]
 \newtheorem{example}{样例~}[chapter]
+\newtheorem{lemma}{引理~}[chapter]
 
 % 制作封面的命令
 \newcommand\makeCoverPage{%

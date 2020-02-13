@@ -1,0 +1,376 @@
+\section{$\amlh$的形式定义}
+
+$\aml$ 只是纯粹基于字符串的形式系统。仅有的字符串理论实在太过单薄，更多巧妙的设计无以构建。
+
+接下来本文论述 $\amlh$，它也是一种形式系统，是 HOL 逻辑的扩广，即有
+
+\[ \mathrm{HOL} \subseteq \amlh \]
+
+这种扩广以对于 HOL 逻辑合法的方式进行，HOL 逻辑上的证明工具依旧可以用于 $\amlh$ 上并对
+$\amlh$ 上的表达进行证明；而这种扩广又允许类似$\aml$地构造程序以允许其上的软件开发。
+
+需要注意的是 $\amlh$ 是一种形式系统的框架，一些设定是未具体定义而允许定制的，可以
+构造不同版本的 $\amlh$ 实现。本文将研究两种$\amlh$的实现，高抽象层级粗粒度的
+$\amlhC$ 与地抽象层级细粒度的 $\amlhF$
+
+\begin{defin}[现象类型] 类型 phenomenon 表示 $\aml$ 上的计算客体，根据不同的$\aml$实现可以
+    以不同方式具体定义。
+\end{defin}
+
+\subsection{理解与超越对应}
+
+\begin{defin}[到$\alpha$的理解] 类型 $\itp{\alpha}$ 是现象到
+    具有类型 $\alpha$ 的本质的理解，包含可以构建现象与本质间联系的映射。
+    \begin{equation} \begin{split}
+        \itp{\alpha} \Coloneqq \mathbf{Interpretation}\ &(\alpha \rightarrow \phenomenon)
+        \ (\phenomenon \rightarrow \alpha)\\
+        &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})
+    \end{split} \end{equation}
+    \begin{align*}
+        \mathbf{ITP\_LIGHT}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = l \\
+        \mathbf{ITP\_TRANSCEND}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = tr \\
+        \mathbf{ITP\_SET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s \\
+        \mathbf{ITP\_PSET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s_p
+    \end{align*}
+\end{defin}
+
+$\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本质的理解。
+例如现象到布尔值间的超越映射就要届由到 bool 类型的理解来完成。
+$\mathbf{Interpretation}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定本质到
+现象的映射；$tr$ 是超越函数，确定现象到本质的映射；$s$ 是本质集合，
+有 $s \subseteq \mathrm{dom}\ l \land s \subseteq \mathrm{rng}\ tr$；
+$s_p$ 是现象集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq \mathrm{rng}\ l$
+，一个理解即是上述的四元组。
+
+
+\begin{notation}[理解的相关属性的简写记号]
+\begin{align*}
+    \mathbf{Li}_i\ & \coloneqq \mathbf{ITP\_LIGHT}\ i
+    & \mathbf{Tr}_i\ & \coloneqq \mathbf{ITP\_TRANSCEND}\ i \\
+    \mathbf{Se}_i\ & \coloneqq \mathbf{ITP\_SET}\ i
+    & \mathbf{Sp}_i\ & \coloneqq \mathbf{ITP\_PSET}\ i
+\end{align*}
+\end{notation}
+
+\begin{defin}[到$\alpha$的有效理解]
+\begin{equation}
+    \mathbf{VALID\_ITP}\ i \coloneqq\
+    (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
+    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e))
+\end{equation}
+\end{defin}
+
+\begin{notation}[有效理解的简写]
+    \[ \mathbf{V}_i \coloneqq \mathbf{VALID\_ITP}\ i \]
+\end{notation}
+
+即 $\mathbf{V}_i$ 意味着 $\mathbf{Li}_i$ 是 $\mathbf{Se}_i$ 到 $\mathbf{Sp}_i$ 的单射，
+$\mathbf{Tr}_i$ 是 $\mathbf{Sp}_i$ 到 $\mathbf{Se}_i$ 的满射，
+$\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
+
+\begin{example}[到bool的有效理解的样例]
+\[ \begin{split}
+    \mathbb{B}_\mathrm{I} \coloneqq\ & \mathbf{Interpretation}\ (\lambda e.\ \mathbf{if}\ e\ 
+    \mathbf{then}\ 1\ \mathbf{else}\ 0) \\
+& (\lambda p.\ \mathbf{if}\ p=0\ \mathbf{then}\ \mathrm{F}\ \mathbf{else}\ \mathrm{T})\quad
+   \{\mathrm{T},\ \mathrm{F}\}\quad \mathbb{N}
+\end{split} \]
+\end{example}
+
+\begin{defin}[超越对应关系] 定义三元关系 $ p \widesim{i} e$ 表示现象与本质在某种理解
+    下的的对应关系。
+\begin{equation}
+     p \widesim{i} e \coloneqq p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p)
+\end{equation}
+\end{defin}
+
+某个成立的超越对应关系可以用 HOL 逻辑证明，或者以形式系统的角度去说，
+可以用HOL逻辑的一系列规则得到某个成立的超越关系。
+
+\begin{prooftree}
+    \AxiomC{$\cdots$} 
+    \RightLabel{对于某个成立的 $p \widesim{i} e$\quad\quad(超越对应的证明律)} \doubleLine
+    \UnaryInfC{$\vdash p \widesim{i} e$}
+\end{prooftree}
+
+由此构建了程序的语义感知（Semantic Reasoning）的基础，即在理解方式$i$下可以将
+计算客体$p$解释成$e$，而$e$即$p$在理解方式$i$下的语义。
+
+一个现象对于一个理解只有确定的一个本质，但一个现象可以同时具有多种理解，
+而现象上的一次计算可以同时带有多个含义。例如现象1可以在布尔理解下对应真，
+也可以在自然数理解下对应自然数1，也可以是某种有序集的理解下的第一个元素。
+
+\begin{defin}[理解的合并] 一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
+    到二元组$(\alpha,\beta)$的理解 $i_a \cdot i_b$
+\[
+    \forall l_a\ l_b\ a\ b.\ (l_a\ a = l_b\ b) \Rightarrow
+    (\dot{\mathbf{l}}\ l_a\ l_b\ a\ b = l_a\ a )
+\]
+\begin{equation} \begin{split}
+    (\mathbf{Interpretation}\ & l_a\ tr_a\ s_a\ sp_a)\ \cdot\ 
+    (\mathbf{Interpretation}\ l_b\ tr_b\ s_b\ sp_b) \coloneqq \\
+    & \mathbf{Interpretation}\ (\dot{\mathbf{l}}\ l_a\ l_b)\ 
+        (\lambda p.\ (tr_a\ p,\ tr_b\ p))\ \\
+    & \quad\quad\quad (s_a \times s_b \cap (\lambda (a,\ b).\ l_a\ a = l_b\ b))\ 
+    (sp_a \cap sp_b)
+\end{split} \end{equation}
+\end{defin}
+
+
+\begin{theo}[理解合并的有效性]
+\begin{equation}
+    \mathbf{V}_a \land \mathbf{V}_b \Rightarrow \mathbf{V}_{a\cdot b}
+\end{equation}
+\end{theo}
+\begin{proof}
+\begin{align*}
+    \mathbf{V}_{a\cdot b} =\ & (\forall e_a\ e_b.\ e_a \in \mathbf{Se}_a \quad \land \quad
+    e_b \in \mathbf{Se}_b \quad \land \quad 
+    (\mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b) \quad \Rightarrow \\
+    & \quad\quad\quad \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \quad \land
+    \quad (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \quad \land \quad
+    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
+    \mathbf{V}_a =\ & (\forall e_a.\ e_a \in \mathbf{Se}_a \Rightarrow
+      \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \quad \land \quad 
+      (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a)) \\
+    \mathbf{V}_b =\ & (\forall e_b.\ e_b \in \mathbf{Se}_b \Rightarrow
+      \mathbf{Li}_b\ e_b \in \mathbf{Sp}_b \quad \land \quad 
+      (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
+    & \mathbf{V}_a,\ \mathbf{V}_b,\ e_a \in \mathbf{Se}_a,\ e_b \in \mathbf{Se}_b,\ 
+    \mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b \quad \vdash \quad
+    \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \\
+    & \quad\quad\quad\quad \land (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \land
+    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b) \\
+    & \mathbf{V}_a,\ \mathbf{V}_b \vdash \mathbf{V}_{a \cdot b}
+\end{align*}
+\end{proof}
+
+\begin{theo}[理解合并对于超越对应的同构]
+\begin{equation}
+    \forall i_a\ i_b\ p\ e_a\ e_b.\ p \widesim{i_a} e_a \land p \widesim{i_b} e_b = 
+    p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) 
+\end{equation}
+\end{theo}
+
+\begin{proof}
+\[ \begin{split}
+    p \widesim[2]{ia \cdot ib} (e_a,\ e_b) =\ & p \in 
+    (\mathbf{Sp}_{ia} \cap \mathbf{Sp}_{ib}) \land 
+    (\mathbf{Tr}_{ia}\ p = e_a) \land (\mathbf{Tr}_{ib}\ p = e_b) \\
+    =\ & p \widesim{i_a} e_a \land p \widesim{i_b} e_b
+\end{split} \]
+\end{proof}
+
+由合并的理解的超越对应关系就可以提取出其中各个理解的超越对应。
+
+\begin{gather*}
+    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_1} e_1 \\
+    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_2} e_2
+\end{gather*}
+
+\begin{minipage}[b]{0.45\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+    \RightLabel{(合并分解律1)}
+\UnaryInfC{$\Gamma \vdash p \widesim{i_1} e_1$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+    \RightLabel{(合并分解律2)}
+\UnaryInfC{$\Gamma \vdash p \widesim{i_2} e_2$}
+\end{prooftree}
+\end{minipage}
+
+\begin{prooftree}
+\AxiomC{$\Gamma_1 \vdash p \widesim{i_1} e_1$}
+\AxiomC{$\Gamma_2 \vdash p \widesim{i_2} e_2$}
+    \RightLabel{(合并律)}
+\BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+\end{prooftree}
+
+\begin{theo}[理解合并在超越对应上的交换律同构与结合律同构]
+\begin{gather}
+    \forall e_a\ e_b\ i_a\ i_b\ p.\ p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) =
+        p \widesim[2]{i_b \cdot i_a} (e_b,\ e_a) \\
+    \forall e_a\ e_b\ e_c\ i_a\ i_b\ i_c\ p.\ p \widesim[4]{(i_a \cdot i_b) \cdot i_c}
+    ((e_a,\ e_b),\ e_c) = p \widesim[4]{i_a \cdot (i_b \cdot i_c)} (e_a,(e_b,\ e_c))
+\end{gather}
+\end{theo}
+
+\begin{proof} 显然，略
+\end{proof}
+
+
+\begin{defin}[过程的超越对应关系] \label{def.proctr}
+定义4元符号 $f_p \proctr{i}{cond} f_e$ 表示有条件的值的超越对应。
+定义5元符号 $f_p \proctr{i|j}{cond} f_e$ 表示1个参数的且以
+$cond$为条件的过程的超越对应，$n+3$ 元符号
+$f_p \proctr{i_1 | \cdots | i_n}{cond} f_e$ 表示 $n$ 个参数的过程的且条件为
+$cond$的超越对应。
+
+\begin{equation} \begin{split}
+    p \proctr{i}{cond} e \coloneqq &\ (cond \Rightarrow p \widesim{i} e) \\
+    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & \proctr{i|j}{cond}
+    (f_e:\alpha \rightarrow \beta) \coloneqq \\
+    (\forall a_p\ a_e.\quad & a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
+    f_p\ a_p \widesim{j} f_e\ a_e) \\
+    (f_p:\mathrm{phenomenon}\rightarrow \cdots \rightarrow \mathrm{phenomenon})\ & 
+    \proctr{i | \cdots | l}{cond}
+    (f_e:\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow \delta) \coloneqq \\
+    (\forall a_p\ a_e \cdots c_p\ c_e.\quad a_p \widesim{i} a_e \Rightarrow &
+    \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow cond\ a_e\ \cdots\ c_e 
+    \Rightarrow  \\
+    & f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e)
+\end{split} \end{equation}
+
+    $cond$ 表示过程执行前的条件。
+
+    对于$\proctr{i | \cdots | k | l}{cond}$ 若理解
+    $i, \cdots, k$ 的类型分别为 $\itp{\alpha},\ \cdots,\ \itp{\gamma}$，
+    那么 $cond$ 的类型为 $\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow 
+    \mathrm{bool}$，即 $cond$ 是在本质层面上描述执行条件。
+
+    过程的超越对应构成了一种契约，在输入参数可以被约定的理解$i,\cdots,k$解释，
+    且解释后的意义也即本质$a_e,\cdots,c_e$满足给定的条件，
+    那么此过程可以正确执行并返回以约定的理解$l$的解释下对应本质$f\ a_e\ \cdots\ c_e$ 的输出
+
+\end{defin}
+
+上述定义具有如下的递归形式。
+
+\begin{equation} \label{f.proctr_rec} \begin{split}
+    f_p \proctr{i|j|\cdots|l}{cond} f_e = (\forall a_p\ a_e.\quad
+      a_p \widesim{i} a_e \Rightarrow f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e} f_e\ a_e)
+\end{split} \end{equation}
+
+\begin{theo}[$\amlh$上的组合律与抽象律]
+类似$\lamst$ 的组合律与抽象律，$\amlh$ 上也有如下推导律。
+
+\begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e$}
+    \AxiomC{$\Gamma_2 \vdash a_p \widesim{i} a_e$}
+    \RightLabel{(组合律)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e}
+      f_e\ a_e$}
+\end{prooftree} 
+
+\begin{prooftree}
+    \AxiomC{$\Gamma_1,\ a_p \widesim{i} a_e \vdash b_p \proctr{j|\cdots|l}{cond} b_e$}
+    \RightLabel{(抽象律)}
+    \UnaryInfC{$\Gamma_1 \vdash (\lambda a_p.\ b_p)
+      \proctr{i|j|\cdots|l}{\lambda a_e.\ cond\ a_e} (\lambda a_e.\ b_e)$}
+\end{prooftree}
+
+\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma, cond \vdash p \widesim{i} e$}
+    \RightLabel{(条件律)}
+    \UnaryInfC{$\Gamma \vdash p \proctr{i}{cond} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash p \proctr{i}{cond} e$}
+    \AxiomC{$\Gamma_2 \vdash cond$}
+    \RightLabel{(条件消去律)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}
+\end{theo}
+
+\begin{proof} 由定义 \ref{def.proctr}，递归公式 \ref{f.proctr_rec}，应用
+    \ref{Sec.HOL} 节中介绍的HOL逻辑上的 MATCH\_MP 律、DISCH 律、GEN 律直接得到。
+\end{proof}
+
+类似 $\lamst$，组合律与条件消去律允许过程的调用，抽象律与条件律允许过程的创建。
+
+上文的类型证明律、合并率、组合律、抽象律已经充分地揭示理解及超越对应
+如何为 $\amlh$ 实现了类型系统的功能，但理解与超越对应绝对\textbf{不是}一种类型系统。
+最主要的问题，类型归属关系一定是个二元关系，但超越对应是三元的。尽管可以把理解与本质合并
+为二元组而将超越对应退化为二元关系，但如此一来，这所谓的类型就仅有一个实例，这就破坏了
+上述的组合律与抽象律，进而破坏了类型演算。三元的超越对应是自然的。
+
+又也许理解可以尝试地作为这样一种类型，但问题在于，任何一个现象都可以被应用于大量的理解
+——只要现象在理解的现象集内就行，若尝试将理解作为类型，就意味着每一个现象都可以属于大量的类型，
+这显然是荒谬的。
+
+本文对所有将超越对应描述成某种类型系统的尝试都失败了。根本在于，类型是一种对值的分类，
+以良好地提取维护值的部分性质；
+但本文的思路，超越对应根本不尝试对值分类，而是尝试显示地确定理解方式而找到值对应的以某种
+数理结构表示的意义，进而提取出值在该理解下的全部性质。
+这与与指称语义（Denotational semantics）非常相似。
+
+指称语义尝试建立起程序与数学函数的对应关系，跟超越对应非常相似。
+但$\amlh$的优势在于程序的抽象，基于$\lamst$使得程序本身亦是抽象的结构。
+这导致一些重要的区别，指称语义在递归定义的函数与数据结构上遇到的困难带领指称语义
+走向了域理论，而对于$\amlh$，不使用域理论而
+是在？？？节将看到递归与归纳（Induction）间的内在联系。
+指称语义与超越对应尝试实现类似的目标，但解决思路与方式完全不同。
+
+超越对应与 Curry-Howard 同构似乎也有密切的联系，超越对应关系同时是一种定理又可以被理解一种
+近似的类型从属关系，这与 Curry-Howard 同构中的类型从属与定理间的对应关系非常相似。
+但问题在于，超越对应不是类型关系，超越对应的机制不是类型系统，就难以将Curry-Howard 同构的任何理论联系于此。直觉上超越对应与 Curry-Howard 同构一定有着某种联系，但本文未能成功发掘。
+
+最后看到，超越对应实际完成了$\amlh$上类型系统的功能，又不是一种类型系统，
+所以严格来说超越对应是$\amlh$上对类型系统的替代。而严格来讲$\amlh$上现象只有一种类型，
+phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明系统的类型系统）就是只有
+一种 phenomenon 类型的简单类型$\lambda$演算$\lamst$。
+
+\subsection{基元指令（Primitive Operations）}
+
+基元指令有两种引入方法。第一种是基于现象的定义，编写现象上的函数，具体地给出定义，
+再证明此函数满足某个或者某一些超越对应，一个确定的现象函数可以具有多个意义继而
+拥有多个超越对应关系。
+第二种是根据预先确定的超越对应关系，不给出明确的函数体，而是
+证明对于确定的超越关系存在一个现象函数满足此对应关系，进而由此引入。
+事实上可以证明，对于任意的超越对应关系，一定存在一个现象函数满足此对应关系。
+进而基元指令实际根本不用具体地描述计算过程，可以根据其意义直接引入。
+而基元指令也根本不需要确定具体的计算为何，输出的现象具体如何表达，只要得到了超越对应定理，
+就可以直接由组合律去使用。
+
+\begin{theo}(基元创立定理)
+\[ \begin{split} \forall f_e\ i\ \cdots\ k\ l\ cond.\ 
+ \mathbf{V}_i\ \land\ &(\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
+   \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e) ) \Rightarrow \\
+ & \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e
+\end{split} \]
+\end{theo}
+
+\begin{lemma} \label{lem.1}
+\[ \forall i\ e.\ \mathbf{V}_i \Rightarrow e \in \mathbf{Se}_i \Rightarrow
+  \exists p.\ p \widesim{i} e \]
+\end{lemma}
+\begin{proof} \begin{gather*}
+  p \widesim{i} e = p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p) \\
+\mathbf{V}_i = (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
+    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) \\
+\mathbf{V}_i = (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \widesim{i} e)
+\end{gather*}
+
+即，目标命题得证，存在 $p = \mathbf{Li}_i\ e$
+
+\end{proof}
+
+\begin{proof}
+
+令 $x_p = f_p\ a_p\ \cdots\ c_p\ ;\ x_e = f_e\ a_e\ \cdots\ c_e$
+
+且 $\Gamma_\sim = \{a_p \widesim{i} a_e,\ \cdots\ ,\ c_p \widesim{k} c_e,\ 
+cond\ x_e,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se}_l),\ 
+\mathbf{V}_l\}$
+
+\begin{prooftree}
+\AxiomC{$\Gamma_\sim \vdash x_e \in \mathbf{Se}_l \land \mathbf{V}_l$}
+\RightLabel{引理 \ref{lem.1}}
+\UnaryInfC{$\Gamma_\sim \vdash \exists p.\ p \widesim{i} x_e$}
+\UnaryInfC{$\Gamma_\sim \vdash \exists f_p.\ f_p\ a_p\ \cdots\ c_p \widesim{i} f_e\ a_e\ \cdots c_e$}
+\UnaryInfC{$(\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se}_l),\ 
+\mathbf{V}_l \vdash \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\UnaryInfC{$\forall f_e\ i\ \cdots\ k\ l\ cond.\ 
+ \mathbf{V}_i\ \land\ (\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
+   \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e) ) \Rightarrow$} \noLine
+\UnaryInfC{$\exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\end{prooftree}
+\end{proof}
+
+
+
+

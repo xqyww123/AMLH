@@ -9,6 +9,13 @@
 \usepackage{bussproofs}
 \usepackage{listings}
 \usepackage{tikz}
+
+%\usepackage[english]{babel}
+%\usepackage{newunicodechar}
+%\newfontfamily\miscsymfont{DejaVu Sans}
+%\newunicodechar{☲}{{\miscsymfont\symbol{"2632}}}
+%\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
+
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
 %\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
@@ -17,13 +24,14 @@
 \let\emptyset\varnothing
 \newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
 \newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
+\newcommand{\lamcr}[0]{\ensuremath{\lambda{\rightarrow}}}
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
-\newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}}}
-\newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamst}}}
-\newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamst}}}
-\newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamst}}}
-\newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamst}{-}\mathrm{WASM}}}
+\newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
+\newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
+\newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamcr}}}
+\newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamcr}}}
+\newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}{-}\mathrm{WASM}}}
 \newcommand{\mbar}[0]{\ensuremath{\ |\ }}
 \newcommand{\phety}[0]{\ensuremath{\mathrm{ph}}}
 \newcommand{\natn}[0]{\ensuremath{\mathrm{number}}}
@@ -40,8 +48,8 @@
   \mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
 }
 \renewcommand{\qedsymbol}{$\blacksquare$}
-\newcommand{\proctr}[1]{\ensuremath{\prec #1 \succ}}
-
+\newcommand{\proctr}[2]{\ensuremath{\ {\prec}\frac{#1}{#2}{\succ}\ }}
+\newcommand{\vdashv}{\ensuremath{\ {\dashv}{\vdash}\ }}
 
 
 % 取消目录中链接的颜色，方便打印

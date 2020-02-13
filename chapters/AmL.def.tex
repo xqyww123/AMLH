@@ -65,14 +65,14 @@
 \begin{minipage}[b]{0.45\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma, x : \sigma \vdash_\mathrm{A} M : \tau$}
-\RightLabel{(抽象规则)}
+\RightLabel{(抽象律)}
 \UnaryInfC{$\Gamma \vdash_\mathrm{A} \lambda x\ M : \sigma \leftarrow \tau$}
 \end{prooftree}
 \end{minipage}
 \begin{minipage}[b]{0.3\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash_\mathrm{A} M : \sigma \leftarrow \tau$}
-\RightLabel{(组合规则)}
+\RightLabel{(组合律)}
 \AxiomC{$\Gamma \vdash_\mathrm{A} N : \sigma$}
 \BinaryInfC{$\Gamma \vdash_\mathrm{A} M N : \tau$}
 \end{prooftree}
@@ -104,7 +104,7 @@ $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指
 \AxiomC{$\ $}
 \RightLabel{(参数公理)}
 \UnaryInfC{$x : \phety, y : \phety \vdash x : \phety$}
-\RightLabel{(组合规则)}
+\RightLabel{(组合律)}
 \BinaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add}\ x : \phety \rightarrow \phety$}
 \end{prooftree}
 
@@ -114,11 +114,11 @@ $\mathbf{Add} : \phety \rightarrow \phety \rightarrow \phety \in P$ 是基元指
 \AxiomC{$\ $}
 \RightLabel{(参数公理)}
 \UnaryInfC{$x : \phety, y : \phety \vdash y : \phety$}
-\RightLabel{(组合规则)}
+\RightLabel{(组合律)}
 \BinaryInfC{$x : \phety, y : \phety \vdash \mathbf{Add}\ x\ y : \phety$}
-\RightLabel{(抽象规则)}
+\RightLabel{(抽象律)}
 \UnaryInfC{$x : \phety \vdash \lambda y\ \mathbf{Add}\ x\ y  : \phety \rightarrow \phety$}
-\RightLabel{(抽象规则)}
+\RightLabel{(抽象律)}
 \UnaryInfC{$\vdash \lambda x\ y.\ \mathbf{Add}\ x\ y  : \phety \rightarrow \phety
   \rightarrow \phety$}
 \end{prooftree}
@@ -147,7 +147,11 @@ phenomenon 意为“现象”，是哲学上的术语，与其对应的是本质
 而不得已构造的表象。
 重要的是数值计算背后承载的意义，而失去了意义，纯粹的计算毫无意义。
 在这点上，计算机世界的本体论是彻底的二元的，计算客体是现象，计算对应的意义是本质。
-故而以 phenomenon 命名 $\aml$ 的计算客体是恰当的。
+故而以 phenomenon 命名 $\aml$ 的计算客体是恰当的，而计算客体的意义自然就是本质。
+
+\begin{defin}[现象与本质] 
+$\aml$ 及 $\amlh$ 上的计算客体，被叫做{\it 现象}，现象的意义被叫做{\it 本质}。
+\end{defin}
 
 对于计算机，计算客体是数字。但对于$\aml$，计算客体 phenomenon 可以
 不是数字。虽然phenomenon主要是基于数字类型，但这里有抽象的空间。
@@ -160,295 +164,58 @@ phenomenon 意为“现象”，是哲学上的术语，与其对应的是本质
 ，phenomenon 类型所表达的是确定数目的二进制位组加上这些位组间届由指针相连成的结构，
 这样就非常有效地解决了指针的问题并允许复杂数据结构的有效处理。
 
-现象与本质间的对应关系，被叫做\textbf{超越关系}，基于此 $\amlh$ 构建起一套
-非常梦幻的类型系统。
+现象与本质间的对应关系，被叫做\textbf{超越关系}，围绕此关系 $\amlh$ 实现了类型系统的功能。
+这样说是因为超越关系及其机制并不能叫做类型系统，而 $\amlh$ 上的类型仅有一个
+\textit{phenomenon}。
 
-\subsection{$\amlh$的形式定义}
+\input{chapters/AmLH.def.tex}
 
-$\aml$ 只是纯粹基于字符串的形式系统。仅有的字符串理论实在太过单薄，更多巧妙的设计无以构建。
-
-接下来本文论述 $\amlh$，它也是一种形式系统，是 HOL 逻辑的扩广，即有
-
-\[ \mathrm{HOL} \subseteq \amlh \]
-
-这种扩广以对于 HOL 逻辑合法的方式进行，HOL 逻辑上的证明工具依旧可以用于 $\amlh$ 上并对
-$\amlh$ 上的表达进行证明；而这种扩广又允许类似$\aml$地构造程序以允许其上的软件开发。
-
-需要注意的是 $\amlh$ 是一种形式系统的框架，一些设定是未具体定义而允许定制的，可以
-构造不同版本的 $\amlh$ 实现。本文将研究两种$\amlh$的实现，高抽象层级粗粒度的
-$\amlhC$ 与地抽象层级细粒度的 $\amlhF$
-
-\begin{defin}[现象类型] 类型 phenomenon 表示 $\aml$ 上的计算客体，根据不同的$\aml$实现可以
-    以不同方式具体定义。
-\end{defin}
-
-\begin{defin}[到$\alpha$的理解] 类型 $\itp{\alpha}$ 是现象到
-    具有类型 $\alpha$ 的本质的理解，包含可以构建现象与本质间联系的映射。
-    \begin{equation} \begin{split}
-        \itp{\alpha} \Coloneqq \mathbf{Interpretation}\ &(\alpha \rightarrow \phenomenon)
-        \ (\phenomenon \rightarrow \alpha)\\
-        &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})
-    \end{split} \end{equation}
-    \begin{align*}
-        \mathbf{ITP\_LIGHT}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = l \\
-        \mathbf{ITP\_TRANSCEND}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = tr \\
-        \mathbf{ITP\_SET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s \\
-        \mathbf{ITP\_PSET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s_p
-    \end{align*}
-\end{defin}
-
-$\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本质的理解。
-例如现象到布尔值间的超越映射就要届由到 bool 类型的理解来完成。
-$\mathbf{Interpretation}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定本质到
-现象的映射；$tr$ 是超越函数，确定现象到本质的映射；$s$ 是本质集合，
-有 $s \subseteq \mathrm{dom}\ l \land s \subseteq \mathrm{rng}\ tr$；
-$s_p$ 是现象集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq \mathrm{rng}\ l$
-，一个理解即是上述的四元组。
-
-理解及其机制可以认为是 $\amlh$ 上的类型系统。之所以说“可以”，是因为理解及其机制实际
-实现了类型系统的功能，但并不严格地符合类型系统的定义；而$\amlh$上类型系统的功能
-被理解及其机制实现，所以实际上并不需要类型系统。严格地来说理解及其机制是
-类型系统的替代。
-
-\begin{notation}[理解的相关属性的简写记号]
-\begin{align*}
-    \mathbf{Li}_i\ & \coloneqq \mathbf{ITP\_LIGHT}\ i
-    & \mathbf{Tr}_i\ & \coloneqq \mathbf{ITP\_TRANSCEND}\ i \\
-    \mathbf{Se}_i\ & \coloneqq \mathbf{ITP\_SET}\ i
-    & \mathbf{Sp}_i\ & \coloneqq \mathbf{ITP\_PSET}\ i
-\end{align*}
-\end{notation}
-
-\begin{defin}[到$\alpha$的有效理解]
-\begin{equation}
-    \mathbf{VALID\_ITP}\ i \coloneqq\
-    (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
-    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e))
-\end{equation}
-\end{defin}
-
-\begin{notation}[有效理解的简写]
-    \[ \mathbf{V}_i \coloneqq \mathbf{VALID\_ITP}\ i \]
-\end{notation}
-
-即 $\mathbf{V}_i$ 意味着 $\mathbf{Li}_i$ 是 $\mathbf{Se}_i$ 到 $\mathbf{Sp}_i$ 的单射，
-$\mathbf{Tr}_i$ 是 $\mathbf{Sp}_i$ 到 $\mathbf{Se}_i$ 的满射，
-$\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
-
-\begin{example}[到bool的有效理解的样例]
-\[ \begin{split}
-    \mathbb{B}_\mathrm{I} \coloneqq\ & \mathbf{Interpretation}\ (\lambda e.\ \mathbf{if}\ e\ 
-    \mathbf{then}\ 1\ \mathbf{else}\ 0) \\
-& (\lambda p.\ \mathbf{if}\ p=0\ \mathbf{then}\ \mathrm{F}\ \mathbf{else}\ \mathrm{T})\quad
-   \{\mathrm{T},\ \mathrm{F}\}\quad \mathbb{N}
-\end{split} \]
-\end{example}
-
-\begin{defin}[超越对应关系] 定义三元关系 $ p \widesim{i} e$ 表示现象与本质在某种理解
-    下的的对应关系。
-\begin{equation}
-     p \widesim{i} e \coloneqq p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p)
-\end{equation}
-\end{defin}
-
-某个成立的超越对应关系可以用 HOL 逻辑证明，或者以形式系统的角度去说，
-可以用HOL逻辑的一系列规则得到某个成立的超越关系。
-
-\begin{prooftree}
-    \AxiomC{$\cdots$} 
-    \RightLabel{对于某个成立的 $p \widesim{i} e$\quad\quad(类型证明率)} \doubleLine
-    \UnaryInfC{$\vdash p \widesim{i} e$}
-\end{prooftree}
-
-由此构建了程序的语义感知（Semantic Reasoning）的基础，即在理解方式$i$下可以将
-计算客体$p$解释成$e$，而$e$即$p$在理解方式$i$下的语义。
-
-\begin{defin}[理解的合并] 一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
-    到二元组$(\alpha,\beta)$的理解 $i_a \cdot i_b$
-\[
-    \forall l_a\ l_b\ a\ b.\ (l_a\ a = l_b\ b) \Rightarrow
-    (\dot{\mathbf{l}}\ l_a\ l_b\ a\ b = l_a\ a )
-\]
-\begin{equation} \begin{split}
-    (\mathbf{Interpretation}\ & l_a\ tr_a\ s_a\ sp_a)\ \cdot\ 
-    (\mathbf{Interpretation}\ l_b\ tr_b\ s_b\ sp_b) \coloneqq \\
-    & \mathbf{Interpretation}\ (\dot{\mathbf{l}}\ l_a\ l_b)\ 
-        (\lambda p.\ (tr_a\ p,\ tr_b\ p))\ \\
-    & \quad\quad\quad (s_a \times s_b \cap (\lambda (a,\ b).\ l_a\ a = l_b\ b))\ 
-    (sp_a \cap sp_b)
-\end{split} \end{equation}
-\end{defin}
-
-这意味着一个计算客体可以同时具有多种理解，而现象上的一次计算可以同时带有多个含义。
-
-\begin{theo}[理解合并的有效性]
-\begin{equation}
-    \mathbf{V}_a \land \mathbf{V}_b \Rightarrow \mathbf{V}_{a\cdot b}
-\end{equation}
-\end{theo}
-\begin{proof}
-\begin{align*}
-    \mathbf{V}_{a\cdot b} =\ & (\forall e_a\ e_b.\ e_a \in \mathbf{Se}_a \quad \land \quad
-    e_b \in \mathbf{Se}_b \quad \land \quad 
-    (\mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b) \quad \Rightarrow \\
-    & \quad\quad\quad \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \quad \land
-    \quad (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \quad \land \quad
-    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
-    \mathbf{V}_a =\ & (\forall e_a.\ e_a \in \mathbf{Se}_a \Rightarrow
-      \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \quad \land \quad 
-      (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a)) \\
-    \mathbf{V}_b =\ & (\forall e_b.\ e_b \in \mathbf{Se}_b \Rightarrow
-      \mathbf{Li}_b\ e_b \in \mathbf{Sp}_b \quad \land \quad 
-      (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
-    & \mathbf{V}_a;\ \mathbf{V}_b;\ e_a \in \mathbf{Se}_a;\ e_b \in \mathbf{Se}_b;\ 
-    \mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b \quad \vdash \quad
-    \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \\
-    & \quad\quad\quad\quad \land (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \land
-    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b) \\
-    & \mathbf{V}_a;\ \mathbf{V}_b \vdash \mathbf{V}_{a \cdot b}
-\end{align*}
-\end{proof}
-
-\begin{theo}[理解合并对于超越对应的同构]
-\begin{equation}
-    \forall i_a\ i_b\ p\ e_a\ e_b.\ p \widesim{i_a} e_a \land p \widesim{i_b} e_b = 
-    p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) 
-\end{equation}
-\end{theo}
-
-\begin{proof}
-\[ \begin{split}
-    p \widesim[2]{ia \cdot ib} (e_a,\ e_b) =\ & p \in 
-    (\mathbf{Sp}_{ia} \cap \mathbf{Sp}_{ib}) \land 
-    (\mathbf{Tr}_{ia}\ p = e_a) \land (\mathbf{Tr}_{ib}\ p = e_b) \\
-    =\ & p \widesim{i_a} e_a \land p \widesim{i_b} e_b
-\end{split} \]
-\end{proof}
-
-由合并的理解的超越对应关系就可以提取出其中各个理解的超越对应。
-
-\begin{gather*}
-    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_1} e_1 \\
-    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_2} e_2
-\end{gather*}
-
-\begin{minipage}[b]{0.45\linewidth}
-\begin{prooftree}
-\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
-    \RightLabel{(合并分解率1)}
-\UnaryInfC{$\Gamma \vdash p \widesim{i_1} e_1$}
-\end{prooftree}
-\end{minipage}%
-\begin{minipage}[b]{0.4\linewidth}
-\begin{prooftree}
-\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
-    \RightLabel{(合并分解率2)}
-\UnaryInfC{$\Gamma \vdash p \widesim{i_2} e_2$}
-\end{prooftree}
-\end{minipage}
-
-\begin{prooftree}
-\AxiomC{$\Gamma \vdash p \widesim{i_1} e_1$}
-\AxiomC{$\Gamma \vdash p \widesim{i_2} e_2$}
-    \RightLabel{(合并率)}
-\BinaryInfC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
-\end{prooftree}
-
-\begin{theo}[理解合并在超越对应上的交换律同构与结合律同构]
-\begin{gather}
-    \forall e_a\ e_b\ i_a\ i_b\ p.\ p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) =
-        p \widesim[2]{i_b \cdot i_a} (e_b,\ e_a) \\
-    \forall e_a\ e_b\ e_c\ i_a\ i_b\ i_c\ p.\ p \widesim[4]{(i_a \cdot i_b) \cdot i_c}
-    ((e_a,\ e_b),\ e_c) = p \widesim[4]{i_a \cdot (i_b \cdot i_c)} (e_a,(e_b,\ e_c))
-\end{gather}
-\end{theo}
-
-\begin{proof} 显然，略
-\end{proof}
-
-类型证明率，合并率，合并分解率构成了值的类型演算。
-
-\begin{defin}[过程的超越对应关系] 定义4元符号 $f_p \prec i | j \succ f_e$ 表示1个参数
-的过程的超越对应， $n+2$ 元符号 $f_p \prec i_1 | \cdots | i_n \succ f_e$ 表示 $n$ 个参数的过程的
-超越对应。
-\begin{equation} \begin{split}
-    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & \prec i | j \succ
-    (f_e:\alpha \rightarrow \beta) \coloneqq \\
-&(\forall a_p\ a_e.\quad a_p \widesim{i} a_e \Rightarrow f_p\ a_p \widesim{j} f_e\ a_e) \\
-    (f_p:\mathrm{phenomenon}\rightarrow \cdots \rightarrow \mathrm{phenomenon})\ & 
-    \prec i | \cdots | l \succ
-    (f_e:\alpha \rightarrow \cdots \rightarrow \delta \rightarrow \epsilon) \coloneqq \\
-    (\forall a_p\ a_e \cdots d_p\ d_e.\quad a_p \widesim{i} a_e \Rightarrow &
-    \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow f_p\ a_p\ \cdots\ d_p
-    \widesim{l} f_e\ a_e\ \cdots\ d_e)
-\end{split} \end{equation}
-
-    特别的 $p \proctr{i} e \coloneqq p \widesim{i} e$
-
-\end{defin}
-
-
-
-HOL 上的 $\aml$ 即 $\amlh$，在 HOL 的范畴下，包括自然数理论、
-高阶逻辑理论等众多数学工具得以使用，允许构建非常巧妙而强大的类型系统。
-
-此处的 HOL 是双关语，即表示高阶逻辑，又表示 HOL 定理证明器上的形式逻辑即 HOL 逻辑。
-高阶逻辑与 HOL 定理证明器的逻辑是如此接近，而 $\amlh$ 对数理工具的应用并不严苛，
-事实上对于 $\amlh$ 这两者都可行而不需要区分开来。
-
-
-\begin{defin}[解释] 给定集合 $S$，$S$ 到  
-\end{defin}
-
-\begin{defin}[超越关系] 定义关系
-\end{defin}
-
-
-
-\subsection{抽象机$\amlhF$的形式定义}
-
-对 $\aml$ 在 HOL 上的实现首先从细粒度也是低抽象层级的 $\amlhF$ 开始。
-
-$\aml$ 中的类型 phenomenon 由 HOL 中的类型实现，$\aml$ 中的表达式（term）由 HOL 
-中的表达式表达，也就意味着 $\amlh$ 是 HOL 逻辑的子形式系统。
-
-\[ \amlh \subseteq \HOL \]
-
-\begin{defin}[$\amlhF$的phenomenon类型在HOL上的实现]
-    \begin{equation}
-        \begin{split}
-            \mathrm{phenoval} \Coloneqq\ & \mathbf{PhenoVal}\ \natn\ \natn \\
-            \mathrm{history} \Coloneqq\ & \cdots \\
-            \mathrm{phenomenon} \Coloneqq\ & \mathbf{Phenomenon}\ \mathrm{phenoval}\ 
-                \mathrm{history}
-        \end{split}
-    \end{equation}
-\end{defin}
-
-history 设计对系统状态的建模，暂且搁置而在？？？节论述。
-$\natn$ 是自然数类型。$\mathrm{phenoval}$ 表示一切抽象机上的数值，
-$\mathbf{PhenoVal}\ x\ b$ 在 $x < 2^b$ 时表示$b$个二进制位且数值为$x$的值。
-
-\begin{defin}[phenoval 有效性]
-    \begin{equation}
-        \mathbf{VALID\_PHV}\ (\mathbf{PhenoVal}\ x\ b) \coloneqq x < 2^b
-    \end{equation}
-\end{defin}
-
-\begin{defin}[phenomenon 有效性]
-    \begin{equation}
-        \mathbf{VALID\_PHE}\ (\mathbf{Phenomenon}\ v\ h) \coloneqq \mathbf{VALID\_PHV}
-        \ v \land \mathbf{VALID\_HIS}\ h
-    \end{equation}
-    其中 $\mathbf{VALID\_HIS}$ 为history的有效性谓词，在？？？节详细论述。
-\end{defin}
-
-\begin{defin}[$\amlhF$ 上 $\mathbf{Const}$ 的定义]
-    \begin{equation}
-        \mathbf{Const}\ x\ b \coloneqq \mathbf{Phenomenon}\ (\mathbf{PhenoVal}\ x\ b)\ \mathbf{HGenerator}
-    \end{equation}
-    其中 $\mathbf{HGenerator}$ 在？？？节定义。
-\end{defin}
-
-定义 \ref{Def.aml} 中的常量公理即可由 $\mathbf{Const}$ 实现。
-
+%
+%
+%\subsection{抽象机$\amlhF$的形式定义}
+%
+%对 $\aml$ 在 HOL 上的实现首先从细粒度也是低抽象层级的 $\amlhF$ 开始。
+%
+%$\aml$ 中的类型 phenomenon 由 HOL 中的类型实现，$\aml$ 中的表达式（term）由 HOL 
+%中的表达式表达，也就意味着 $\amlh$ 是 HOL 逻辑的子形式系统。
+%
+%\[ \amlh \subseteq \HOL \]
+%
+%\begin{defin}[$\amlhF$的phenomenon类型在HOL上的实现]
+%    \begin{equation}
+%        \begin{split}
+%            \mathrm{phenoval} \Coloneqq\ & \mathbf{PhenoVal}\ \natn\ \natn \\
+%            \mathrm{history} \Coloneqq\ & \cdots \\
+%            \mathrm{phenomenon} \Coloneqq\ & \mathbf{Phenomenon}\ \mathrm{phenoval}\ 
+%                \mathrm{history}
+%        \end{split}
+%    \end{equation}
+%\end{defin}
+%
+%history 设计对系统状态的建模，暂且搁置而在？？？节论述。
+%$\natn$ 是自然数类型。$\mathrm{phenoval}$ 表示一切抽象机上的数值，
+%$\mathbf{PhenoVal}\ x\ b$ 在 $x < 2^b$ 时表示$b$个二进制位且数值为$x$的值。
+%
+%\begin{defin}[phenoval 有效性]
+%    \begin{equation}
+%        \mathbf{VALID\_PHV}\ (\mathbf{PhenoVal}\ x\ b) \coloneqq x < 2^b
+%    \end{equation}
+%\end{defin}
+%
+%\begin{defin}[phenomenon 有效性]
+%    \begin{equation}
+%        \mathbf{VALID\_PHE}\ (\mathbf{Phenomenon}\ v\ h) \coloneqq \mathbf{VALID\_PHV}
+%        \ v \land \mathbf{VALID\_HIS}\ h
+%    \end{equation}
+%    其中 $\mathbf{VALID\_HIS}$ 为history的有效性谓词，在？？？节详细论述。
+%\end{defin}
+%
+%\begin{defin}[$\amlhF$ 上 $\mathbf{Const}$ 的定义]
+%    \begin{equation}
+%        \mathbf{Const}\ x\ b \coloneqq \mathbf{Phenomenon}\ (\mathbf{PhenoVal}\ x\ b)\ \mathbf{HGenerator}
+%    \end{equation}
+%    其中 $\mathbf{HGenerator}$ 在？？？节定义。
+%\end{defin}
+%
+%定义 \ref{Def.aml} 中的常量公理即可由 $\mathbf{Const}$ 实现。
+%

@@ -126,7 +126,7 @@ HOL 系列内部使用一个微小的“核”（kernel）程序，决定了基�
 一如证明系统中对基元规则的复合。于是所有的推理与证明都经由这个微小的核，
 复制核程序或者人工模拟核的运算就可以独立验证任何定理证明器得出的结论。
 
-\subsection{HOL 逻辑概述}
+\subsection{HOL 逻辑概述} \label{Sec.HOL}
 
 HOL 逻辑是 HOL 定理证明器上的证明系统，而 $\amlh$ 构建在 HOL 逻辑上，故有必要介绍 HOL逻辑。
 
@@ -163,21 +163,35 @@ HOL 逻辑上的推理由一系列规则构成，以下是部分本文需要使�
     \AxiomC{$\Gamma_2 \vdash t_1 $}
     \RightLabel{(EQ\_MP)}
     \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$}
-\end{prooftree}
-\end{minipage}
+\end{prooftree} \end{minipage}
 
-\begin{prooftree}
+\hfill
+
+\begin{minipage}[b]{0.6\linewidth} \begin{prooftree}
     \AxiomC{$ \Gamma_1 \vdash \forall x_1\cdots x_n.\ t_1 \Rightarrow t_2 $}
     \AxiomC{$\Gamma_2 \vdash t_1 $}
     \RightLabel{(MATCH\_MP)}
     \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash \forall x_a\cdots x_k.\ t_2$}
-\end{prooftree}
-
-\begin{prooftree}
+\end{prooftree} \end{minipage}%
+\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
     \AxiomC{$\ $}
     \RightLabel{(ASSUME)}
     \UnaryInfC{$ t \vdash t$}
-\end{prooftree}
+\end{prooftree} \end{minipage}%
+
+\hfill
+
+\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$ \Gamma \vdash t $}
+    \RightLabel{(DISCH $u$)}
+    \UnaryInfC{$\Gamma - \{u\} \vdash u \Rightarrow t$}
+\end{prooftree} \end{minipage}%
+\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
+    \AxiomC{$ \Gamma \vdash t $}
+    \RightLabel{(GEN $x$)}
+    \UnaryInfC{$\Gamma \vdash \forall x.\ t$}
+\end{prooftree} \end{minipage}
+
 
 \end{defin}
 
