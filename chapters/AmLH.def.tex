@@ -19,7 +19,7 @@ $\amlhC$ 与地抽象层级细粒度的 $\amlhF$
 
 \subsection{理解与超越对应}
 
-\begin{defin}[到$\alpha$的理解] 类型 $\itp{\alpha}$ 是现象到
+\begin{defin}[到$\alpha$的理解] \label{Def.itp} 类型 $\itp{\alpha}$ 是现象到
     具有类型 $\alpha$ 的本质的理解，包含可以构建现象与本质间联系的映射。
     \begin{equation} \begin{split}
         \itp{\alpha} \Coloneqq \mathbf{Interpretation}\ &(\alpha \rightarrow \phenomenon)
@@ -52,12 +52,14 @@ $s_p$ 是现象集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq 
 \end{align*}
 \end{notation}
 
-\begin{defin}[到$\alpha$的有效理解]
-\begin{equation}
-    \mathbf{VALID\_ITP}\ i \coloneqq\
+\begin{defin}[到$\alpha$的有效理解] \label{Def.Vi}
+\begin{equation} \begin{split}
+    \mathbf{VALID\_ITP}\ i \coloneqq\ &
     (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
-    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e))
-\end{equation}
+    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) \\
+    & \land\ (\forall p.\ p \in \mathbf{Sp}_i \Rightarrow \mathbf{Tr}_i\ p \in 
+    \mathbf{Se}_i)
+\end{split} \end{equation}
 \end{defin}
 
 \begin{notation}[有效理解的简写]
@@ -116,6 +118,7 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \end{split} \end{equation}
 \end{defin}
 
+这样合并的意义在于，多个基于不同理解的超越关系，可以将这些不同的理解合并而表示为一个超越关系。
 
 \begin{theo}[理解合并的有效性]
 \begin{equation}
@@ -124,24 +127,33 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \end{theo}
 \begin{proof}
 \begin{align*}
-    \mathbf{V}_{a\cdot b} =\ & (\forall e_a\ e_b.\ e_a \in \mathbf{Se}_a \quad \land \quad
-    e_b \in \mathbf{Se}_b \quad \land \quad 
-    (\mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b) \quad \Rightarrow \\
-    & \quad\quad\quad \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \quad \land
-    \quad (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \quad \land \quad
+    \mathbf{V}_{a\cdot b} =\ & (\forall e_a\ e_b.\ e_a \in \mathbf{Se}_a \ \ \land \ \ 
+    e_b \in \mathbf{Se}_b \ \ \land \ \ 
+    (\mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b) \ \ \Rightarrow \\
+    & \quad\quad\quad \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \ \ \land
+    \ \ (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \ \ \land \ \ 
     (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_a \ \ \land \ \ p \in \mathbf{Sp}_b
+    \Rightarrow \mathbf{Tr}_a\ p \in \mathbf{Se}_a \ \ \land \ \ \mathbf{Tr}_b\ p \in 
+      \mathbf{Se}_b ) \\
     \mathbf{V}_a =\ & (\forall e_a.\ e_a \in \mathbf{Se}_a \Rightarrow
-      \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \quad \land \quad 
+      \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \ \ \land \ \ 
       (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a)) \\
-    \mathbf{V}_b =\ & (\forall e_b.\ e_b \in \mathbf{Se}_b \Rightarrow
-      \mathbf{Li}_b\ e_b \in \mathbf{Sp}_b \quad \land \quad 
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_a \Rightarrow \mathbf{Tr}_a\ p \in 
+      \mathbf{Se}_a) \\
+\mathbf{V}_b =\ & (\forall e_b.\ e_b \in \mathbf{Se}_b \Rightarrow
+      \mathbf{Li}_b\ e_b \in \mathbf{Sp}_b \ \ \land \ \ 
       (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
-    & \mathbf{V}_a,\ \mathbf{V}_b,\ e_a \in \mathbf{Se}_a,\ e_b \in \mathbf{Se}_b,\ 
-    \mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b \quad \vdash \quad
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_b \Rightarrow \mathbf{Tr}_b\ p \in
+      \mathbf{Se}_b) \\
+\mathbf{V}_a,\ & \mathbf{V}_b,\ e_a \in \mathbf{Se}_a,\ e_b \in \mathbf{Se}_b,\ 
+    \mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b \ \vdash \ 
     \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \\
     & \quad\quad\quad\quad \land (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \land
     (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b) \\
-    & \mathbf{V}_a,\ \mathbf{V}_b \vdash \mathbf{V}_{a \cdot b}
+\mathbf{V}_a,\ & \mathbf{V}_b,\ p \in \mathbf{Sp}_a,\ p \in \mathbf{Sp}_b\ \vdash\ 
+    \mathbf{Tr}_a\ p \in \mathbf{Se}_a\ \ \land \ \ \mathbf{Tr}_b\ p \in \mathbf{Se}_b \\
+\mathbf{V}_a,\ &\mathbf{V}_b \vdash \mathbf{V}_{a \cdot b}
 \end{align*}
 \end{proof}
 
@@ -314,7 +326,7 @@ $cond$的超越对应。
 phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明系统的类型系统）就是只有
 一种 phenomenon 类型的简单类型$\lambda$演算$\lamst$。
 
-\subsection{基元指令（Primitive Operations）}
+\subsection{基元指令（Primitive Operations）} \label{Sec.Op}
 
 基元指令有两种引入方法。第一种是基于现象的定义，编写现象上的函数，具体地给出定义，
 再证明此函数满足某个或者某一些超越对应，一个确定的现象函数可以具有多个意义继而
@@ -326,9 +338,13 @@ phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明
 而基元指令也根本不需要确定具体的计算为何，输出的现象具体如何表达，只要得到了超越对应定理，
 就可以直接由组合律去使用。
 
-\begin{theo}(基元创立定理)
+\begin{theo}(基元虚构定理)
+给定所期望的本质$f_e$，参数的理解$i\ \cdots\ k$，返回值的理解$l$，过程执行的条件$cond$，
+只要 $l$ 有效，且 $cond$ 足以限定返回值的本质$f_e\ a_e\ \cdots\ c_e$到其理解$l$的本质集
+$\mathbf{Se}_l$内，则必定存在一个现象上的过程 $f_p$，且满足期望的超越对应关系。
+
 \[ \begin{split} \forall f_e\ i\ \cdots\ k\ l\ cond.\ 
- \mathbf{V}_i\ \land\ &(\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
+ \mathbf{V}_l\ \land\ &(\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
    \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e) ) \Rightarrow \\
  & \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e
 \end{split} \]
@@ -340,16 +356,16 @@ phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明
 \end{lemma}
 \begin{proof} \begin{gather*}
   p \widesim{i} e = p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p) \\
-\mathbf{V}_i = (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
+\mathbf{V}_i \Rightarrow (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
     \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) \\
-\mathbf{V}_i = (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \widesim{i} e)
+\mathbf{V}_i \Rightarrow (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \widesim{i} e)
 \end{gather*}
 
 即，目标命题得证，存在 $p = \mathbf{Li}_i\ e$
 
 \end{proof}
 
-\begin{proof}
+\begin{proof}[基元虚构定理]
 
 令 $x_p = f_p\ a_p\ \cdots\ c_p\ ;\ x_e = f_e\ a_e\ \cdots\ c_e$
 
@@ -362,15 +378,103 @@ cond\ x_e,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se
 \RightLabel{引理 \ref{lem.1}}
 \UnaryInfC{$\Gamma_\sim \vdash \exists p.\ p \widesim{i} x_e$}
 \UnaryInfC{$\Gamma_\sim \vdash \exists f_p.\ f_p\ a_p\ \cdots\ c_p \widesim{i} f_e\ a_e\ \cdots c_e$}
-\UnaryInfC{$(\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se}_l),\ 
-\mathbf{V}_l \vdash \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\UnaryInfC{$\mathbf{V}_l,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e
+\in \mathbf{Se}_l) \vdash \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
 \UnaryInfC{$\forall f_e\ i\ \cdots\ k\ l\ cond.\ 
- \mathbf{V}_i\ \land\ (\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
+ \mathbf{V}_l\ \land\ (\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
    \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e) ) \Rightarrow$} \noLine
 \UnaryInfC{$\exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
 \end{prooftree}
 \end{proof}
 
+由基元虚构定理，可以任意的引入具有期望意义的基元指令。而基元指令也根本不需要考虑
+具体如何对现象计算，因为编译只需要给出程序以基元指令组合而成的表达，基元指令的具体
+计算过程是根本不需要的。这一点意味着 $\amlh$ 极为强大的适应能力，可以任意自由地定义指令集，
+进而构造出各种各样的抽象机器，用于各种各样的场合。
 
+第一种，构造现象函数然后证明其超越对应的方法表述为基元证明律；第二种利用基元虚构定理
+引入具有特定超越对应的基元函数的方法表述为基元虚构律。
 
+{\center \begin{prooftree}
+    \AxiomC{$\cdots$}
+    \RightLabel{基元证明律}
+    \UnaryInfC{$\vdash f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\end{prooftree}}
+
+{\center \begin{prooftree}
+    \AxiomC{$\vdash \mathbf{V}_l$}
+    \AxiomC{$\vdash \forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
+      \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e)$}
+    \RightLabel{基元虚构律}
+    \BinaryInfC{$\vdash f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\end{prooftree}}
+
+\subsection{虚构理解}
+
+基元虚构定理带来了非常好的启发，理解也可以被类似地虚构地引入，而完全不给出任何具体的细节。
+这一点是通过同构实现的。
+
+\begin{defin}[单射的定义]
+\[
+    \mathbf{INJ}\ f\ S\ T \coloneqq (\forall s.\ s \in S \Rightarrow f\ s \in T) \land
+    (\forall s_1\ s_2.\ s_1 \in S \land s_2 \in S \land (f\ s_1 = f\ s_2) \Rightarrow
+    s_1 = s_2)
+\]
+\end{defin}
+\begin{lemma}[单射存在逆函数] \label{L.inji}
+\[ \forall f\ S\ T.\ \mathbf{INJ}\ f\ S\ T \Rightarrow \exists g.\ (\forall t.\ t \in T
+    \Rightarrow g\ t \in S) \ \land\ (\forall s.\ s \in S \Rightarrow
+    g(f(s)) = s) \]
+\end{lemma}
+\begin{lemma}[有效理解的投影是单射]
+\[
+    \mathbf{V}_i \Rightarrow \mathbf{INJ}\ \mathbf{L}_i\ \mathbf{Se}_i\ \mathbf{Sp}_i
+\]
+\end{lemma}
+\begin{proof} 
+
+\begin{align*}
+& \text{由定义} \ref{Def.Vi} && \mathbf{V}_i \Rightarrow \ 
+    (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
+    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) & (1) \\
+& \text{只需证明} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
+    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash\ e_1 = e_2 & \\
+& \text{显然有} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
+    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash
+    \mathbf{Tr}_i(\mathbf{Li}_i\ e_1) = \mathbf{Tr}_i(\mathbf{Li}_i\ e_2) & \\
+& \text{由 (1)} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
+    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash e_1 = e_2 &
+\end{align*}
+
+\end{proof}
+\begin{defin}[势的偏序关系的定义] \label{Def.Card}
+    \[ \abs{A} \leq \abs{B} \coloneqq (\exists f.\ \mathbf{INJ}\ f\ A\ B) \]
+\end{defin}
+
+\begin{theo}[理解虚构定理]
+\[ \forall S_e. \abs{S_e} \leq \abs{\mathrm{phenomenon}} \Rightarrow
+    \exists i.\ \mathbf{V}_i\ \land\ (\mathbf{Se}_i = S_e) \]
+\end{theo}
+\begin{proof}
+在假设 $\abs{S_e} \leq \abs{\mathrm{phenomenon}} $ 下，由定义 \ref{Def.Card} 得到
+由$S_e$到现象的单射$f$，再由引理$\ref{L.inji}$得到逆函数$g$，记单射$f$的值域为
+$S_p = \Ima f$，有：
+\[ \forall e.\ e \in S_e \Rightarrow f\ e \in S_p \land g(f\ e) = e  \tag{1} \]
+\[ \forall p.\ p \in S_p \Rightarrow g\ e \in S_e \tag{2} \]
+令 $i = \mathbf{Interpretation}\ f\ g\ S_e\ S_p$ 现只需证明 $\mathbf{V}_i$ 即可。
+\[ \mathbf{V}_i = (\forall e.\ e \in S_e \Rightarrow f\ e \in S_p \land
+    f(g(e)) = e)\ \land\ (\forall p.\ p \in S_p \Rightarrow g\ p \in S_e) \]
+由(1)，(2) 这是显然的。
+\end{proof}
+
+一般而言$\amlh$的实现中现象集是同构于自然数集的一阶无穷，这就给$S_e$的选择带来很大的空间。
+事实上任何计算机实际可触及的意义，或者说计算机上可表示的概念，一定是有限的，因为计算机的
+内存是有限的，于是$S_e$是有限的；而即便抛开内存的限制，需要去表示的概念也往往是一阶无穷。
+这些一阶无穷集包括一阶无穷集上的列表、树结构、映射表等多种数据结构。
+
+借助理解虚构定理，可以直接引入到期望本质集上的理解。尽管不给出理解的具体映射方式意味着
+不可能直接证明某个现象在该理解下的超越对应，但依旧可以用\ref{Sec.Op}节论述的虚构基元指令
+的方式引入关于此虚构理解的基元指令。
+
+\begin{}
 

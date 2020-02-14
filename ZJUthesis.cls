@@ -241,6 +241,7 @@
 \newtheorem{prove}{证明~}[chapter]
 \newtheorem{example}{样例~}[chapter]
 \newtheorem{lemma}{引理~}[chapter]
+\renewenvironment{proof}[1][]{{\noindent {\lishu 证明}\ #1}}{\hfill$\square$}
 
 % 制作封面的命令
 \newcommand\makeCoverPage{%
