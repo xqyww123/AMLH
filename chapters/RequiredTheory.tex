@@ -244,3 +244,14 @@ val _ = Datatype `type_name = Constructor1 arg11 ... arg1i | ...
 val value_def = Define `value = expression`;
 val func_def = Define `function x1 ... xn = expression`;
 \end{lstlisting}
+
+\section{其他一些需要的理论与工具}
+
+这些逻辑上的理论与工具通用于经典逻辑与大多数非经典逻辑，下文的论述默认在 HOL 的范畴下。
+
+\begin{defin}[常用逻辑函数]
+\begin{align*}
+    & (\mathrm{I}:\alpha \rightarrow \alpha)\ x\ \coloneqq x \\
+    & (\mathrm{K}:\alpha \rightarrow \beta \rightarrow \alpha)\ x\ y\ \coloneqq x
+\end{align*}
+\end{defin}

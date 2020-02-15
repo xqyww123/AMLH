@@ -1,5 +1,14 @@
 \section{$\amlh$的形式定义}
 
+接下来本文一步步给出$\amlh$的形式定义。
+首先是基于$\lamst$的且无状态纯粹数值计算的抽象机$\aml$，
+然后将$\aml$实现在HOL定理证明器的HOL逻辑上，
+$\aml$在HOL上的实现根据抽象级别的高低有两个版本，
+粗粒度抽象机$\amlhC$与细粒度抽象机$\amlhF$，最后几节将分别论述其实现。
+
+\input{./chapters/AmL.def.tex}
+\subsection{$\amlh$}
+
 $\aml$ 只是纯粹基于字符串的形式系统。仅有的字符串理论实在太过单薄，更多巧妙的设计无以构建。
 
 接下来本文论述 $\amlh$，它也是一种形式系统，是 HOL 逻辑的扩广，即有
@@ -14,7 +23,11 @@ $\amlh$ 上的表达进行证明；而这种扩广又允许类似$\aml$地构造
 $\amlhC$ 与地抽象层级细粒度的 $\amlhF$
 
 \begin{defin}[现象类型] 类型 phenomenon 表示 $\aml$ 上的计算客体，根据不同的$\aml$实现可以
-    以不同方式具体定义。
+    以不同方式具体定义，不同的具体定义不影响本节理论。
+
+唯独特别的，phenomenon 类型中需要包含一个特别的零元素$\mathrm{p}_0$，表示
+计算客体中不需要被任何实在的现象表示而自然地于背景中存在的，
+例如0个二进制位或者C语言的void类型。
 \end{defin}
 
 \subsection{理解与超越对应}
@@ -111,7 +124,8 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \begin{proof} 由定义 \ref{Def.Vi} 直接得到。
 \end{proof}
 
-\begin{defin}[理解的合并] 一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
+\begin{defin}[理解的合并] \label{Def.I*}
+一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
     到二元组$(\alpha,\beta)$的理解 $i_a \cdot i_b$
 \[
     \forall l_a\ l_b\ a\ b.\ (l_a\ a = l_b\ b) \Rightarrow
@@ -515,9 +529,10 @@ $S_p = \Im f$，有：
 \end{align*}
 \end{proof}
 
-\begin{example}[以虚构方式引入列表理解] 现在假设 $\abs{\mathrm{phenomenon}} = \aleph_1$，
+\begin{example}[以虚构方式引入列表理解] \label{exam.LI}
+现在假设 $\abs{\mathrm{phenomenon}} = \aleph_1$，
 即现象集同构于自然数集。先如下递归定义集合$S$上的列表$\mathbf{List}_S$集
-\[ \begin{split} \mathbf{List}_S\ []\ & = T \\
+\[ \begin{split} \mathbf{List}_S\ [\ ]\ & = T \\
 \mathbf{List}_S\ [x_1,x_2,\cdots,x_n]\ & = x_1 \in S \land \mathbf{List}_S\ [x_2,\cdots,x_n] \end{split} \]
 通过列表的可数性可以证明如下定理
     \[ \abs{S} \leq \aleph_1 \Rightarrow \abs{\mathbf{List}_S} \leq \aleph_1 \]
@@ -530,8 +545,10 @@ $\abs{\mathbf{List}_S} \leq \aleph_1$
 \[ \forall i.\ \mathbf{V}_i \Rightarrow \exists j.\ \mathbf{V}_j \ \land\ 
     (\mathbf{Se}_j = \mathbf{List}(\mathbf{Se}_i))\]
 据此定义列表理解 $\mathbf{LI} : \itp{\alpha} \rightarrow \itp{\alpha\ \mathrm{list}}$
-\[ \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)} \ \land\ 
-    (\mathbf{Se}_{\mathbf{LI}(i)} = \mathbf{List}(\mathbf{Se}_i))\]
+\begin{equation} \label{V.LI}
+    \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)} \ \land\ 
+    (\mathbf{Se}_{\mathbf{LI}(i)} = \mathbf{List}(\mathbf{Se}_i))
+\end{equation}
 然后由常量虚构律引入空列表常量
 {\center \begin{prooftree}
     \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
@@ -567,3 +584,36 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
 
 \end{example}
 
+\subsection{其他一些有用的案例}
+
+\begin{example}[单元素本质集的理解]
+    \[ \mathbf{I1}\ e = \mathbf{Interpretation}\ (\K \mathrm{p}_0)\ (\K e)\ 
+    \{e\}\ \{\mathrm{p}_0\} \]
+最主要的特点是，$\mathbf{I1}\ e$ 不需要实际地表达，因为本质集中只有一个元素，
+于是表示这一个元素不需要使用任何实质的计算客体除了独特的零现象$\mathrm{p}_0$，
+不占用任何二进制位，而在最后编译出的
+目标程序中不需要也不会被表达，一如C语言的void。但却是一种合理合法的理解，可以参与
+整个 $\amlh$ 的方方面面。
+
+类似很多其他编程语言中的常量概念，$\mathbf{I1}\ e$ 也可以作为某个过程的参数，而 $e$ 
+可以在那过程中被全称量化（universal quantification），
+下面是如此应用的一个例子。
+\end{example}
+
+\begin{example} \label{exam.I1}
+\[ \forall (e:\mathrm{num}).\ \mathrm{AddN}
+\proctr{\mathcal{N}|\mathbf{I1}_e|\mathcal{N}}{cond} 
+    (\lambda x\ e.\ x + e) \]
+
+AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函数，
+而编译结果中实际不会出现参数$e$，在 AddN 内部参数$e$被作为常量优化。
+\end{example}
+
+\begin{notation}
+    \[ \mathbf{I1}_e \coloneqq \mathbf{I1}\ e \]
+\end{notation}
+\begin{theo}[$\mathbf{I1}$ 有效性]
+    \[ \forall e.\ \mathbf{VALID\_ITP}\ \mathbf{I1}_e \]
+\end{theo}
+\begin{proof} 略
+\end{proof}
