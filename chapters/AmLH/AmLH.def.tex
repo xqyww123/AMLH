@@ -6,7 +6,7 @@
 $\aml$在HOL上的实现根据抽象级别的高低有两个版本，
 粗粒度抽象机$\amlhC$与细粒度抽象机$\amlhF$，最后几节将分别论述其实现。
 
-\input{./chapters/AmL.def.tex}
+\input{./chapters/AmLH/AmL.def.tex}
 \subsection{$\amlh$}
 
 $\aml$ 只是纯粹基于字符串的形式系统。仅有的字符串理论实在太过单薄，更多巧妙的设计无以构建。
@@ -92,10 +92,11 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \end{split} \]
 \end{example}
 
-\begin{defin}[超越对应关系] 定义三元关系 $ p \widesim{i} e$ 表示现象与本质在某种理解
-    下的的对应关系。
+\begin{defin}[超越对应关系] \label{Def.TR}
+定义三元关系 $ p \widesim{i} e$ 表示现象与本质在某种理解下的的对应关系。
 \begin{equation}
-     p \widesim{i} e \coloneqq p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ p = e)
+    p \widesim{i} e \coloneqq \mathbf{V}_i \land p \in \mathbf{Sp}_i \land
+    (\mathbf{Tr}_i\ p = e)
 \end{equation}
 \end{defin}
 
@@ -115,14 +116,14 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 而现象上的一次计算可以同时带有多个含义。例如现象1可以在布尔理解下对应真，
 也可以在自然数理解下对应自然数1，也可以是某种有序集的理解下的第一个元素。
 
-\begin{theo}[超越关系的一些性质]
-\begin{align*}
-  \forall p\ i\ e.\ \mathbf{V}_i \Rightarrow p \widesim{i} e \Rightarrow
-    e \in \mathbf{Se}_i
-\end{align*}
-\end{theo}
-\begin{proof} 由定义 \ref{Def.Vi} 直接得到。
-\end{proof}
+%\begin{theo}[超越关系的一些性质]
+%\begin{align*}
+%  \forall p\ i\ e.\ p \widesim{i} e \Rightarrow
+%    e \in \mathbf{Se}_i
+%\end{align*}
+%\end{theo}
+%\begin{proof} 由定义 \ref{Def.Vi} 直接得到。
+%\end{proof}
 
 \begin{defin}[理解的合并] \label{Def.I*}
 一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
@@ -143,7 +144,7 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 
 这样合并的意义在于，多个基于不同理解的超越关系，可以将这些不同的理解合并而表示为一个超越关系。
 
-\begin{theo}[理解合并的有效性]
+\begin{theo}[理解合并的有效性] \label{T.V.IMerge}
 \begin{equation}
     \mathbf{V}_a \land \mathbf{V}_b \Rightarrow \mathbf{V}_{a\cdot b}
 \end{equation}
@@ -188,12 +189,11 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \end{theo}
 
 \begin{proof}
-\[ \begin{split}
-    p \widesim[2]{ia \cdot ib} (e_a,\ e_b) =\ & p \in 
+\[ p \widesim[2]{ia \cdot ib} (e_a,\ e_b) =\ \mathbf{V}_{ia\cdot ib} \land p \in 
     (\mathbf{Sp}_{ia} \cap \mathbf{Sp}_{ib}) \land 
-    (\mathbf{Tr}_{ia}\ p = e_a) \land (\mathbf{Tr}_{ib}\ p = e_b) \\
-    =\ & p \widesim{i_a} e_a \land p \widesim{i_b} e_b
-\end{split} \]
+    (\mathbf{Tr}_{ia}\ p = e_a) \land (\mathbf{Tr}_{ib}\ p = e_b) \]
+结合定义\ref{Def.TR}以及理解合并的有效性定理\ref{T.V.IMerge}
+\[p \widesim[2]{ia \cdot ib} (e_a,\ e_b) = p \widesim{i_a} e_a \land p \widesim{i_b} e_b \]
 \end{proof}
 
 由合并的理解的超越对应关系就可以提取出其中各个理解的超越对应。
@@ -356,7 +356,8 @@ phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明
 拥有多个超越对应关系。
 第二种是根据预先确定的超越对应关系，不给出明确的函数体，而是
 证明对于确定的超越关系存在一个现象函数满足此对应关系，进而由此引入。
-事实上可以证明，对于任意的超越对应关系，一定存在一个现象函数满足此对应关系。
+事实上可以证明，对于任意的超越对应关系，只要满足一些很容易的条件，
+就一定存在一个现象函数满足此对应关系。
 进而基元指令实际根本不用具体地描述计算过程，可以根据其意义直接引入。
 而基元指令也根本不需要确定具体的计算为何，输出的现象具体如何表达，只要得到了超越对应定理，
 就可以直接由组合律去使用。
@@ -367,9 +368,11 @@ phenomenon，而$\amlh$的围绕编程的类型系统（特别注意不是证明
 $\mathbf{Se}_l$内，则必定存在一个现象上的过程 $f_p$，且满足期望的超越对应关系。
 
 \[ \begin{split} \forall f_e\ i\ \cdots\ k\ l\ cond.\ 
- \mathbf{V}_l\ \land\ &(\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
-   f\ a_e\ \cdots\ c_e \in \mathbf{Se}_l) \Rightarrow \\
- & \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e
+ \mathbf{V}_l\ \land\ &\\
+    (\forall a_e\ \cdots\ c_e.\ \mathbf{V}_i\ & \land a_e \in \mathbf{Se}_i \land \cdots
+\land \mathbf{V}_k \land c_e \in \mathbf{Se}_k \land cond\ a_e\ \cdots\ c_e\ \Rightarrow\\
+    & f\ a_e\ \cdots\ c_e \in \mathbf{Se}_l) \Rightarrow\\
+    & \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e
 \end{split} \]
 \end{theo}
 
@@ -380,7 +383,7 @@ $\mathbf{Se}_l$内，则必定存在一个现象上的过程 $f_p$，且满足�
   \exists p.\ p \widesim{i} e \]
 \end{theo}
 \begin{proof} \begin{gather*}
-  p \widesim{i} e = p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p) \\
+p \widesim{i} e = \mathbf{V}_i \land p \in \mathbf{Sp}_i \land (\mathbf{Tr}_i\ e = p) \\
 \mathbf{V}_i \Rightarrow (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
     \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) \\
 \mathbf{V}_i \Rightarrow (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \widesim{i} e)
@@ -390,25 +393,32 @@ $\mathbf{Se}_l$内，则必定存在一个现象上的过程 $f_p$，且满足�
 
 \end{proof}
 
-\begin{proof}[基元虚构定理]
+\begin{proof}[(基元虚构定理)]
 
 令 $x_p = f_p\ a_p\ \cdots\ c_p\ ;\ x_e = f_e\ a_e\ \cdots\ c_e$
 
-且 $\Gamma_\sim = \{a_p \widesim{i} a_e,\ \cdots\ ,\ c_p \widesim{k} c_e,\ 
-cond\ x_e,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se}_l),\ 
-\mathbf{V}_l\}$
+$P_{cond} = (\forall a_e\ \cdots\ c_e.\ \mathbf{V}_i\ \land a_e \in 
+\mathbf{Se}_i \land \cdots
+\land \mathbf{V}_k \land c_e \in \mathbf{Se}_k \land cond\ a_e\ \cdots\ c_e\ \Rightarrow
+    f\ a_e\ \cdots\ c_e \in \mathbf{Se}_l)$
+
+$\Gamma_\sim = \{a_p \widesim{i} a_e,\ \cdots\ ,\ c_p \widesim{k} c_e,\ cond\ x_e,\ 
+\mathbf{V}_l,\ P_{cond} \}$
 
 \begin{prooftree}
-\AxiomC{$\Gamma_\sim \vdash x_e \in \mathbf{Se}_l \land \mathbf{V}_l$}
-\RightLabel{常量虚构定理}
+\AxiomC{$\Gamma_\sim \vdash P_{cond}$}
+\AxiomC{$a_p \widesim{i} a_e \vdash \mathbf{V}_i \land a_e \in \mathbf{Se}_i$}
+\AxiomC{$\cdots$}
+\AxiomC{$c_p \widesim{i} c_e \vdash \mathbf{V}_i \land c_e \in \mathbf{Se}_i$}
+\QuaternaryInfC{$\Gamma_\sim \vdash x_e \in \mathbf{Se}_l \land \mathbf{V}_l$}
+\RightLabel{(常量虚构定理)}
 \UnaryInfC{$\Gamma_\sim \vdash \exists p.\ p \widesim{i} x_e$}
 \UnaryInfC{$\Gamma_\sim \vdash \exists f_p.\ f_p\ a_p\ \cdots\ c_p \widesim{i} f_e\ a_e\ \cdots c_e$}
-\UnaryInfC{$\mathbf{V}_l,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e
-\in \mathbf{Se}_l) \vdash \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\UnaryInfC{$\mathbf{V}_l,\ P_{cond} \vdash \exists f_p.\ 
+    f_p \proctr{i|\cdots|k|l}{cond} f_e$}
 \UnaryInfC{$\forall f_e\ i\ \cdots\ k\ l\ cond.\ 
- \mathbf{V}_l\ \land\ (\forall a_e\ \cdots\ c_e.\ cond\ a_e\ \cdots\ c_e \Rightarrow
-   \mathbf{Se}_l\ (f\ a_e\ \cdots\ c_e) ) \Rightarrow$} \noLine
-\UnaryInfC{$\exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
+\mathbf{V}_l\ \land\ P_{cond} \Rightarrow 
+    \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
 \end{prooftree}
 \end{proof}
 
@@ -439,6 +449,33 @@ cond\ x_e,\ (\forall a_e\ \cdots\ c_e.\ cond\ x_e \Rightarrow x_e \in \mathbf{Se
     \RightLabel{基元虚构律}
     \BinaryInfC{$\vdash \exists f_p.\ f_p \proctr{i|\cdots|k|l}{cond} f_e$}
 \end{prooftree}}
+
+而虚构基元的两个条件，结果的理解的有效性与条件足够约束结果的本质落入结果理解的本质集中，
+都非常容易，且一般都成立。
+
+\begin{theo}[过程的超越对应的条件的充分性]  \label{T.ptr.enough}
+\[ \begin{split}
+\forall f_p\ i\ &\cdots\ k\ l\ cond\ f_e.\ f_p \proctr{i|\cdots|k|l}{cond} f_e 
+\Rightarrow\\ & \forall a_e\cdots c_e.\ \mathbf{V}_i \land a_e \in \mathbf{Se}_i
+    \land \cdots \land \mathbf{V}_k \land c_e \in \mathbf{Se}_k \land
+    cond\ a_e\ \cdots\ c_e \Rightarrow \\
+    & \quad\quad\quad\quad f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l
+\end{split} \]
+\end{theo}
+\begin{proof}
+\[\begin{split} f_p \proctr{i|\cdots|k|l}{cond} f_e = (\forall &a_e\ a_p\ \cdots c_e\ c_p.\
+    a_p \widesim{i} a_e \ \Rightarrow \cdots \Rightarrow c_p \widesim{i} c_e \Rightarrow\\
+    & cond\ a_e\cdots\ c_e \Rightarrow f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ 
+c_e) \end{split} \tag{1} \]
+令 $a_p = \mathbf{Li}_i\ a_e,\ \cdots,\ c_p = \mathbf{Li}_k\ c_e$，
+由定义\ref{Def.TR}在前提 $\mathbf{V}_i \land a_e \in \mathbf{Se}_i
+    \land \cdots \land \mathbf{V}_k \land c_e \in \mathbf{Se}_k$ 下有
+    \[ a_p \widesim{i} a_e \land \cdots \land c_p \widesim{k} c_e \]
+带入(1)并结合前提$cond\ a_e\cdots\ c_e$ 得到
+    \[ f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e \]
+由定义\ref{Def.TR}
+    \[ f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l \]
+\end{proof}
 
 \subsection{虚构理解}
 
@@ -488,132 +525,5 @@ $S_p = \Im f$，有：
 
 即，而可以为虚构的理解引入一系列虚构常量与虚构基元指令，以允许照常如旧地应用 $\amlh$
 
-以下给出对列表的虚构理解作为样例。
+下一节给出对列表的虚构理解作为样例。
 
-\begin{lemma}[单射与子集] \label{L.inj_subset}
-    \[ \forall f\ S\ T_1\ T_2.\ T_1 \subseteq T_2 \Rightarrow \mathbf{INJ}\ f\ S\ T_1
-    \Rightarrow \mathbf{INJ}\ f\ S\ T_2\]
-\end{lemma}
-\begin{proof} 基础的数学定理，略。
-\end{proof}
-\begin{lemma}[有效理解的投影是单射] \label{L.i.inj}
-\[ \mathbf{V}_i \Rightarrow \mathbf{INJ}\ \mathbf{L}_i\ \mathbf{Se}_i\ \mathbf{Sp}_i \]
-\end{lemma}
-\begin{proof} 
-
-\begin{align*}
-& \text{由定义} \ref{Def.Vi} && \mathbf{V}_i \Rightarrow \ 
-    (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
-    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) & (1) \\
-& \text{只需证明} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
-    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash\ e_1 = e_2 & \\
-& \text{显然有} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
-    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash
-    \mathbf{Tr}_i(\mathbf{Li}_i\ e_1) = \mathbf{Tr}_i(\mathbf{Li}_i\ e_2) & \\
-& \text{由 (1)} && \mathbf{V}_i,\ e_1 \in \mathbf{Se}_i,\ e_2 \in \mathbf{Se}_i,\ 
-    \mathbf{Li}_i\ e_1 = \mathbf{Li}_i\ e_2\ \vdash e_1 = e_2 &
-\end{align*} \end{proof}
-\begin{theo}[理解的 phenomenon 可数性]\label{TI.countable}
-    \[ \forall i.\ \mathbf{V}_i \Rightarrow \abs{\mathbf{Se}_i} \leq
-    \abs{\mathrm{phenomenon}} \]
-\end{theo}
-\begin{proof} 
-\begin{align*}
-& \text{由定义 \ref{Def.Card} 只需证明} && \mathbf{V}_i \vdash
-  \exists f.\ \ \mathbf{INJ} \ \ f\ \ \mathbf{Se}_i\ \ \mathrm{phenomenon}& \\
-& \text{由引理 \ref{L.i.inj}} && \mathbf{V}_i \vdash \mathbf{INJ}\ \mathbf{L}_i\ 
-    \mathbf{Se}_i\ \mathbf{Sp}_i & (1) \\
-& \text{显然有} && \vdash \mathbf{Sp}_i \subseteq \mathrm{phenomenon} & (2) \\
-& \text{由引理 \ref{L.inj_subset}，(1)，(2)} && \mathbf{V}_i \vdash \mathbf{INJ}\ 
-    \mathbf{L}_i\ \mathbf{Se}_i\ \mathrm{phenomenon}&
-\end{align*}
-\end{proof}
-
-\begin{example}[以虚构方式引入列表理解] \label{exam.LI}
-现在假设 $\abs{\mathrm{phenomenon}} = \aleph_1$，
-即现象集同构于自然数集。先如下递归定义集合$S$上的列表$\mathbf{List}_S$集
-\[ \begin{split} \mathbf{List}_S\ [\ ]\ & = T \\
-\mathbf{List}_S\ [x_1,x_2,\cdots,x_n]\ & = x_1 \in S \land \mathbf{List}_S\ [x_2,\cdots,x_n] \end{split} \]
-通过列表的可数性可以证明如下定理
-    \[ \abs{S} \leq \aleph_1 \Rightarrow \abs{\mathbf{List}_S} \leq \aleph_1 \]
-令 $i$ 是以 $S$ 为本质集的有效解释
-    \[ \mathbf{Se}_i = S \ \land\ \mathbf{V}_i \]
-由定理 \ref{TI.countable}，得到 $\mathbf{V}_i \Rightarrow \abs{S} \leq \aleph_1$ 进而
-$\abs{\mathbf{List}_S} \leq \aleph_1$
-\[ \forall i.\ \mathbf{V}_i \Rightarrow \abs{\mathbf{List}(\mathbf{Se}_i)} \leq \aleph_1 \]
-于是可以应用理解虚构
-\[ \forall i.\ \mathbf{V}_i \Rightarrow \exists j.\ \mathbf{V}_j \ \land\ 
-    (\mathbf{Se}_j = \mathbf{List}(\mathbf{Se}_i))\]
-据此定义列表理解 $\mathbf{LI} : \itp{\alpha} \rightarrow \itp{\alpha\ \mathrm{list}}$
-\begin{equation} \label{V.LI}
-    \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)} \ \land\ 
-    (\mathbf{Se}_{\mathbf{LI}(i)} = \mathbf{List}(\mathbf{Se}_i))
-\end{equation}
-然后由常量虚构律引入空列表常量
-{\center \begin{prooftree}
-    \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
-    \AxiomC{$\vdash [\ ] \in \mathbf{List}(\mathbf{Se}_i)$}
-\BinaryInfC{$\vdash \exists \mathrm{EMPTY}.\ \mathrm{EMPTY} \widesim[3]{\mathbf{LI}\ i} [\ ]$}
-\end{prooftree}}
-
-接下来是基元虚构律引入各种需要的功能，记号 $l_k$ 表示列表 $l$ 中的第$k$个元素，
-
-$h::l$ 表示 $[h,l_1,\cdots,l_n]$
-
-{\center \begin{prooftree}
-    \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
-    \AxiomC{$h \in \mathbf{Se}_i,\ l \in \mathbf{Se}(\mathbf{LI}\ i)
-    \vdash (h::l) \in \mathbf{Se}_{\mathbf{LI}\ i} $}
-\BinaryInfC{$\vdash \exists \mathrm{APPEND}.\ \mathrm{APPEND}
-    \proctr{i|\mathbf{LI}(i)|\mathbf{LI}(i)}{\lambda h\ l.\ \mathrm{T}}
-    (\lambda h\ l.\ h::l)$}
-\end{prooftree}}
-
-令 $\mathcal{N}$ 为一自然数集的理解。
-{\center \begin{prooftree}
-    \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
-\AxiomC{$k \in \mathbf{Se}_{\mathcal{N}},\ l \in \mathbf{Se}(\mathbf{LI}\ i),\ 
-  k < \mathrm{len}\ l \vdash l_k \in \mathbf{Se}_{\mathbf{LI}\ i} $}
-\BinaryInfC{$\vdash \exists \mathrm{GET}.\ \mathrm{GET}
-    \proctr{\mathbf{LI}(i)|\mathcal{N}|\mathbf{LI}(i)}{\lambda l\ k.\ k < \mathrm{len}\ l}
-    (\lambda l\ k.\ l_k)$}
-\end{prooftree}}
-
-以上，$\mathbf{LI}$，APPEND，GET 均是虚构的，不需要涉及具体的实现，就可以使用这些进行
-列表功能的编程。
-
-\end{example}
-
-\subsection{其他一些有用的案例}
-
-\begin{example}[单元素本质集的理解]
-    \[ \mathbf{I1}\ e = \mathbf{Interpretation}\ (\K \mathrm{p}_0)\ (\K e)\ 
-    \{e\}\ \{\mathrm{p}_0\} \]
-最主要的特点是，$\mathbf{I1}\ e$ 不需要实际地表达，因为本质集中只有一个元素，
-于是表示这一个元素不需要使用任何实质的计算客体除了独特的零现象$\mathrm{p}_0$，
-不占用任何二进制位，而在最后编译出的
-目标程序中不需要也不会被表达，一如C语言的void。但却是一种合理合法的理解，可以参与
-整个 $\amlh$ 的方方面面。
-
-类似很多其他编程语言中的常量概念，$\mathbf{I1}\ e$ 也可以作为某个过程的参数，而 $e$ 
-可以在那过程中被全称量化（universal quantification），
-下面是如此应用的一个例子。
-\end{example}
-
-\begin{example} \label{exam.I1}
-\[ \forall (e:\mathrm{num}).\ \mathrm{AddN}
-\proctr{\mathcal{N}|\mathbf{I1}_e|\mathcal{N}}{cond} 
-    (\lambda x\ e.\ x + e) \]
-
-AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函数，
-而编译结果中实际不会出现参数$e$，在 AddN 内部参数$e$被作为常量优化。
-\end{example}
-
-\begin{notation}
-    \[ \mathbf{I1}_e \coloneqq \mathbf{I1}\ e \]
-\end{notation}
-\begin{theo}[$\mathbf{I1}$ 有效性]
-    \[ \forall e.\ \mathbf{VALID\_ITP}\ \mathbf{I1}_e \]
-\end{theo}
-\begin{proof} 略
-\end{proof}
