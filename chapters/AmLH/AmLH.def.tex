@@ -459,7 +459,7 @@ $\Gamma_\sim = \{a_p \widesim{i} a_e,\ \cdots\ ,\ c_p \widesim{k} c_e,\ cond\ x_
 \Rightarrow\\ & \forall a_e\cdots c_e.\ \mathbf{V}_i \land a_e \in \mathbf{Se}_i
     \land \cdots \land \mathbf{V}_k \land c_e \in \mathbf{Se}_k \land
     cond\ a_e\ \cdots\ c_e \Rightarrow \\
-    & \quad\quad\quad\quad f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l
+    & \quad\quad\quad\quad \mathbf{V}_l \ \land\  f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l
 \end{split} \]
 \end{theo}
 \begin{proof}
@@ -474,7 +474,7 @@ c_e) \end{split} \tag{1} \]
 带入(1)并结合前提$cond\ a_e\cdots\ c_e$ 得到
     \[ f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e \]
 由定义\ref{Def.TR}
-    \[ f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l \]
+    \[ \mathbf{V}_l \ \land\ f_e\ a_e\ \cdots\ c_e \in \mathbf{Se}_l \]
 \end{proof}
 
 \subsection{虚构理解}
@@ -505,7 +505,7 @@ c_e) \end{split} \tag{1} \]
 \begin{proof}
 在假设 $\abs{S_e} \leq \abs{\mathrm{phenomenon}} $ 下，由定义 \ref{Def.Card} 得到
 由$S_e$到现象的单射$f$，再由引理$\ref{L.inji}$得到逆函数$g$，记单射$f$的值域为
-$S_p = \Im f$，有：
+$S_p = \{f(a)\mbar a \in S_e \}$，有：
 \[ \forall e.\ e \in S_e \Rightarrow f\ e \in S_p \land g(f\ e) = e  \tag{1} \]
 \[ \forall p.\ p \in S_p \Rightarrow g\ e \in S_e \tag{2} \]
 令 $i = \mathbf{Interpretation}\ f\ g\ S_e\ S_p$ 现只需证明 $\mathbf{V}_i$ 即可。
