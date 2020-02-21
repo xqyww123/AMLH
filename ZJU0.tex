@@ -1,0 +1,171 @@
+\documentclass[oneside]{ZJU0}
+% 该文档中首字符为“%”的均为注释行，不会在论文中出现
+
+% 论文默认为单面模式，需单面模式请将第一行换为如下所示：
+%\documentclass[twoside]{ZJUthesis}
+
+\input{ctex-xecjk-winfonts.def}
+\usepackage{tikz-network}
+\usepackage{bussproofs}
+\usepackage{listings}
+\usepackage{tikz}
+
+%\usepackage[english]{babel}
+\usepackage{newunicodechar}
+\newfontfamily\miscsymfont{DejaVu Sans}
+\newunicodechar{λ}{{\miscsymfont\symbol{"03BB}}}
+%\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
+
+\allowdisplaybreaks
+%\usepackage[mathscr]{euscript}
+%\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
+\usepackage{amssymb}
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+\newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
+\newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
+\newcommand{\lamcr}[0]{\ensuremath{\lambda{\rightarrow}}}
+\newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
+\newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
+\newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
+\newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
+\newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamcr}}}
+\newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamcr}}}
+\newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}{-}\mathrm{WASM}}}
+\newcommand{\mbar}[0]{\ensuremath{\ |\ }}
+\newcommand{\phety}[0]{\ensuremath{\mathrm{ph}}}
+\newcommand{\natn}[0]{\ensuremath{\mathrm{number}}}
+\newcommand{\bnf}[1]{\ensuremath{\langle\ #1\ \rangle}}
+\newcommand{\itp}[1]{\ensuremath{#1\ \mathrm{interpretation}}}
+\newcommand{\phenomenon}{\ensuremath{\mathrm{phenomenon}}}
+\newcommand{\widesqa}[2][1.5]{
+  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
+}
+\newcommand{\widesim}[2][1.5]{
+  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
+}
+\newcommand{\widesims}[3][1.5]{
+  \mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
+}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\newcommand{\proctr}[2]{\ensuremath{\ {\prec}\frac{#1}{#2}{\succ}\ }}
+\newcommand{\vdashv}{\ensuremath{\ {\dashv}{\vdash}\ }}
+\newcommand{\abs}[1]{\ensuremath{\ {|}#1{|}\ }}
+\DeclareMathOperator{\K}{K}
+\DeclareMathOperator{\I}{I}
+\DeclareMathOperator{\T}{T}
+\DeclareMathOperator{\F}{F}
+\DeclareMathOperator{\Ima}{Ima}
+\DeclareMathOperator{\Dom}{Dom}
+\DeclareMathOperator{\EVERY}{EVERY}
+\DeclareMathOperator{\Suc}{Suc}
+\DeclareMathOperator{\INSERT}{\ INSERT\ }
+\DeclareMathOperator{\xif}{if\ }
+\DeclareMathOperator{\xthen}{\ then\ }
+\DeclareMathOperator{\xelse}{\ else\ }
+\DeclareMathOperator{\fupdate}{\ |+\ }
+
+% 取消目录中链接的颜色，方便打印
+% 如需颜色，请将“false”改为“true”
+\hypersetup{colorlinks=false}
+
+\begin{document}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 正文字体设定
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\songti
+	
+	\title[]{基于经典逻辑上抽象机器的形式化方法}
+	% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
+    %\titletl{第二行}
+	
+	%英文题目
+	\Etitle{A formal method via abstract machine}
+	% 如果一行写不下，同中文题目设定，一行写不下则写两行，不需要就注释掉
+	\Etitletl{on classical logic}
+	%\Etitletll{An Oriental View}s
+	
+	% 作者
+	\author{徐启源}
+	\Eauthor{Qiyuan Xu}
+	
+	\degree{硕士}
+	\Edegree{Master of Engineering}
+	
+	% 导师
+	\supervisor{张\ \ 三\ \ 教授} \Esupervisor{Prof. San Zhang}
+	
+	% 合作导师，如果有的话，去掉注释，
+	\cpsupervisor{刘长发\ \ 教授}
+	\Ecpsupervisor{Prof. Changfa Liu}
+	
+	% 专业名称
+	\major{计算机应用技术} \Emajor{Computer Application Technology}
+	
+	% 研究方向
+	\researchdm{形式化方法} \Eresearchdm{Formal Method}
+	
+	% 所属学院
+	\institute{计算机科学与技术学院} \Einstitute{College of Computer Science and Techonology}
+	
+	% 答辨日期
+	%\defenddate{2011年11月1日}
+	
+	% 生成封面
+	\makeCoverPage
+	
+	% 生成英文封面
+	\makeECoverPage
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 原创声明与版权协议页
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	% 生成原创声明与版权协议页
+	%\makeOSandCPRTpage
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 论文部分开始
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUfrontmatter
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 摘要
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\input{./chapters/abstractC}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 目录页
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUcontents
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 插图列表
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUListofFigures
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 表格列表
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUListofTables
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 正文内容部分开始
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUmainmatter
+	
+	\input{./chapters/Ch.Background.tex}
+	\input{./chapters/Content_Point.tex}
+	\input{./chapters/RequiredTheory.tex}
+	\input{./chapters/AmLH.tex}
+	\input{./chapters/EditorShell.tex}
+	
+	\ZJUbackmatter
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% 参考文献
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\ZJUthesisbib{bib}
+	
+\end{document}
