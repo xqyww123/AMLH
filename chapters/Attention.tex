@@ -1,31 +1,46 @@
 \section{记号与混淆区分}
 
-本工作在形式系统的记号上使用逻辑学领域通用的记号，来自计算机科学或其他学科的读者
+本工作一贯地使用符号逻辑（Symbolic Logic）领域通用的记号，来自计算机科学或其他学科的读者
 可以参考Greg 在 \textit{An introduction to substructural logics} 
 第二章前几节形式定义的表达方式\cite{restall2002introduction}。
 
-首先是证明系统（Proof System）的区分，一些计算机领域可能将其指代证明用的软件系统而
-被误解。证明系统是逻辑学下证明理论中清晰而确定的概念。
+首先是证明系统（Proof System）的区分，
+一些计算机领域可能将其指代证明用的软件系统而被误解。
+证明系统是逻辑学下证明理论中清晰而确定的概念。
 本文不尝试定义如此基础的理论概念而仅留下参考文献\cite{restall2002introductionP31}。
-简单来说，证明系统是一种由一组公理与一组推导规则构成的形式系统。
+简单来说，证明系统是一种证明理论（Proof Theory）领域的形式系统，
+由一组公理与一组用于推理定理的演绎规则构成。
 
 缩写 HOL 既代表高阶逻辑（High Order Logic）也代表 HOL交互式定理证明器
-（Higher Order Logic Interactive Theorem Prover），同时也表示HOL证明器上所使用
-的HOL逻辑，一种高阶逻辑的修改版本。
-必须区分HOL逻辑与高阶逻辑，HOL逻辑是HOL定理证明器上所使用的形式化的证明系统，
-这一证明系统非常类似高阶逻辑但并不完全等同，这就是普通的一个证明系统，仅仅是跟高阶逻辑
-相似，而HOL定理证明器上的证明亦仅是此证明系统上的形式证明。
-一个例子是，HOL逻辑这一证明系统上无法良好地定义 NaN ，而可以证明 $0 \div 0 = 0$，参见
-John Harrison 的文章 \cite{harrison1993constructing}。
+（Higher Order Logic Interactive Theorem Prover），
+同时也表示HOL证明器上所使用的HOL逻辑（HOL Logic），
+一种类似高阶逻辑的公理系统（Axiomatic System）。
+而公理系统是形式系统专用于数理逻辑领域时的别称，所以HOL逻辑亦是形式系统。
+必须区分HOL逻辑与高阶逻辑，HOL逻辑是HOL定理证明器上所使用的证明系统，
+这一证明系统非常类似高阶逻辑但完全不等同，是仅仅相似但完全不同的两个
+形式系统。
+而HOL定理证明器上的证明亦仅是HOL逻辑上的形式证明，HOL定理证明器
+从来无法证明高阶逻辑上的任何命题。
+一个例子是，HOL逻辑上无法良好地定义 NaN ，以至可以证明 $0 \div 0 = 0$，
+参见John Harrison 的文章 \cite{harrison1993constructing}。
 
-最后形式系统相关的论述经常需要字符串的操作与 BNF 语法，又需要与集合论结合。
+不熟悉证明理论的读者可能因此质疑HOL定理证明器的可靠性，
+但这是多余的。近代兴起的数学形式主义（Mathematical Formalism）
+已将曾在王座上的经典逻辑拉下神坛，
+世界上存在着诸多的形式系统、公理系统、证明系统，没有任何理由偏爱一方
+而歧视一方。本文不是证明理论的文献，有兴趣的读者应当更了解David Hilbert
+引领的数学形式主义。
+
+最后形式系统相关的论述经常需要字符串的操作与语法，又需要与集合论结合。
 本文使用下划线记号$\underline{\mathrm{some}\ text}$ 表示字符串，以斜体表示其中的变量，
 而正体表示字面量。
 例如 $a, b$ 均为 $\underline{a\ \mathrm{and}\ b}$ 中的变量。
 额外的， $a$ 与 $\underline{a}$ 等价，都可以表示字符串变量 $a$，
+本文使用BNF范式作为形式语法（Formal Grammer），
 记号$\bnf{BNF}$ 表示满足 BNF 语法 $BNF$ 的字符串构成的集合。
 例如$\bnf{A:B}$ 表示 $\{\underline{a:b} \mbar a \in A \land b \in B\}$
 
 再一些额外的记号表示常用的字符串连接词。记号 $a:b$ 表示 $\underline{a:b}$，
-记号 $\lambda a\ b$表示 $\underline{\lambda a\ b}$。
+记号 $\lambda a\ b$表示 $\underline{\lambda a\ b}$，
+$\forall a\ b$ 表示 $\underline{\forall a\ b}$。
 

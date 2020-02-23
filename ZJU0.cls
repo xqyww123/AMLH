@@ -222,7 +222,7 @@
 
 % 定理，假设，定义，证明
 \newtheoremstyle{ZJUtheorem}
-   {9pt}{9pt}{\ttfamily}{0pt}{\lishu}{：}{0pt}{}
+   {9pt}{9pt}{}{0pt}{\lishu}{：}{0pt}{}
 \theoremstyle{ZJUtheorem}
 \newtheorem{hypo}{假设~}[chapter]
 \newtheorem{defin}{定义~}[chapter]
@@ -242,11 +242,12 @@
   {
     \songti\zihao{-4}
     \linespread{1.3}
+      保护学术秘密！！！
     \begin{center}
 
-      \hfill \vspace{16mm}
+      \vspace{16mm}
 
-      \bfseries\fangsong\zihao{0}$\amlh$
+      \bfseries\fangsong\zihao{0}$\Eamlh$
 
       \vspace{10mm}
       \bfseries\fangsong\zihao{2} 一种高阶逻辑上的抽象机器

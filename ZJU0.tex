@@ -9,11 +9,12 @@
 \usepackage{bussproofs}
 \usepackage{listings}
 \usepackage{tikz}
+\usepackage{textgreek}
 
 %\usepackage[english]{babel}
 \usepackage{newunicodechar}
 \newfontfamily\miscsymfont{DejaVu Sans}
-\newunicodechar{λ}{{\miscsymfont\symbol{"03BB}}}
+\newunicodechar{→}{{\miscsymfont\symbol{"2192}}}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
 
 \allowdisplaybreaks
@@ -28,6 +29,10 @@
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
+\newcommand{\ES}{\raisebox{-.05\baselineskip}
+{\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(}\cdot}}
+\newcommand{\Eamlh}[0]{\raisebox{-.05\baselineskip}
+{\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(A}_{\HOL}^{\lamcr}}}
 \newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
 \newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamcr}}}
 \newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamcr}}}
@@ -41,6 +46,7 @@
 \newcommand{\widesqa}[2][1.5]{
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
 }
+\newcommand{\breduce}{\mathrel{\rightarrow_\beta}}
 \newcommand{\widesim}[2][1.5]{
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
 }
@@ -64,6 +70,10 @@
 \DeclareMathOperator{\xthen}{\ then\ }
 \DeclareMathOperator{\xelse}{\ else\ }
 \DeclareMathOperator{\fupdate}{\ |+\ }
+
+\newcommand{\UE}{\ensuremath{U_{\mathrm{E}}}}
+\newcommand{\PiE}{\ensuremath{\Pi_{\mathrm{E}}}}
+\newcommand{\PiAE}{\ensuremath{\Pi^{\forall}_{\mathrm{E}}}}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
