@@ -1,4 +1,4 @@
-\chapter{编辑壳层$\ES$}
+\chapter{$\ES$编辑壳层}
 
 $\amlh$ 已经在上一章论述清楚。但$\amlh$只是一个抽象机理论，尽管被
 定义在 HOL 交互式证明工具的 HOL 逻辑上，借助定理证明工具似乎具象了一点，
@@ -8,16 +8,311 @@ $\amlh$ 已经在上一章论述清楚。但$\amlh$只是一个抽象机理论�
 
 \section{$\ES$概述}
 
-$\ES$ 是一个形式系统，基于此形式系统构建起同名为$\ES$的下推自动机
-然后是同样同名的交互式工具进而允许用户由此有效地在$\amlh$上开发程序。
+$\ES$ 是一个形式语言，且具有同名为$\ES$的
+基于 System F 的一阶多态类型系统。围绕此构建起同名为$\ES$的状态机，
+最后是名为$\ES$编辑壳层的软件工具。
 
-$\ES$ 形式系统 $\rightarrow$ $\ES$ 状态机 $\rightarrow$ $\ES$ 交互工具
+接下来将分别论述$\ES$形式语言、$\ES$类型系统、$\ES$状态机。
 
-本节概述这三者以给读者一个直观的轮廓而将精细的形式定义留在之后。
-$\ES$ 形式系统，简单来说是一个改造过的 λ2 演算，继承了 λ2 表达式、
-多态类型系统、α 规约、β 规约
+\section{$\ES$ 形式语言}
 
-\section{$\ES$ 形式系统}
+首先定义类型。
+
+\begin{defin}[类型集$\PiE$]
+字符串集合 $U$ 为用于表示类型的字母表，
+函数$\xa : U \mapsto \mathbb{N}$表示类型的元数（Arity），
+从$U$元数为0的子集$U_\mathrm{v}$：
+$U_\mathrm{v} \subseteq U\ \land\ \forall u.\ u \in U_\mathrm{v}
+\Rightarrow \xa(u) = 0$ 表示类型变量，主要用于全称量化。
+
+所有由字母表 $U$ 组成的字符串记为集合$\mathrm{String}(U)$，
+$\ES$ 的类型集 $\Pi_\mathrm{E}$ 是满足以下条件的$\mathrm{String}(U)$最小子集
+\begin{equation} \label{Def.PiE}
+\forall u.\ u \in U \Rightarrow \forall \bm{v}.\ \bm{v} 
+\in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow \underline{(u\ \bm{v}_1\ 
+\cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E}
+\end{equation}
+其中 $\Pi_\mathrm{E}^{\xa(u)}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
+空间，特别的 $\Pi_\mathrm{E}^0 = \{\mathbf{0}\}$
+\end{defin}
+
+\begin{example}[$\Pi_\mathrm{E}$] 以下命题成立：
+\[ \forall u.\ u \in U\ \land\ (\xa(u) = 0)\ \Rightarrow\ 
+\underline{(u)} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in U\ \land\ v \in U_\mathrm{v}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(u\ v)} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in U\ \land\ v \in \Pi_\mathrm{E}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(u\ v)} \in \Pi_\mathrm{E} \]
+\end{example}
+
+\begin{theo}(类型的结构) \label{TS}
+\[ \forall u'.\ u' \in \PiE \Rightarrow \exists! u\ \bm{v}.\ 
+u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' = \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')})}) \]
+\end{theo}
+\begin{proof} 首先唯一性是显然的，由字符串理论就可以得到。
+对存在性的证明使用反证法，假设
+\begin{equation} \label{Hypo.TS}
+\exists u'.\ u' \in \PiE \Rightarrow \forall u\ \bm{v}.\ 
+u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' \neq \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')})})
+\end{equation}
+现证明 $\PiE - \{u'\}$ 满足条件 \ref{Def.PiE} 而
+$\PiE - \{u'\} \subset \PiE$ 这样就构造了悖论，因为 $\PiE$ 不再是满足
+条件 \ref{Def.PiE} 的最小子集，$\PiE - \{u'\}$ 比 $\PiE$更小。
+即证明
+\[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \PiE^{\xa(u)} - \{u'\} \Rightarrow
+\underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \PiE - \{u'\} \]
+因为有
+\[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow
+\underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E} \]
+所以只要证明
+\[ \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \neq u' \]
+而由反证假设 \ref{Hypo.TS} 这是成立的，故而悖论被构造进而命题得证。
+\end{proof}
+
+定理 \ref{TS} 意味着一切类型$u$都具有且唯一地具有如下格式
+\[ \underline{u_0\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u_0)}} \]
+其中 $u_0 \in \mathrm{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0)} \in \PiE$
+
+即每一个类型都构成一颗树，类型变量与0元类型构造器是叶子。
+
+\begin{defin}[类型的构造器、元数、高度] \label{Def.Th}
+函数 $\mathrm{c}:\Pi_\mathrm{E} \mapsto U$ 表示类型的构造器。
+\[ \mathrm{c}\ \underline{(u\ v_1\ \cdots\ v_n)} = u\]
+函数 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的元数。
+\[ \xa\ \underline{(u\ v_1\ \cdots\ v_n)} = n\]
+$\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 不会跟上文定义的
+$\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相同的意义，
+不会造成歧义。
+
+\noindent 函数 $\mathrm{h}:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的高度。
+\[ \mathrm{h}\ \underline{(u\ v_1\ \cdots\ v_n)} = 1 + \max(\mathrm{h}\ v_1,\ \cdots,\ 
+\mathrm{h}\ v_n) \]
+\end{defin}
+
+有如下性质
+
+\begin{theo}[类型的元数与高度的性质] \label{T.cah}
+\[ \forall u.\ \mathrm{h}\ u  \geq 1 \quad\quad\text{(1)}\quad\quad
+\quad\quad\quad\forall u.\ \xa(\mathrm{c}\ u) = \xa\ u \quad\quad\text{(2)} \]
+\[ \forall u.\ (\mathrm{h}\ u = 1) \Rightarrow \exists \mathrm{c}.\ \mathrm{c} \in U
+\ \land\ u = \underline{(\mathrm{c})} \tag{3} \]
+\[ \begin{split}
+\forall u.\ (\mathrm{h}\ u > 1) \Rightarrow \exists \mathrm{c}\ &\bm{v}.\ \mathrm{c} \in U
+\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ u = \underline{
+(\mathrm{c}\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \ \land\ \\
+&(\forall i.\ 1 \leq i \leq \xa(u) \Rightarrow \mathrm{h}\ \bm{v}_i < \mathrm{h}\ u )
+\end{split} \tag{4} \]
+\end{theo}
+\begin{proof} 由定义 \ref{Def.Th} 与定理 \ref{TS} 直接得到。
+\end{proof}
+
+这样就可以关于类型的高度进行归纳法。
+
+\begin{defin}[全称量化类型 $\PiAE$]
+集合 $\Pi_\mathrm{E}^\forall$ 表示全称量化类型，由所有满足如下语法的字符串构成。
+\[ \Pi_\mathrm{E} \mbar \forall U_\mathrm{v}\ \Pi_\mathrm{E} \]
+同样有记号 $\forall v_1\ \cdots\ v_n.\ b$ 表示 $\underline{\forall v_1
+\ \cdots\  \forall v_n\ b}$
+\end{defin}
+
+\begin{defin}[全称量化类型的相关属性]
+函数 $\mathrm{QV} : \Pi_\mathrm{E}^\forall \rightarrow \powerset(
+U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
+\[ \mathrm{QV}(\forall v_1\ \cdots\ \v_n.\ b) = \{v_1,\ \cdots,\ v_n\} \]
+函数 $\mathrm{QB} : \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$
+表示全称量化的类型体。
+\[ \mathrm{QB}(\forall v_1\ \cdots\ \v_n.\ b) = b \]
+\end{defin}
+
+\begin{defin}[实例化] \label{Def.Inst}
+函数 $\mathrm{Inst} : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
+\rightarrow \Pi_\mathrm{E} \rightarrow \Pi_\mathrm{E}$ 对类型
+进行变量实例化。
+\begin{align*}
+\mathrm{Inst}\ f\ \underline{(v)} &= \xif v \in U_\mathrm{v} \xthen
+ f\ v \xelse \underline{(v)} \\
+\mathrm{Inst}\ f\ \underline{(u\ v_1\ \cdots\ v_{\xa(u)})} &= 
+\underline{(u\ f(v_1)\ \cdots\ f(v_{\xa(u)}))}
+\end{align*}
+
+函数 $\mathrm{Inst}_\forall : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
+\rightarrow \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$ 
+实例化全称量化类型。
+\begin{gather*}
+\mathrm{Inst}_\forall\ f\ q = \mathrm{Inst}\ \ (\lambda v.\ \xif v \in
+\mathrm{QV}(q) \xthen f\ v \xelse v)\ \ \mathrm{QB}(q)
+\end{gather*}
+即$\mathrm{Inst}_\forall$只会实例化全称量化的类型变量。
+\end{defin}
+
+\begin{defin}[α等价] \label{Def.aE}
+二元关系$\sim_\alpha$ 定义为
+\[ (q_1 \sim_\alpha q_2) = (\forall f.\ \mathrm{Inst}_\forall\ f\ q_1
+= \mathrm{Inst}_\forall\ f\ q_2) \]
+显然是一种等价关系，被叫做α等价。
+\end{defin}
+
+α等价类$\Pi_\mathrm{E}^\forall/[\sim_\alpha]$即是本质不同的全称量化类型。
+
+\begin{defin}[实例化类型集] \label{Def.QI}
+全称量化类型$q$的实例化类型集$\mathrm{QI}\ q$为
+\[ \mathrm{QI}\ q = \{\mathrm{Inst}_\forall\ f\ q\mbar f \in 
+(U_\mathrm{v} \rightarrow \Pi_\mathrm{E})\} \]
+\end{defin}
+\begin{theo}[实例化类型集的相等即是$\sim_\alpha$等价]
+\[(q_1 \sim_\alpha q_2) = (\mathrm{QI}\ q_1 = \mathrm{QI}\ q_2)\]
+\end{theo}
+\begin{proof} 由定义 \ref{Def.aE} 与定义 \ref{Def.QI} 直接得到。
+\end{proof}
+\begin{theo}[实例化类型集非空]
+\[\forall q.\ \mathrm{QI}\ q \neq \emptyset\]
+\end{theo}
+\begin{proof}
+因为 $\quad\forall q.\ \mathrm{Inst}_\forall\ \I\ q = \mathrm{QB}\ q 
+\quad$ 所以有 $\quad\forall q.\ \mathrm{QB}\ q \in \mathrm{QI}\ q$
+\end{proof}
+
+接下来尝试证明一个重要命题 
+\[ \forall q_1\ q_2.\ q_1,\ q_2 \in \Pi_\mathrm{E}^\forall 
+\ \land\ (\mathrm{QI}\ q_1 \cap \mathrm{QI}\ q_2 \neq \emptyset)
+\Rightarrow
+\exists q.\ q \in \Pi_\mathrm{E}^\forall\ \land\ ((\mathrm{QI}\ q_1)
+\cap (\mathrm{QI}\ q_2) = \mathrm{QI}\ q) \]
+并找到一个算法用于求解上述的 $q$
+
+首先要引入诸多工具的定义。
+
+\begin{defin}[类型方程组] 类型方程组集 $\EQs$ 是集合
+\[ \EQs = \powerset(\Uv) \times \powerset(\PiE \times \PiE) \]
+类型方程组是所有集合 $\EQs$ 中的元素。
+\end{defin}
+\begin{notation}[类型方程组的记号] 
+记号
+\[ \begin{Bmatrix}
+x_1 &=& y_1 \\
+x_2 &=& y_2 \\
+x_3 &=& y_3 \\
+&\cdots& 
+\end{Bmatrix}_V \]
+表示类型方程组
+\[ (V,\ \{ (x_1, y_1),\ (x_2, y_2),\ (x_3, y_3),\ \cdots \}) \]
+其中 $x_1 = y_1,\ \cdots$ 被叫做方程组中的方程，
+$V$ 是类型方程组的变量集。
+\end{notation}
+\begin{defin}[类型方程的解与解集] \label{Def.MF}
+一个类型方程组$(V,X)$的解$f$是一个$(\Uv \rightarrow \PiE)$函数，
+满足
+\[ \forall u_1\ u_2.\ (u_1,u_2) \in X \Rightarrow 
+\Inst f\ u_1 = \Inst f\ u_2 \]
+所有这样的解构成的集合叫解集。
+
+函数 $\MF : \EQs \rightarrow \powerset(\Uv \rightarrow \PiE)$
+将一个类型方程映射到其解集
+\[ \MF X = \{ f \mbar \forall u_1\ u_2.\ (u_1,u_2) \in X
+\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2 \} \]
+\end{defin}
+
+\begin{defin}[类型方程组的M等价] \label{Def.Meq}
+二元等价关系 $\Meq$
+\[ \forall A\ B.\ (A \Meq B) = (\MF A = \MF B) \]
+\end{defin}
+\begin{theo}
+\[ \forall A\ v.\ A \Meq (A \cup \{(v,v)\}) \]
+\end{theo}
+\begin{proof} 由定义 \ref{Def.Meq} 定义 \ref{Def.MF} 直接得到
+\end{proof}
+
+\begin{defin}[有意义类型方程组] \label{Def.SF}
+有意义（Senseful Form）类型方程组函数
+$\SF : \powerset(\PiE \times \PiE) \rightarrow \powerset(\PiE \times \PiE)$
+\[ \SF X = \{(x,y) \mbar (x,y) \in X \ \land\ x \neq y\} \]
+即是削除了恒等式 $(x,x)$ 后的方程组。
+\end{defin}
+
+\begin{defin}[已解的类型方程组] \label{Def.Solved}
+类型方程组在的{\it 已解}形式下的未定变量（Undefined Variable）函数
+$\UDV : \powerset(\PiE \times \PiE) \rightarrow \powerset(\Uv)$
+\[ \UDV X = \{x \mbar (x,y) \in \SF X \} \]
+一个类型方程组 $X$ 若满足 $\Solved X$ 则被叫做{\it 已解}的。
+\[ \begin{split}
+\Solved X = (\forall x\ &y.\ (x,y) \in \SF X \Rightarrow
+  x \in \Uv \ \land\ \BV y \cap \UDV X = \emptyset)\ \land \\
+  & (\forall x\ y_1\ y_2.\ (x,y_1) \in \SF X \ \land\ (x,y_2) \in \SF X
+  \Rightarrow (y_1 = y_2))
+\end{split} \]
+\end{defin}
+
+已解方程组 $\Solved X$ 中
+任何一个方程 $(x, y) \in X$，首先 $x \in \Uv$ 是一个变量，
+这意味着
+\[ \Solved X \Rightarrow \UDV X \subseteq \Uv \]
+其次对于任意的 $x$ 至多只有一个 $y$ 使 $(x,y) \in X$，
+且 $y$ 中不包含任何未定变量，这保证解 $f$ 在 $x$ 点处被唯一确定
+ $f\ x = y$，已解方程组中
+ 所有的方程都如此就允许直接地写出已解方程组的解
+
+\begin{theo}[已解方程组的解]
+\[ \Solved X \vdash \MF X = \{ f \mbar (x,y) \in \SF X \ \land\ 
+(f\ x = y) \} \]
+更一般的，若将函数视作特殊的二元关系即 
+$(\Uv \rightarrow \PiE) \subset (\Uv \times \PiE)$
+那么
+\[ \Solved X \vdash \MF X = \{ f \mbar f \in (\Uv \times \PiE) \ \land\ 
+\SF X \subset f \} \]
+\end{theo}
+\begin{proof} 由定义 \ref{Def.MF} 命题等价于
+\[ \Solved X \vdash (\forall u_1\ u_2.\ (u_1,u_2) \in X
+\Rightarrow \Inst f\ u_1 = \Inst f\ u_2) = (\forall x\ y.\ 
+(x,y) \in \SF X \ \land\ (f\ x = y))\]
+由定义 \ref{Def.SF} 命题等价与
+\[ \Solved X,\ (x,y) \in \SF X \vdash 
+(\Inst f\ x = \Inst f\ y) = (f\ x = y) \tag{1} \]
+由定义 \ref{Def.Solved}
+\[ \Solved X,\ (x,y) \in \SF X \vdash x \in \Uv \tag{2} \]
+且由定义 \ref{Def.Inst}
+\[ x \in \Uv \vdash \Inst f\ x = f\ x \tag{3} \]
+\end{proof}
+
+
+
+\begin{theo} 
+\[ \forall q_1\ q_2.\ q_1,\ q_2 \in \Pi_\mathrm{E}^\forall 
+\ \land\ (\mathrm{QI}\ q_1 \cap \mathrm{QI}\ q_2 \neq \emptyset)
+\Rightarrow
+\exists q.\ q \in \Pi_\mathrm{E}^\forall\ \land\ ((\mathrm{QI}\ q_1)
+\cap (\mathrm{QI}\ q_2) = \mathrm{QI}\ q) \]
+\end{theo}
+
+\begin{proof} 证明等价命题
+\[ \begin{split}
+\forall n\ q_1\ q_2\ u_1\ u_2.\ q_1,\ &q_2 \in \Pi_\mathrm{E}^\forall 
+\ \land\ (\mathrm{QI}\ q_1 \cap \mathrm{QI}\ q_2 \neq \emptyset)
+\ \land\ (u_1 = \mathrm{QB}\ q_1) \ \land\  (u_2 = \mathrm{QB}\ q_2)\\
+\land\ (n = &\max(\mathrm{h}\ u_1,\ \mathrm{h}\ u_2)) \Rightarrow
+\exists q.\ q \in \Pi_\mathrm{E}^\forall\ \land\ ((\mathrm{QI}\ q_1)
+\cap (\mathrm{QI}\ q_2) = \mathrm{QI}\ q)
+\end{split} \]
+对 $n$ 使用归纳法
+
+\noindent 在 $n = 0$ 时，由定理 \ref{T.cah} 性质1
+不存在 $q_1,\ q_2$ 使得 $n = \max(\mathrm{h}\ q_1,\ \mathrm{h}\ q_2)$
+
+\noindent 在 $n = 1$ 时，由定理 \ref{T.cah} 性质1
+$\quad \mathrm{h}\ q_1 = \mathrm{h}\ q_2 = 1\quad$
+由定理 \ref{T.cah} 性质3
+\[ u_1 = \underline{(c_1)} \quad\quad u_2 = \underline{(c_2)}
+\quad\quad c_1,\ c_2 \in U \]
+\end{proof}
+
+
+类型变量主要用于全称量化中，
+集合$U_0$ 表示预定义的类型如整数 int 以及类型构造器（Type Constructor）
+如列表类型构造器 α list，
+
 
 $\ES$ 形式系统是一种改造过的 λ2 演算，且非常接近SML语言
 
