@@ -1,0 +1,14 @@
+\section{数学理论}
+
+\begin{defin}[函数] \label{Def.Func}
+此定义来自 Halmos 的朴素集合论 \cite{halmos2017naive}。
+所有从 $U$ 到 $V$ 的函数构成的集合 $U \rightarrow V$ 是
+$\powerset(U \times V)$ 的子集
+\[ \begin{split}
+U \rightarrow&\ V = \{ s \mbar s \in \powerset(U \times V) \ \land\\
+&(\Dom s = U)\ \land\ 
+(\forall u\ v_1\ v_2.\ (u,v_1) \in s \land (u,v_2) \in s
+\Rightarrow (v_1 = v_2))\\
+\} \quad &
+\end{split} \]
+\end{defin}

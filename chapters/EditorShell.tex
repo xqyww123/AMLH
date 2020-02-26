@@ -139,15 +139,38 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 \underline{(u\ f(v_1)\ \cdots\ f(v_{\xa(u)}))}
 \end{align*}
 
+以及部分实例化 $\Inst_V$ 
+\[ \Inst_V f = \Inst (\lambda v.\ \xif v \in V \xthen f\ v \xelse v) \]
+
 函数 $\mathrm{Inst}_\forall : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
 \rightarrow \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$ 
 实例化全称量化类型。
 \begin{gather*}
-\mathrm{Inst}_\forall\ f\ q = \mathrm{Inst}\ \ (\lambda v.\ \xif v \in
-\mathrm{QV}(q) \xthen f\ v \xelse v)\ \ \mathrm{QB}(q)
+\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q)} f\ \mathrm{QB}(q)
 \end{gather*}
 即$\mathrm{Inst}_\forall$只会实例化全称量化的类型变量。
 \end{defin}
+
+\begin{algorithm}
+\caption{实例化函数 $\Inst_V$} \label{alg:Iv}
+\begin{algorithmic}[1]
+\Require 集合 $V \in \powerset(\Uv)$ 表示实例化的范围
+\Require 实例化函数 $f : \Uv \rightarrow \PiE$ 表示变量到值的对应
+\Require $u \in \PiE,\ u = \underline{(c\ v_1\ \cdots\ v_o)}$
+表示要实例化的目标
+\Ensure $\Inst_V f\ u \in \PiAE$
+\If {$o = 0$}
+\If {\quad $c \in \Uv$ \quad} \quad 以 $c$ 调用 $f$ 将结果输出
+\Else {\quad 输出 $\underline{(c)}$}
+\EndIf
+\Else
+\For{$i=1,\ \dots,\ o$}
+\State 调用算法\ref{alg:Iv}自身，输入$V,\ f,\ v_i$，记输出为 $v_i'$
+\EndFor
+\State 输出 $\underline{(c\ v_1'\ \cdots\ v_o')}$
+\EndIf
+\end{algorithmic}
+\end{algorithm}
 
 \begin{defin}[α等价] \label{Def.aE}
 二元关系$\sim_\alpha$ 定义为
@@ -186,11 +209,15 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 
 首先要引入诸多工具的定义。
 
-\begin{defin}[类型方程组] 类型方程组集 $\EQs$ 是集合
+\begin{defin}[类型匹配系统(Type Match System)] 类型匹配系统集 $\EQs$ 是集合
 \[ \EQs = \powerset(\Uv) \times \powerset(\PiE \times \PiE) \]
-类型方程组是所有集合 $\EQs$ 中的元素。
+类型匹配系统是所有集合 $\EQs$ 中的元素。
+\[ (V,\ \{ (x_1, y_1),\ (x_2, y_2),\ (x_3, y_3),\ \cdots \}) \]
+其中 $\{ (x_1, y_1),\ (x_2, y_2),\ (x_3, y_3),\ \cdots \}$ 叫做
+匹配系统中的方程组，$x_1 = y_1,\ \cdots$ 是方程组中的方程，
+$V \subseteq \Uv$ 是类型匹配系统的变量集。
 \end{defin}
-\begin{notation}[类型方程组的记号] 
+\begin{notation}[类型匹配系统的记号] 
 记号
 \[ \begin{Bmatrix}
 x_1 &=& y_1 \\
@@ -198,30 +225,28 @@ x_2 &=& y_2 \\
 x_3 &=& y_3 \\
 &\cdots& 
 \end{Bmatrix}_V \]
-表示类型方程组
+表示类型匹配系统
 \[ (V,\ \{ (x_1, y_1),\ (x_2, y_2),\ (x_3, y_3),\ \cdots \}) \]
-其中 $x_1 = y_1,\ \cdots$ 被叫做方程组中的方程，
-$V$ 是类型方程组的变量集。
 \end{notation}
-\begin{defin}[类型方程的解与解集] \label{Def.MF}
-一个类型方程组$(V,X)$的解$f$是一个$(\Uv \rightarrow \PiE)$函数，
+\begin{defin}[类型匹配系统的解与解集] \label{Def.MF}
+一个类型匹配系统$(V,X)$的解$f$是一个$(\Uv \rightarrow \PiE)$函数，
 满足
 \[ \forall u_1\ u_2.\ (u_1,u_2) \in X \Rightarrow 
 \Inst f\ u_1 = \Inst f\ u_2 \]
 所有这样的解构成的集合叫解集。
 
 函数 $\MF : \EQs \rightarrow \powerset(\Uv \rightarrow \PiE)$
-将一个类型方程映射到其解集
-\[ \MF X = \{ f \mbar \forall u_1\ u_2.\ (u_1,u_2) \in X
+将一个类型匹配系统映射到其解集
+\[ \MF (V,X) = \{ f \mbar \forall u_1\ u_2.\ (u_1,u_2) \in X
 \Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2 \} \]
 \end{defin}
 
-\begin{defin}[类型方程组的M等价] \label{Def.Meq}
+\begin{defin}[类型匹配系统的M等价] \label{Def.Meq}
 二元等价关系 $\Meq$
 \[ \forall A\ B.\ (A \Meq B) = (\MF A = \MF B) \]
 \end{defin}
 \begin{theo}
-\[ \forall A\ v.\ A \Meq (A \cup \{(v,v)\}) \]
+\[ \forall X\ V\ v.\ (V,X) \Meq (V, X \cup \{(v,v)\}) \]
 \end{theo}
 \begin{proof} 由定义 \ref{Def.Meq} 定义 \ref{Def.MF} 直接得到
 \end{proof}
@@ -230,51 +255,241 @@ $V$ 是类型方程组的变量集。
 有意义（Senseful Form）类型方程组函数
 $\SF : \powerset(\PiE \times \PiE) \rightarrow \powerset(\PiE \times \PiE)$
 \[ \SF X = \{(x,y) \mbar (x,y) \in X \ \land\ x \neq y\} \]
-即是削除了恒等式 $(x,x)$ 后的方程组。
+即是削除了恒等式 $(x,x)$ 后的方程。
 \end{defin}
 
-\begin{defin}[已解的类型方程组] \label{Def.Solved}
-类型方程组在的{\it 已解}形式下的未定变量（Undefined Variable）函数
-$\UDV : \powerset(\PiE \times \PiE) \rightarrow \powerset(\Uv)$
-\[ \UDV X = \{x \mbar (x,y) \in \SF X \} \]
-一个类型方程组 $X$ 若满足 $\Solved X$ 则被叫做{\it 已解}的。
+\begin{defin}[已解的类型匹配系统] \label{Def.Solved}
+类型匹配系统在的{\it 已解}形式下的未知量（Unknown Variable）函数
+$\UV : (\PiE \times \PiE) \rightarrow \powerset(\Uv)$
+\[ \UV X = \{x \mbar (x,y) \in \SF X\} \]
+一个类型匹配系统 $(V,X)$ 若满足 $\Solved (V,X)$ 则被叫做{\it 已解}的。
 \[ \begin{split}
-\Solved X = (\forall x\ &y.\ (x,y) \in \SF X \Rightarrow
-  x \in \Uv \ \land\ \BV y \cap \UDV X = \emptyset)\ \land \\
+\Solved (V,X) = (\forall x\ &y.\ (x,y) \in \SF X \Rightarrow
+  x \in V \ \land\ \BV y \cap \UV X = \emptyset)\ \land \\
   & (\forall x\ y_1\ y_2.\ (x,y_1) \in \SF X \ \land\ (x,y_2) \in \SF X
   \Rightarrow (y_1 = y_2))
 \end{split} \]
 \end{defin}
 
-已解方程组 $\Solved X$ 中
-任何一个方程 $(x, y) \in X$，首先 $x \in \Uv$ 是一个变量，
-这意味着
-\[ \Solved X \Rightarrow \UDV X \subseteq \Uv \]
-其次对于任意的 $x$ 至多只有一个 $y$ 使 $(x,y) \in X$，
-且 $y$ 中不包含任何未定变量，这保证解 $f$ 在 $x$ 点处被唯一确定
- $f\ x = y$，已解方程组中
- 所有的方程都如此就允许直接地写出已解方程组的解
+有一些显然的性质，
+\begin{equation} \Solved(V,X) \vdash \UV X \subseteq V \end{equation}
+\begin{equation} \Solved(V,X) \vdash \forall x\ y.\ (x,y) \in X
+\Rightarrow x \in \UV X \label{UVX} \end{equation}
+
+\begin{lemma} \label{Lem.SFXF}
+\[ \Solved(V,X) \vdash \SF X \in (\UV X \rightarrow \PiE) \]
+即在已解形式下，有意义的方程组 $\SF X$ 就是一个$V$到$\PiE$的函数。
+\end{lemma}
+\begin{proof}
+由定义 \ref{Def.Func}，命题等价于
+\[ \Solved(V,X) \vdash \forall x\ y_1\ y_2.\ (x,y_1) \in \SF X \ \land\ 
+(x,y_2) \in \SF X \Rightarrow (y_1 = y_2) \ \land\ x \in \UV X \ \land\ 
+y_1 \in \PiE \]
+由定义 \ref{Def.Solved} 这是显然的。
+\end{proof}
+\begin{lemma}[引理\ref{Lem.SFXF}的推论] \label{Lem.SFXapplied}
+结合引理\ref{Lem.SFXF}与公式 \ref{UVX}
+\[ \Solved(V,X),\ (x,y) \in X \vdash \SF X\ x = y \]
+\end{lemma}
+
+\begin{defin}[部分函数的I扩展]
+$\EI\ f$ 将一个部分函数 $f$ 扩展成完全函数
+\[ \EI\ f\ x = \xif x \in \Dom f \xthen f\ x \xelse x \]
+\end{defin}
 
 \begin{theo}[已解方程组的解]
-\[ \Solved X \vdash \MF X = \{ f \mbar (x,y) \in \SF X \ \land\ 
-(f\ x = y) \} \]
-更一般的，若将函数视作特殊的二元关系即 
-$(\Uv \rightarrow \PiE) \subset (\Uv \times \PiE)$
-那么
-\[ \Solved X \vdash \MF X = \{ f \mbar f \in (\Uv \times \PiE) \ \land\ 
-\SF X \subset f \} \]
+\[ \Solved (V,X) \vdash \MF(V,X) = \{ \Inst_V g
+\circ \EI (\SF X) \mbar g \} \]
 \end{theo}
 \begin{proof} 由定义 \ref{Def.MF} 命题等价于
-\[ \Solved X \vdash (\forall u_1\ u_2.\ (u_1,u_2) \in X
-\Rightarrow \Inst f\ u_1 = \Inst f\ u_2) = (\forall x\ y.\ 
-(x,y) \in \SF X \ \land\ (f\ x = y))\]
-由定义 \ref{Def.SF} 命题等价与
-\[ \Solved X,\ (x,y) \in \SF X \vdash 
-(\Inst f\ x = \Inst f\ y) = (f\ x = y) \tag{1} \]
-由定义 \ref{Def.Solved}
-\[ \Solved X,\ (x,y) \in \SF X \vdash x \in \Uv \tag{2} \]
-且由定义 \ref{Def.Inst}
-\[ x \in \Uv \vdash \Inst f\ x = f\ x \tag{3} \]
+\[ \begin{split}
+\Solved&(V,X) \vdash (\forall u_1\ u_2.\ (u_1,u_2) \in X
+\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2) = \\
+&(\exists g.\ \forall x.\ x \in \Uv \Rightarrow 
+(f(x) = \Inst_V g(\EI (\SF X)\ x)))
+\end{split} \]
+当 $X = \emptyset$ 时等式左边即是 $T$，右边也是 $T$ 因为
+$\Dom (\SF X) = \emptyset$ 故而 $\EI(\SF X) = I$ 这样右式就等于
+\[ \exists g.\ \forall x.\ x \in \Uv \Rightarrow
+(f\ x = \Inst_V\ g\ x)\]
+而这样的 $g$ 是始终存在的，令 $g = f$ 则有
+\[ \forall x.\ x \in \Uv \Rightarrow (f\ x = \Inst_V\ f\ x)\]
+而由 $\Inst_V$ 的定义，当 $x \in \Uv$ 时，$\Inst_V f\ x = f\ x$，
+故而右式就是恒真式。
+
+\hfill
+
+\noindent 接下来证明 $X \neq \emptyset$ 的情况，先
+证明 $\Rightarrow$，即命题
+\[ \begin{split}
+X \neq \emptyset,\ 
+\Solved(V,X),\ (\forall x\ y.\ &(x, y) \in \SF X \Rightarrow
+(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+&\exists g.\ \forall u.\ u \in \Uv \Rightarrow
+(f(u) = \Inst_V g(\EI (\SF X)\ u)) \end{split}\]
+存在这样的 $g = f$，命题变为
+\[ \begin{split}
+X \neq \emptyset,\ 
+\Solved(V,X),\ (&\forall x\ y.\ (x, y) \in \SF X \Rightarrow
+(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+&\forall u.\ u \in \Uv \Rightarrow
+(f\ u = \Inst_V f(\EI (\SF X)\ u))
+\end{split} \]
+由引理 \ref{Lem.SFXF}，$\Dom(\SF X) = \UV X$，再由$\EI$的定义，
+当 $u \notin \UV X$ 时，$\EI(\SF X) u = u$，
+而由 $\Inst_V$ 的定义，在$u \in \Uv$时$\Inst_V u = u$，
+故而最后只要下述证明命题
+\[ \begin{split}
+X \neq \emptyset,\ 
+Solved(V,X),\ &(\forall x\ y.\ (x, y) \in \SF X \Rightarrow
+(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+&\forall u.\ u \in \UV\ X
+\Rightarrow (f\ u = \Inst_V f\ (\SF X\ u)) \end{split} \]
+再由公式 \ref{UVX} 且 $X \neq \emptyset$
+\[X \neq \emptyset,\ 
+\Solved(V,X),\ (x, y) \in \SF X,\ 
+\Inst_V f\ x = \Inst_V f\ y \vdash f\ x = \Inst_V f\ (\SF X\ x)\]
+引理 \ref{Lem.SFXapplied}
+\[X \neq \emptyset,\ 
+\Solved(V,X),\ (x, y) \in \SF X,\ 
+\Inst_V f\ x = \Inst_V f\ y \vdash f\ x = \Inst_V f\ y\]
+而 $\Solved(V,X)\ \land\ (x, y) \in \SF X$ 所以 $x \in \Uv$ 所以
+$\Inst_V\ f\ x = x$ 于是命题得证。
+
+\hfill
+
+\noindent 接下来证明 $\Leftarrow$，即命题
+\[ \begin{split}
+X \neq \emptyset,\ 
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g(\EI (\SF X)\ u))) \vdash \\
+&\forall x\ y.\ (x, y) \in \SF X \Rightarrow
+(\Inst_V f\ x = \Inst_V f\ y)
+\end{split}\]
+等价于
+\[ \begin{split}
+X \neq \emptyset,\ 
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
+\vdash \\
+& \Inst_V f\ x = \Inst_V f\ y
+\end{split}\]
+$(x,y) \in \SF X$ 故而 $x \in \UV X$
+故而 $x \in \Uv$ 这样 $\Inst_V f\ x = f\ x$ 且
+$f\ x = \Inst_V g\ (\EI (\SF X)\ x)$
+
+\noindent 且因为 $x \in \UV X$ 所以 $\EI (\SF X)\ x = \SF X\ x = y$
+最后命题等价于
+\[ \begin{split}
+X \neq \emptyset,\ 
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
+\vdash \\
+& \Inst_V g\ y = \Inst_V f\ y
+\end{split}\]
+\end{proof}
+
+\begin{defin}[类型匹配系统的实例集] \label{Def.MI}
+类型匹配系统 $(V,X) \in \EQs$ 在 $u \in \PiE$ 上的实例集 
+$\MI\ (V,X)\ u \in \powerset(\PiE)$
+\[\MI\ (V,X)\ u = \{ \Inst_V f\ u \mbar f \in \MF(V,X) \}\]
+\end{defin}
+\begin{lemma}[类型匹配系统的实例集的M等价] \label{Lem.MI.Meq}
+\[ \forall M_1\ M_2.\ (M_1 \Meq M_2) \Rightarrow (\MI M_1 \Meq \MI M_2)
+\]
+\end{lemma}
+\begin{proof} 由$\MI$的定义 \ref{Def.MI}，M等价的定义 \ref{Def.Meq}
+直接得到
+\end{proof}
+
+\begin{lemma} \label{Lem.RecIv}
+\[ \Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
+\EI\ (\SF X)) = \Inst_V g \circ \Inst_V (\EI\ (\SF X))\]
+\end{lemma}
+\begin{proof} 等价于
+\[ \Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
+\EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)\]
+对 $u$ 进行高度的归纳法，当 $\h u = 1$ 时，$u = \underline{(c)}$，
+$c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
+
+\noindent 当 $\h u = \Suc n$ 时，$u = \underline{(c\ v_1\ \cdots\ v_o)}
+,\ \h v_1 \leq n,\ \cdots,\ \h v_o \leq n$，且有
+\[ \Solved(V,X),\ \h u \leq n \vdash \Inst_V (\Inst_V g \circ
+\EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)
+\tag{归纳假设} \]
+由 $\Inst$ 的定义 \ref{Def.Inst} 命题等价于
+\begin{align*}
+\Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
+\EI\ (\SF X))\ v_1\ &= \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ v_1)\\
+\cdots&\\
+\Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
+\EI\ (\SF X))\ v_o\ &= \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ v_o)
+\end{align*}
+逐个应用归纳假设，命题得证。
+\end{proof}
+
+\begin{lemma} \label{L.QIMI}
+\[ \Solved(V,X),\ \QV q = V,\ \QB q = 
+\Inst_V\ (\EI (\SF X))\ u \vdash
+\QI q = \MI\ (V,X)\ u \]
+\end{lemma}
+\begin{proof}
+等价于
+\[ \begin{split}
+\Solved(V,&X),\ \QV q = V,\ \QB q = 
+\Inst_V\ (\EI (\SF X))\ u\vdash\\
+&\{\Inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\Inst_V (\Inst_V g \circ
+\EI\ (\SF X))\ u \mbar g\} \end{split} \]
+由引理 \ref{Lem.RecIv}
+\[ \begin{split}
+\Solved(V,&X),\ \QV q = V,\ \QB q =  
+\Inst_V\ (\EI (\SF X))\ u\vdash\\
+&\{\Inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\Inst_V g\ (
+\Inst_V (\EI\ (\SF X))\ u) \mbar g\} \end{split} \]
+这是显然成立的。
+\end{proof}
+
+引理 \ref{L.QIMI} 意味着很多，首先对于任意的类型匹配系统 $M \in \EQs$
+如果其有可解形式 $M'$ 即 $\Solved M'\ \land\ M \Meq M'$，
+那么必定存在存在一个 $q \in \PiAE$ 使得 $\QI q = \MI M$，
+其次，可以有一个算法由 $\Solved M'$ 求解 $q$
+
+\begin{theo} \label{T.QIMI.S}
+\[ \forall M.\ \Solved M \Rightarrow \exists q.\ \QI q = \MI M \]
+\end{theo}
+\begin{proof} 由引理 \ref{L.QIMI} 直接得到。
+\end{proof}
+
+\begin{algorithm}
+\caption{已解类型匹配系统的全称量化类型} %\label{alg:put-into-refri}
+\begin{algorithmic}[1]
+\Require 类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
+\Ensure $q \in \PiAE$ 满足 $\QI q = \MI (V,X)$
+\State 先热热身:)
+\For{$i=1,\dots ,N$} \Comment{我是个For循环}
+\If {是猪八戒}
+	\State 打开冰箱门，把第$i$个放进冰箱，关上冰箱门
+\Else 
+	\State 下一个
+\EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theo}[类型匹配系统有解与实例化类型集交集的关系]
+\[ \begin{split}
+\forall q_1\ q_2.\ &(\QV q_1 \cap \QV q_2 = \emptyset) \Rightarrow\\
+(\QI q_1 \cap \QI q_2 =\ &
+\MI(\QV q_1 \cup \QV a_2,\ \{\QB q_1 = \QB q_2\}))
+\end{split}\]
+\end{theo}
+\begin{proof}
+\[\begin{split}
+\QV q_1 \cap \QV q_2&\ = \emptyset \vdash \{u \mbar
+  u = \Inst_{\ \QV(q_1)} f_1\ \QB(q_1) = \Inst_{\ \QV(q_2)} f_2\ 
+  \QB(q_2) \} = \\
+\{ \Inst_\forall f\ q_1 \mbar  \}
+\end{split}\]
 \end{proof}
 
 

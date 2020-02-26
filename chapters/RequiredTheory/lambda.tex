@@ -21,7 +21,6 @@ V = \{v_0,v_1,\cdots\}
 \end{equation}
 
 \item 字符串集合 $L$ 是无类型 $\lambda$ 演算上的表达式（$\lambda$ term），由如下语法定义。
-
 \begin{equation}
 L = \bnf{V\ |\ (L\ L)\ |\ (\lambda V \ L)}
 \end{equation}
@@ -30,33 +29,25 @@ L = \bnf{V\ |\ (L\ L)\ |\ (\lambda V \ L)}
     $\lambda x_1\ x_2\ \cdots\ x_n.\ y$
 
 \item 集合$U$是另一个无穷的字母表，表示类型变量集（type variables）。
-
 \begin{equation}
 U = \{\alpha,\beta,\cdots\} 
 \end{equation}
 
 \item 字符串集合 $\Pi$ 表示简单类型。
-
 \begin{equation} \label{Pi}
     \Pi = \bnf{U\ |\ (\Pi \rightarrow \Pi)}
 \end{equation}
 
 \item 集合 $C$ 表示上下文，是由语法$V : \Pi$定义的字符串集合的幂集。
-
 \begin{equation}
     C = \powerset \bnf{V:\Pi}
 \end{equation}
-
 即$C$ 是所有具有如下形式的集合。
-
         \[ \{x_1:\tau_1, \cdots, x_n : \tau_n\} \]
-
 其中 $x_1,\cdots,x_n \in V$，$\tau_1,\cdots,\tau_n \in \Pi$。
 
 \item 定义上下文$\Gamma = \{x_1:\tau_1,\cdots,x_n:\tau_n\}$ 的符号域 $\mathrm{dom}$
-
 \[ \mathrm{dom}(\Gamma) = \{x_1,\cdots,x_n\}\]
-
 将$\Gamma_1 \cup \Gamma_2$ 写作 $\Gamma_1, \Gamma_2$ 当
         $\mathrm{dom}(\Gamma_1) \cap \mathrm{dom}(\Gamma_2)$ 时。
 
