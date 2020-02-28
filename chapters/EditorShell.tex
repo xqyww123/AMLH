@@ -21,73 +21,79 @@ $\ES$ 是一个形式语言，且具有同名为$\ES$的
 首先定义类型。
 
 \begin{defin}[类型集$\PiE$]
-字符串集合 $U$ 为用于表示类型的字母表，
-函数$\xa : U \mapsto \mathbb{N}$表示类型的元数（Arity），
-从$U$元数为0的子集$U_\mathrm{v}$：
-$U_\mathrm{v} \subseteq U\ \land\ \forall u.\ u \in U_\mathrm{v}
-\Rightarrow \xa(u) = 0$ 表示类型变量，主要用于全称量化。
+字符串集合 $\hat{U}$ 为用于表示类型的字母表
+$\hat{U} \subseteq \String$，
+函数$\xa : \hat{U} \mapsto \mathbb{N}$表示类型的元数（Arity），
+$\hat{U}$ 中元数为0的子集$\hat{U}_\mathrm{v}$：
+$\hat{U}_\mathrm{v} \subseteq \hat{U}\ \land\ \forall u.\ 
+u \in \hat{U}_\mathrm{v} \Rightarrow \xa(u) = 0$
+表示类型变量，主要用于全称量化。
 
-所有由字母表 $U$ 组成的字符串记为集合$\mathrm{String}(U)$，
-$\ES$ 的类型集 $\Pi_\mathrm{E}$ 是满足以下条件的$\mathrm{String}(U)$最小子集
+$\ES$ 的类型集 $\Pi_\mathrm{E}$ 是满足以下条件的$\String$的最小子集
 \begin{equation} \label{Def.PiE}
 \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ \bm{v} 
-\in \Pi_\mathrm{E}^{\xa(u\ )} \Rightarrow \underline{(\ u\ \bm{v}_1\ 
-\cdots\ \bm{v}_{\xa(u\ )}\ )} \in \Pi_\mathrm{E}
+\in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow \underline{(\ u\ \bm{v}_1\ 
+\cdots\ \bm{v}_{\xa(u)}\ )} \in \Pi_\mathrm{E}
 \end{equation}
-其中 $\Pi_\mathrm{E}^{\xa(u\ )}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
+其中 $\Pi_\mathrm{E}^{\xa(u)}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
 空间，特别的 $\Pi_\mathrm{E}^0 = \{\mathbf{0}\}$
+\begin{equation}
+\Uv = \{\underline{(\ u\ )}\mbar u \in \hat{\mathrm{U}}_v\}
+\end{equation}
 \end{defin}
 
 \begin{example}[$\Pi_\mathrm{E}$] 以下命题成立：
-\[ \forall u.\ u \in U\ \land\ (\xa(u) = 0)\ \Rightarrow\ 
+\[ \forall u.\ u \in \hat{U}\ \land\ (\xa(u) = 0)\ \Rightarrow\ 
 \underline{(\ u\ )} \in \Pi_\mathrm{E} \]
-\[ \forall u\ v.\ u \in U\ \land\ v \in U_\mathrm{v}\ \land\ (\xa(u) = 1)
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in \hat{U}_\mathrm{v}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(\ u\ (\ v\ )\ )} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in U_\mathrm{v}\ \land\ (\xa(u) = 1)
 \ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
-\[ \forall u\ v.\ u \in U\ \land\ v \in \Pi_\mathrm{E}\ \land\ (\xa(u) = 1)
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in \Pi_\mathrm{E}\ \land\ (\xa(u) = 1)
 \ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
 \end{example}
 
 \begin{theo}(类型的结构) \label{TS}
 \[ \forall u'.\ u' \in \PiE \Rightarrow \exists! u\ \bm{v}.\ 
-u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ 
-(u' = \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u'\ )}\ )}) \]
+u \in \hat{U}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' = \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')}\ )}) \]
 \end{theo}
 \begin{proof} 首先唯一性是显然的，由字符串理论就可以得到。
 对存在性的证明使用反证法，假设
 \begin{equation} \label{Hypo.TS}
 \exists u'.\ u' \in \PiE \Rightarrow \forall u\ \bm{v}.\ 
-u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ 
-(u' \neq \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u'\ )}\ )})
+u \in \hat{U}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' \neq \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')}\ )})
 \end{equation}
 现证明 $\PiE - \{u'\}$ 满足条件 \ref{Def.PiE} 而
 $\PiE - \{u'\} \subset \PiE$ 这样就构造了悖论，因为 $\PiE$ 不再是满足
 条件 \ref{Def.PiE} 的最小子集，$\PiE - \{u'\}$ 比 $\PiE$更小。
 即证明
-\[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
-\bm{v} \in \PiE^{\xa(u\ )} - \{u'\} \Rightarrow
-\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \in \PiE - \{u'\} \]
+\[ \forall u.\ u \in \hat{U} \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \PiE^{\xa(u)} - \{u'\} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \PiE - \{u'\} \]
 因为有
-\[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
-\bm{v} \in \Pi_\mathrm{E}^{\xa(u\ )} \Rightarrow
-\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \in \Pi_\mathrm{E} \]
+\[ \forall u.\ u \in \hat{U} \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E} \]
 所以只要证明
-\[ \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \neq u' \]
+\[ \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)}\ )} \neq u' \]
 而由反证假设 \ref{Hypo.TS} 这是成立的，故而悖论被构造进而命题得证。
 \end{proof}
 
 定理 \ref{TS} 意味着一切类型$u$都具有且唯一地具有如下格式
 \[ \underline{u_0\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u_0\ )}} \]
-其中 $u_0 \in \mathrm{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0\ )} \in \PiE$
+其中 $u_0 \in \hat{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0\ )} \in \PiE$
 
 即每一个类型都构成一颗树，类型变量与0元类型构造器是叶子。
 
-\begin{defin}[类型的构造器、元数、高度] \label{Def.Th}
-函数 $\mathrm{c}:\Pi_\mathrm{E} \mapsto U$ 表示类型的构造器。
+\begin{defin}[类型的构造器、元数、高度、变量集] \label{Def.Th}
+函数 $\mathrm{c}:\Pi_\mathrm{E} \mapsto \hat{U}$ 表示类型的构造器。
 \[ \mathrm{c}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = u\]
 函数 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的元数。
 \[ \xa\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = n\]
 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 不会跟上文定义的
-$\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相同的意义，
+$\xa:\hat{U} \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相同的意义，
 不会造成歧义。
 
 \noindent 函数 $\mathrm{h}:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的高度。
@@ -97,7 +103,8 @@ $\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相
 \noindent 函数 $\mathrm{v}:\Pi_\mathrm{E} \mapsto \powerset{(\Uv)}$ 
 表示类型中的所有变量。
 \[ \begin{split}
-&\mathrm{v}\ \underline{(\ c\ )}=\xif c \in \Uv \xthen \{c\} \xelse \emptyset \\
+&\mathrm{v}\ \underline{(\ c\ )}=\xif c \in \Uv \xthen \{
+\underline{(\ c\ )}\} \xelse \emptyset \\
 &\mathrm{v}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )}=
 \bigcup_{i=1\cdots n} \mathrm{v}(v_i)
 \end{split} \]
@@ -112,8 +119,8 @@ $\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相
 \ \land\ u = \underline{(\ \mathrm{c}\ )} \tag{3} \]
 \[ \begin{split}
 \forall u.\ (\mathrm{h}\ u > 1) \Rightarrow \exists \mathrm{c}\ &\bm{v}.\ \mathrm{c} \in U
-\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ u = \underline{
-(\mathrm{c}\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \ \land\ \\
+\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ u = \underline{
+(\mathrm{c}\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)}\ )} \ \land\ \\
 &(\forall i.\ 1 \leq i \leq \xa(u) \Rightarrow \mathrm{h}\ \bm{v}_i < \mathrm{h}\ u )
 \end{split} \tag{4} \]
 \end{theo}
@@ -124,7 +131,7 @@ $\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相
 
 \begin{defin}[全称量化类型 $\PiAE$]
 集合 $\Pi_\mathrm{E}^\forall$ 表示全称量化类型，由所有满足如下语法的字符串构成。
-\[ \Pi_\mathrm{E} \mbar \forall U_\mathrm{v}\ \Pi_\mathrm{E} \]
+\[ \Pi_\mathrm{E} \mbar \forall \Uv\ \Pi_\mathrm{E} \]
 同样有记号 $\forall v_1\ \cdots\ v_n.\ b$ 表示 $\underline{\forall v_1
 \ \cdots\  \forall v_n\ b}$
 \end{defin}
@@ -146,20 +153,22 @@ U_\mathrm{v})$ 表示全称量化类型所有的变量集。
 \rightarrow \Pi_\mathrm{E} \rightarrow \Pi_\mathrm{E}$ 对类型
 进行变量实例化。
 \begin{align*}
-\mathrm{Inst}\ f\ \underline{(\ v\ )} &= \xif v \in U_\mathrm{v} \xthen
- f\ v \xelse \underline{(\ v\ )} \\
-\mathrm{Inst}\ f\ \underline{(\ u\ v_1\ \cdots\ v_{\xa(u\ )}\ )} &= 
-\underline{(\ u\ f(v_1)\ \cdots\ f(v_{\xa(u\ )})\ )}
+\mathrm{Inst}\ f\ \underline{(\ v\ )} &= \xif \underline{(\ v\ )}
+\in U_\mathrm{v} \xthen
+ f\ \underline{(\ v\ )} \xelse \underline{(\ v\ )} \\
+\mathrm{Inst}\ f\ \underline{(\ u\ v_1\ \cdots\ v_{\xa(u)}\ )} &= 
+\underline{(}\concat u \concat \Inst f\ v_1\concat\cdots\concat
+\Inst f\ v_{\xa(u)}\concat\underline{)}
 \end{align*}
 
 以及部分实例化 $\Inst_V$ 
-\[ \Inst_V f = \Inst (\lambda v.\ \xif v \in V \xthen f\ v \xelse v) \]
+\[ \Inst_V f = \Inst\ (\lambda v.\ \xif v \in V \xthen f\ v \xelse v) \]
 
 函数 $\mathrm{Inst}_\forall : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
 \rightarrow \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$ 
 实例化全称量化类型。
 \begin{gather*}
-\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q\ )} f\ \mathrm{QB}(q)
+\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q)} f\ \mathrm{QB}(q)
 \end{gather*}
 即$\mathrm{Inst}_\forall$只会实例化全称量化的类型变量。
 \end{defin}
@@ -173,8 +182,8 @@ U_\mathrm{v})$ 表示全称量化类型所有的变量集。
 表示要实例化的目标
 \Ensure $\Inst_V f\ u \in \PiE$
 \If {$o = 0$}
-\If {\quad $c \in V$ \quad} \quad 输出 $f(c)$
-\Else {\quad 输出 $\underline{(\ c\ )}$}
+\If {\quad $u \in V$ \quad} \quad 输出 $f(u)$
+\Else {\quad 输出 $u$}
 \EndIf
 \Else
 \State $\underline{(\ c} \rightarrow s$
@@ -382,6 +391,20 @@ y_1 \in \PiE \]
 $\EI\ f$ 将一个部分函数 $f$ 扩展成完全函数
 \[ \EI\ f\ x = \xif x \in \Dom f \xthen f\ x \xelse x \]
 \end{defin}
+
+\begin{lemma} \label{L.vEi}
+\[ x \in V \vdash \mathrm{v}(\Inst_V\ (\EI \{(x,y)\})\ u) =
+\mathrm{v}(u) - \{x\} \]
+\begin{proof} 对 $u$ 进行类型高度的归纳法，只需要证明叶子类型的情形
+命题就能得证。
+\[ x \in V,\ u\in \Uv \vdash \mathrm{v}(\Inst_V\ (\EI \{(x,y)\})\ u) =
+\mathrm{v}(u) - \{x\} \]
+由 $\Inst_V$ 的定义 \ref{Def.Inst}
+\[ x \in V,\ u\in \Uv \vdash \mathrm{v}(\EI \{(x,y)\}\ u) =
+\mathrm{v}(u) - \{x\} \]
+分类讨论 $u = x$ 的情况，结合$\mathrm{v}$的定义 \ref{Def.Th} 命题得证。
+\end{proof}
+\end{lemma}
 
 \begin{algorithm}
 \caption{二元组集的函数扩张 $\mathrm{AsFunc}$} \label{alg:AsFunc}
@@ -693,7 +716,7 @@ $\MNS$ 具体的表达是无关紧要的，例如下面的类型匹配系统即�
 表示 $X$ 中每一个类型方程的所有类型变量的合并。
 \end{defin}
 
-\begin{defin}[类型匹配系统的实例化]
+\begin{defin}[类型匹配系统的实例化] \label{Def.IM}
 $\IM : (\Uv \rightarrow \PiE) \rightarrow \EQs \rightarrow \EQs$ 
 将一个类型匹配系统的所有方程的等式两边都实例化
 \[ \IM f\ (V,X) = \{(\Inst_V f\ x,\ \Inst_V f\ y) \mbar (x,y) \in X\}\] 
@@ -715,7 +738,7 @@ $\IM : (\Uv \rightarrow \PiE) \rightarrow \EQs \rightarrow \EQs$
 \end{proof}
 \end{lemma}
 
-\begin{lemma}
+\begin{lemma} \label{L.EM.IMEiX}
 \[ (u,v) \in X,\ u \in V \vdash (V,X) 
 \Meq (V,(\IM\ \EI\{(u,v)\}\ \ (X - \{(u,v)\})) \cap \{(u,v)\})\]
 \begin{proof} 命题等价于
@@ -767,11 +790,18 @@ $\IM : (\Uv \rightarrow \PiE) \rightarrow \EQs \rightarrow \EQs$
 \end{proof}
 \end{lemma}
 
-\begin{defin}
+\begin{lemma} \label{L.MVIM}
+\[ (u,v) \in X,\ u \in V \vdash \MV(\IM\ \EI\{(u,v)\}\ (X-\{(u,v)\}))
+= \MV(X) - \{u\} \]
+\begin{proof} 由引理 \ref{L.vEi} 以及 $\IM$ 的定义 \ref{Def.IM} 直接得到。
+\end{proof}
+\end{lemma}
+
+\begin{defin} \label{Def.SBP}
 $\SBP\ (V_x,X_x)\ (V_o,X_o)$ 描述类型匹配系统 
 $(V_x,X_x),\ (V_o,X_o) \in \EQs$ 具有如下性质
 \[ \SBP\ (V_x,X_x)\ (V_o,X_o) = \Solved(V_o,X_o) \ \land\ 
-(V_x \cap V_o = \emptyset)\ \land\ (\MV X_x \cap V_o = \emptyset) \]
+(V_o = \UV X_o)\ \land\ (\MV X_x \cap V_o = \emptyset) \]
 \end{defin}
 \begin{lemma}
 \[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,x) \in X_x \vdash
@@ -822,28 +852,75 @@ y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash
 
 \begin{lemma}
 \[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
-x = \underline{(\ u\ )},\ u \in V_x \vdash\\
+x \in V_x \vdash\\
 &\SBP\ (V_x',X_x')\ (V_o',X_o')\ \land\ 
 ((V_x',X_x')\cup(V_o',X_o') \Meq (V_x,X_x)\cup(V_o,X_o)) \end{split}\]
 其中
 \begin{align*}
 &X_x' = \IM\ (\EI \{(x,y)\})\ (X_x - \{(x,y)\})&
-&V_x' = V_x - \{u\}&\\
+&V_x' = V_x - \{x\}&\\
 &X_o' = X_o \cup \{(x,y)\}&
-&V_o' = V_o \cup \{u\}&
+&V_o' = V_o \cup \{x\}&
 \end{align*}
 \begin{proof}
 令$V = V_x \cup V_o$
-\[ V_x' \cup V_o' = (V_x - \{u\}) \cup (V_o \cup \{u\}) = V \]
+\[ V_x' \cup V_o' = (V_x - \{x\}) \cup (V_o \cup \{x\}) = V \]
 首先证明 $(V_x',X_x')\cup(V_o',X_o') \Meq (V_x,X_x)\cup(V_o,X_o)$ 部分，即
 \[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
-x = \underline{(\ u\ )},\ u \in V_x \vdash\\
+x \in V_x \vdash\\
 &(\MF(V,X_x' \cup X_o') = \MF(V,X_x \cup X_o)) \end{split}\]
-由引理 \ref{L.MF.XUX}
+\[ X_x' \cup X_o' = \IM\ (\EI\{(x,y)\})\ (X_x - \{(x,y)\})\cup
+\{(x,y)\}\cup X_o\]
+由引理 \ref{L.MF.XUX} 命题等价于
 \[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
-x = \underline{(\ u\ )},\ u \in V_x \vdash\\
-&(\MF(V,X_x') \cap \MF(V,X_o') = \MF(V,X_x) \cap \MF(V,X_o))
+x \in V_x \vdash\\
+(\MF(V,\IM\ (\EI\{(x,y)\})\ (X_x - &\{(x,y)\})\cup
+\{(x,y)\}) \cap \MF(V,X_o) = \MF(V,X_x) \cap \MF(V,X_o))
 \end{split}\]
+弱于
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x \in V_x \vdash\\
+&(\MF(V,\IM\ (\EI\{(x,y)\})\ (X_x - \{(x,y)\})\cup
+\{(x,y)\}) = \MF(V,X_x)
+\end{split}\]
+而这就是引理 \ref{L.EM.IMEiX} 所证明的。
+
+\hfill
+
+\noindent 接下来证明 $\SBP\ (V_x',X_x')\ (V_o',X_o')$ 部分，命题
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x \in V_x \vdash\\
+&\SBP\ (V_x',X_x')\ (V_o',X_o')
+\end{split}\]
+将$\SBP$ 的定义 \ref{Def.SBP} 展开
+\[ \begin{split} 
+\Solved&(V_o,X_o)\ \land\ (V_x\cap V_o = \emptyset)\ \land\ 
+(\MV X_x \cap V_o = \emptyset),\ (x,y) \in X_x,\ 
+x \in V_x \vdash\\
+&\Solved(V_o',X_o')\ \land\ (V_x'\cap V_o' = \emptyset)\ \land\ 
+(\MV X_x' \cap V_o' = \emptyset)
+\end{split}\]
+$(V_x'\cap V_o' = \emptyset)$ 是显然的。
+
+\noindent $\MV X_x' \cap V_o' = \emptyset$ 由引理 \ref{L.MVIM} 对
+$\MV(X_x') = \MV(X_x) - \{x\}$ 的证明得到
+
+\noindent 将 $\Solved(V_o',X_o')$ 中 $\Solved$ 的定义 \ref{Def.Solved}
+展开
+\[ \begin{split}
+\Solved (V_o,X_o) = (\forall x\ &y.\ (x,y) \in \SF X_o \Rightarrow
+  x \in V_o \ \land\ \BV y \cap \UV X_o = \emptyset)\ \land \\
+  & (\forall x\ y_1\ y_2.\ (x,y_1) \in \SF X_o \ \land\ (x,y_2) \in \SF X_o
+  \Rightarrow (y_1 = y_2))
+\end{split} \]
+\[ \begin{split}
+\Solved (V_o',X_o') = (\forall x\ &y.\ (x,y) \in \SF X_o' \Rightarrow
+  x \in V_o' \ \land\ \BV y \cap \UV X_o' = \emptyset)\ \land \\
+  & (\forall x\ y_1\ y_2.\ (x,y_1) \in \SF X_o' \ \land\ (x,y_2) \in \SF X_o'
+  \Rightarrow (y_1 = y_2))
+\end{split} \]
+\begin{align*}
+&V_o' = V_o\cup \{x\}&&X_o' = X_o\cup\{(x,y)\}& \end{align*}
 
 \noindent 这是成立的因为
 $x = \underline{(\ c\ v_1\ \cdots

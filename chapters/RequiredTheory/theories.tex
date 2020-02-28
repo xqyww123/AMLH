@@ -1,4 +1,6 @@
-\section{数学理论}
+\section{一些需要的理论}
+
+本文是计算机领域的论文，故仅将一些需要的理论列在这里而并不去深究更多。
 
 \begin{defin}[函数] \label{Def.Func}
 此定义来自 Halmos 的朴素集合论 \cite{halmos2017naive}。
@@ -12,3 +14,69 @@ U \rightarrow&\ V = \{ s \mbar s \in \powerset(U \times V) \ \land\\
 \} \quad &
 \end{split} \]
 \end{defin}
+
+接下来将简单地定义字符串与字符串代数，
+本文后续讨论中的形式系统大多基于此，以此为
+形式系统中形式语言（Formal Language）的编纂系统（Collation System）。
+
+使用下划线记号 $\underline{abcd}$ 表示一个单词。
+一个单词可以是任何的不被空白分割开的文字、符号，所有的单词构成
+无穷集 $\Words$，作为形式语言的字母表。
+本文不更深入地探讨 $\Words$ 的本质，这涉及到更多的形式系统的理论而
+超出了本文的范畴。
+只是简单地举几个例子
+
+\begin{example}[单词的例子]
+\begin{align*}
+\underline{abc} &\in \Words&\underline{\text{单词}} &\in \Words&
+\underline{(} &\in \Words&\underline{)} &\in \Words&\\
+\underline{\forall} &\in \Words&\underline{:} &\in \Words&
+\underline{\quad} &\notin \Words&\underline{\text{这里有\ \ 空格}} &\notin \Words&
+\end{align*}
+\end{example}
+
+\begin{defin}[字符串代数]
+字符串代数（String Algebra）是满足如下条件的
+集合 $\String$ 与其上的拼接函数 $\concat : \String \rightarrow 
+\String \rightarrow \String$
+
+\begin{itemize}
+\item $\Words \subseteq \String$
+\item $\forall a,\ b,\ c \in \String.
+(a \concat (b \concat c) = (a \concat b) \concat c)$ 即
+拼接具有结合律。
+\item $\forall a \in \Words.\ \nexists b\ c.\ a = b \concat c$
+即单词是原子的。
+\item $\forall s \in \String.\ \exists b_1,\cdots,b_n
+\in \Words.\ b_1 \concat b_2 \concat \cdots \concat b_n = a$ 这也意味着
+$\String$ 中任意的字符串都由有限个单词组成。
+\item $\forall s,\ x,\ y_1,\ y_2 \in \String.\ (a = x\concat y_1)\ 
+\land\ (a = x\concat y_2) \Rightarrow (y_1 = y_2)$
+即所谓{\it 唯一解读性}（{\it unique readability}）
+\end{itemize}
+
+\begin{notation}[字符串的记号]
+使用包含空格的下划线文本表示多个单词拼接成的字符串。
+\[ \underline{a\ b}\quad\text{表示}\quad \underline{a} \concat
+\underline{b}\]
+额外的，斜体表示字符串变量。
+\begin{example}[一些下划线记号表示的字符串]
+\begin{align*}
+&\underline{a:b}\quad\text{表示}\quad a \concat\underline{:}\concat b&
+&\underline{(\ u\ v_1\ v_2\ )}\quad\text{表示}\quad
+\underline{(}\concat u \concat v_1 \concat v_2 \concat\underline{)}&
+\end{align*}
+\end{example}
+\end{notation}
+\end{defin}
+
+\begin{notation}[语法限定的字符串集合]
+使用大尖括号 $\bnf{Grammar}$ 表示所有满足语法 $Grammar$ 的字符串构成的集合。
+\begin{example}[一个语法限定的字符串集合]
+\[ \bnf{A:B}\quad\text{表示}\quad\{\underline{a:b}
+\mbar a \in A \land b \in B\}\]
+\end{example}
+\end{notation}
+
+
+

@@ -10,6 +10,11 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{textgreek}
+%\usepackage{blindtext}
+\usepackage{scrextend}
+\addtokomafont{labelinglabel}{\sffamily}
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
 
 %\usepackage[english]{babel}
 \usepackage{newunicodechar}
@@ -102,6 +107,8 @@
 \newcommand{\PiE}{\ensuremath{\Pi_{\mathrm{E}}}}
 \newcommand{\PiAE}{\ensuremath{\Pi^{\forall}_{\mathrm{E}}}}
 \newcommand{\Meq}{\ensuremath{\overset{\mathrm{M}}{=\joinrel=}}}
+\newcommand{\Words}{\ensuremath{\mathbf{Words}}}
+\newcommand{\String}{\ensuremath{\mathbf{String}}}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
@@ -186,8 +193,9 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 表格列表
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUListofTables
+	%\ZJUListofTables
 	
+	\input{./chapters/terminology.tex}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 正文内容部分开始
