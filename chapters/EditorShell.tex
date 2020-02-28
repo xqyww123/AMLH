@@ -16,6 +16,8 @@ $\ES$ 是一个形式语言，且具有同名为$\ES$的
 
 \section{$\ES$ 形式语言}
 
+\subsection{类型与全称量化类型}
+
 首先定义类型。
 
 \begin{defin}[类型集$\PiE$]
@@ -29,68 +31,76 @@ $U_\mathrm{v} \subseteq U\ \land\ \forall u.\ u \in U_\mathrm{v}
 $\ES$ 的类型集 $\Pi_\mathrm{E}$ 是满足以下条件的$\mathrm{String}(U)$最小子集
 \begin{equation} \label{Def.PiE}
 \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ \bm{v} 
-\in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow \underline{(u\ \bm{v}_1\ 
-\cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E}
+\in \Pi_\mathrm{E}^{\xa(u\ )} \Rightarrow \underline{(\ u\ \bm{v}_1\ 
+\cdots\ \bm{v}_{\xa(u\ )}\ )} \in \Pi_\mathrm{E}
 \end{equation}
-其中 $\Pi_\mathrm{E}^{\xa(u)}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
+其中 $\Pi_\mathrm{E}^{\xa(u\ )}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
 空间，特别的 $\Pi_\mathrm{E}^0 = \{\mathbf{0}\}$
 \end{defin}
 
 \begin{example}[$\Pi_\mathrm{E}$] 以下命题成立：
 \[ \forall u.\ u \in U\ \land\ (\xa(u) = 0)\ \Rightarrow\ 
-\underline{(u)} \in \Pi_\mathrm{E} \]
+\underline{(\ u\ )} \in \Pi_\mathrm{E} \]
 \[ \forall u\ v.\ u \in U\ \land\ v \in U_\mathrm{v}\ \land\ (\xa(u) = 1)
-\ \Rightarrow\ \underline{(u\ v)} \in \Pi_\mathrm{E} \]
+\ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
 \[ \forall u\ v.\ u \in U\ \land\ v \in \Pi_\mathrm{E}\ \land\ (\xa(u) = 1)
-\ \Rightarrow\ \underline{(u\ v)} \in \Pi_\mathrm{E} \]
+\ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
 \end{example}
 
 \begin{theo}(类型的结构) \label{TS}
 \[ \forall u'.\ u' \in \PiE \Rightarrow \exists! u\ \bm{v}.\ 
-u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
-(u' = \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')})}) \]
+u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ 
+(u' = \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u'\ )}\ )}) \]
 \end{theo}
 \begin{proof} 首先唯一性是显然的，由字符串理论就可以得到。
 对存在性的证明使用反证法，假设
 \begin{equation} \label{Hypo.TS}
 \exists u'.\ u' \in \PiE \Rightarrow \forall u\ \bm{v}.\ 
-u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
-(u' \neq \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')})})
+u \in U_\mathrm{\bm{v}}\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ 
+(u' \neq \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u'\ )}\ )})
 \end{equation}
 现证明 $\PiE - \{u'\}$ 满足条件 \ref{Def.PiE} 而
 $\PiE - \{u'\} \subset \PiE$ 这样就构造了悖论，因为 $\PiE$ 不再是满足
 条件 \ref{Def.PiE} 的最小子集，$\PiE - \{u'\}$ 比 $\PiE$更小。
 即证明
 \[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
-\bm{v} \in \PiE^{\xa(u)} - \{u'\} \Rightarrow
-\underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \PiE - \{u'\} \]
+\bm{v} \in \PiE^{\xa(u\ )} - \{u'\} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \in \PiE - \{u'\} \]
 因为有
 \[ \forall u.\ u \in U \Rightarrow \forall \bm{v}.\ 
-\bm{v} \in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow
-\underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E} \]
+\bm{v} \in \Pi_\mathrm{E}^{\xa(u\ )} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \in \Pi_\mathrm{E} \]
 所以只要证明
-\[ \underline{(u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \neq u' \]
+\[ \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \neq u' \]
 而由反证假设 \ref{Hypo.TS} 这是成立的，故而悖论被构造进而命题得证。
 \end{proof}
 
 定理 \ref{TS} 意味着一切类型$u$都具有且唯一地具有如下格式
-\[ \underline{u_0\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u_0)}} \]
-其中 $u_0 \in \mathrm{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0)} \in \PiE$
+\[ \underline{u_0\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u_0\ )}} \]
+其中 $u_0 \in \mathrm{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0\ )} \in \PiE$
 
 即每一个类型都构成一颗树，类型变量与0元类型构造器是叶子。
 
 \begin{defin}[类型的构造器、元数、高度] \label{Def.Th}
 函数 $\mathrm{c}:\Pi_\mathrm{E} \mapsto U$ 表示类型的构造器。
-\[ \mathrm{c}\ \underline{(u\ v_1\ \cdots\ v_n)} = u\]
+\[ \mathrm{c}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = u\]
 函数 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的元数。
-\[ \xa\ \underline{(u\ v_1\ \cdots\ v_n)} = n\]
+\[ \xa\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = n\]
 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 不会跟上文定义的
 $\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相同的意义，
 不会造成歧义。
 
 \noindent 函数 $\mathrm{h}:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的高度。
-\[ \mathrm{h}\ \underline{(u\ v_1\ \cdots\ v_n)} = 1 + \max(\mathrm{h}\ v_1,\ \cdots,\ 
+\[ \mathrm{h}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = 1 + \max(\mathrm{h}\ v_1,\ \cdots,\ 
 \mathrm{h}\ v_n) \]
+
+\noindent 函数 $\mathrm{v}:\Pi_\mathrm{E} \mapsto \powerset{(\Uv)}$ 
+表示类型中的所有变量。
+\[ \begin{split}
+&\mathrm{v}\ \underline{(\ c\ )}=\xif c \in \Uv \xthen \{c\} \xelse \emptyset \\
+&\mathrm{v}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )}=
+\bigcup_{i=1\cdots n} \mathrm{v}(v_i)
+\end{split} \]
 \end{defin}
 
 有如下性质
@@ -99,11 +109,11 @@ $\xa:U \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相
 \[ \forall u.\ \mathrm{h}\ u  \geq 1 \quad\quad\text{(1)}\quad\quad
 \quad\quad\quad\forall u.\ \xa(\mathrm{c}\ u) = \xa\ u \quad\quad\text{(2)} \]
 \[ \forall u.\ (\mathrm{h}\ u = 1) \Rightarrow \exists \mathrm{c}.\ \mathrm{c} \in U
-\ \land\ u = \underline{(\mathrm{c})} \tag{3} \]
+\ \land\ u = \underline{(\ \mathrm{c}\ )} \tag{3} \]
 \[ \begin{split}
 \forall u.\ (\mathrm{h}\ u > 1) \Rightarrow \exists \mathrm{c}\ &\bm{v}.\ \mathrm{c} \in U
-\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ u = \underline{
-(\mathrm{c}\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \ \land\ \\
+\ \land\ \bm{v} \in \PiE^{\xa(u\ )}\ \land\ u = \underline{
+(\mathrm{c}\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u\ )}\ )} \ \land\ \\
 &(\forall i.\ 1 \leq i \leq \xa(u) \Rightarrow \mathrm{h}\ \bm{v}_i < \mathrm{h}\ u )
 \end{split} \tag{4} \]
 \end{theo}
@@ -126,6 +136,9 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 函数 $\mathrm{QB} : \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$
 表示全称量化的类型体。
 \[ \mathrm{QB}(\forall v_1\ \cdots\ \v_n.\ b) = b \]
+函数 $\Qv : \Pi_\mathrm{E}^\forall \rightarrow \powerset(
+U_\mathrm{v})$ 表示全称量化类型所有的变量集。
+\[ \Qv q = \QV q \cup \mathrm{v}(\QB q) \]
 \end{defin}
 
 \begin{defin}[实例化] \label{Def.Inst}
@@ -133,10 +146,10 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 \rightarrow \Pi_\mathrm{E} \rightarrow \Pi_\mathrm{E}$ 对类型
 进行变量实例化。
 \begin{align*}
-\mathrm{Inst}\ f\ \underline{(v)} &= \xif v \in U_\mathrm{v} \xthen
- f\ v \xelse \underline{(v)} \\
-\mathrm{Inst}\ f\ \underline{(u\ v_1\ \cdots\ v_{\xa(u)})} &= 
-\underline{(u\ f(v_1)\ \cdots\ f(v_{\xa(u)}))}
+\mathrm{Inst}\ f\ \underline{(\ v\ )} &= \xif v \in U_\mathrm{v} \xthen
+ f\ v \xelse \underline{(\ v\ )} \\
+\mathrm{Inst}\ f\ \underline{(\ u\ v_1\ \cdots\ v_{\xa(u\ )}\ )} &= 
+\underline{(\ u\ f(v_1)\ \cdots\ f(v_{\xa(u\ )})\ )}
 \end{align*}
 
 以及部分实例化 $\Inst_V$ 
@@ -146,31 +159,65 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 \rightarrow \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$ 
 实例化全称量化类型。
 \begin{gather*}
-\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q)} f\ \mathrm{QB}(q)
+\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q\ )} f\ \mathrm{QB}(q)
 \end{gather*}
 即$\mathrm{Inst}_\forall$只会实例化全称量化的类型变量。
 \end{defin}
 
 \begin{algorithm}
-\caption{实例化函数 $\Inst_V$} \label{alg:Iv}
+\caption{实例化函数 $\Inst$} \label{alg:Iv}
 \begin{algorithmic}[1]
 \Require 集合 $V \in \powerset(\Uv)$ 表示实例化的范围
 \Require 实例化函数 $f : \Uv \rightarrow \PiE$ 表示变量到值的对应
-\Require $u \in \PiE,\ u = \underline{(c\ v_1\ \cdots\ v_o)}$
+\Require $u \in \PiE,\ u = \underline{(\ c\ v_1\ \cdots\ v_o\ )}$
 表示要实例化的目标
-\Ensure $\Inst_V f\ u \in \PiAE$
+\Ensure $\Inst_V f\ u \in \PiE$
 \If {$o = 0$}
-\If {\quad $c \in \Uv$ \quad} \quad 以 $c$ 调用 $f$ 将结果输出
-\Else {\quad 输出 $\underline{(c)}$}
+\If {\quad $c \in V$ \quad} \quad 输出 $f(c)$
+\Else {\quad 输出 $\underline{(\ c\ )}$}
 \EndIf
 \Else
+\State $\underline{(\ c} \rightarrow s$
 \For{$i=1,\ \dots,\ o$}
-\State 调用算法\ref{alg:Iv}自身，输入$V,\ f,\ v_i$，记输出为 $v_i'$
+\State $s \concat \Inst(V,f,v_i) \rightarrow s$
 \EndFor
-\State 输出 $\underline{(c\ v_1'\ \cdots\ v_o')}$
+\State 输出 $s \concat \underline{)}$
 \EndIf
 \end{algorithmic}
 \end{algorithm}
+\begin{algorithm}
+\caption{全称量化的实例化函数 $\Inst_\forall$} \label{alg:IvQ}
+\begin{algorithmic}[1]
+\Require 实例化函数 $f : \Uv \rightarrow \PiE$ 表示变量到值的对应
+\Require $q \in \PiAE,\ q = \underline{\forall\ v_1\ \cdots \forall\ v_p
+\ u}$
+表示要实例化的目标
+\Ensure $\Inst_\forall f\ q \in \PiE$
+\State $\{\} \rightarrow s$
+\For{$i=1,\ \dots,\ p$}
+\State 集合 $s$ 加入 $q_i$
+\EndFor
+\State 调用算法 \ref{alg:Iv}：$\Inst(s,f,u)$ 将结果输出。
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{构造全称量化类型 $\mathrm{MakeQT}$} \label{alg:MakeQT}
+\begin{algorithmic}[1]
+\Require 集合 $V \in \powerset(\Uv)$
+\Require 类型 $u \in \PiE$
+\Ensure $q \in \PiAE$ 满足 $(\QV q = V) \ \land\ (\QB q = u)$
+\For{$v \in V$}
+\State $\underline{\forall} \concat v \concat u \rightarrow u$
+\EndFor
+\State 输出 $u$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemma} \label{Lem.Iv.V}
+\[ \Inst_V f\ u = \Inst_{\ V \cap \mathrm{v}(u)} f\ u \]
+\begin{proof} 对 $u$ 进行类型高度的归纳法即可。
+\end{proof}
+\end{lemma}
 
 \begin{defin}[α等价] \label{Def.aE}
 二元关系$\sim_\alpha$ 定义为
@@ -209,6 +256,8 @@ U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
 
 首先要引入诸多工具的定义。
 
+\subsection{类型匹配系统}
+
 \begin{defin}[类型匹配系统(Type Match System)] 类型匹配系统集 $\EQs$ 是集合
 \[ \EQs = \powerset(\Uv) \times \powerset(\PiE \times \PiE) \]
 类型匹配系统是所有集合 $\EQs$ 中的元素。
@@ -245,17 +294,52 @@ x_3 &=& y_3 \\
 二元等价关系 $\Meq$
 \[ \forall A\ B.\ (A \Meq B) = (\MF A = \MF B) \]
 \end{defin}
-\begin{theo}
+\begin{lemma} \label{L.Meq.refl}
 \[ \forall X\ V\ v.\ (V,X) \Meq (V, X \cup \{(v,v)\}) \]
-\end{theo}
 \begin{proof} 由定义 \ref{Def.Meq} 定义 \ref{Def.MF} 直接得到
 \end{proof}
+\end{lemma}
+
+\begin{lemma} \label{L.MF.XUX}
+\[ \MF (V,X_1 \cup X_2) = \MF(V,X_1) \cap \MF(V,X_2) \]
+\begin{proof} 将$\MF$ 的定义展开，命题等价于
+\begin{multline*}
+(\forall u_1\ u_2.\ (u_1,u_2) \in (X_1 \cup X_2)
+\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2) = \\
+(\forall u_1\ u_2.\ 
+(u_1,u_2) \in X_1
+\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2)\ \land\\
+(\forall u_1\ u_2.\ (u_1,u_2) \in X_2
+\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2)
+\end{multline*}
+这时显然的。
+\end{proof}
+\end{lemma}
 
 \begin{defin}[有意义类型方程组] \label{Def.SF}
 有意义（Senseful Form）类型方程组函数
 $\SF : \powerset(\PiE \times \PiE) \rightarrow \powerset(\PiE \times \PiE)$
 \[ \SF X = \{(x,y) \mbar (x,y) \in X \ \land\ x \neq y\} \]
 即是削除了恒等式 $(x,x)$ 后的方程。
+\end{defin}
+
+
+\begin{algorithm}
+\caption{计算有意义的类型方程组 $\SF X$} \label{alg:SF}
+\begin{algorithmic}[1]
+\Require 类型方程组 $X$
+\Ensure 类型方程组的有意义形式 $\SF X$
+\State $\{\} \rightarrow X'$
+\For {$(x,y) \in X$}
+\If {$x \neq y$} \State 将 $(x,y)$ 加入 $X'$ \EndIf
+\EndFor
+\State 输出 $X'$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{defin}[类型匹配系统的并] \label{Def.M.U}
+类型匹配系统 $(V,X)$ 与 $(V',X')$ 的并 $(V,X)\cup(V',X')$ 定义为
+\[ (V,X)\cup(V',X') = (V \cup V',\ X \cup X') \]
 \end{defin}
 
 \begin{defin}[已解的类型匹配系统] \label{Def.Solved}
@@ -275,6 +359,8 @@ $\UV : (\PiE \times \PiE) \rightarrow \powerset(\Uv)$
 \begin{equation} \Solved(V,X) \vdash \UV X \subseteq V \end{equation}
 \begin{equation} \Solved(V,X) \vdash \forall x\ y.\ (x,y) \in X
 \Rightarrow x \in \UV X \label{UVX} \end{equation}
+\begin{equation} \label{Solved.sub.refl}
+\Solved(V,X) \vdash \Solved(V,X - {u,u}) \end{equation}
 
 \begin{lemma} \label{Lem.SFXF}
 \[ \Solved(V,X) \vdash \SF X \in (\UV X \rightarrow \PiE) \]
@@ -296,6 +382,23 @@ y_1 \in \PiE \]
 $\EI\ f$ 将一个部分函数 $f$ 扩展成完全函数
 \[ \EI\ f\ x = \xif x \in \Dom f \xthen f\ x \xelse x \]
 \end{defin}
+
+\begin{algorithm}
+\caption{二元组集的函数扩张 $\mathrm{AsFunc}$} \label{alg:AsFunc}
+\begin{algorithmic}[1]
+\Require 二元组集 $f \in \powerset(X \times Y)$ 满足
+$\forall x\ y_1\ y_2.\ (x,y_1) \in f \ \land\ (x,y_2) \in f \Rightarrow
+(y_1 = y_2)$
+\Ensure $\EI f \in (X \rightarrow Y)$
+\Function{F\ }{$v$}
+\For {$(x,y) \in f$}
+\If {$x = v$} \State 返回 $y$ \EndIf
+\EndFor
+\State 返回 $v$
+\EndFunction
+\State 输出 F
+\end{algorithmic}
+\end{algorithm}
 
 \begin{theo}[已解方程组的解]
 \[ \Solved (V,X) \vdash \MF(V,X) = \{ \Inst_V g
@@ -387,6 +490,36 @@ X \neq \emptyset,\
 \vdash \\
 & \Inst_V g\ y = \Inst_V f\ y
 \end{split}\]
+对 $y$ 进行类型高度的递归法，只要证明下式命题就能得证。
+\[ \begin{split}
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
+\vdash \\
+& \Inst_V g\ y = \Inst_V f\ y
+\end{split}\]
+进而
+\[ \begin{split}
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
+\vdash \\ & g\ y = f\ y
+\end{split}\]
+由前提中的 $(\forall u.\ u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u)))$
+\[ \begin{split}
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
+\vdash \\& g\ y = \Inst_V g\ (\EI (\SF X)\ y)
+\end{split}\]
+注意至今为止一直没用到的 $\Solved$ 的一个条件
+\[ \Solved(V,X),\ (x,y) \in \SF X \vdash \BV y \cap \UV X = \emptyset \]
+而 $\Dom (\SF X) = \emptyset$，这意味着  $\EI (\SF X)\ y = y$
+于是命题变成
+\[ \begin{split}
+\Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
+(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
+\vdash \\& g\ y = \Inst_V g\ y
+\end{split}\]
+因为 $y \in \Uv$ 所以 $\Inst_V g\ y = g\ y$ 命题得证。
 \end{proof}
 
 \begin{defin}[类型匹配系统的实例集] \label{Def.MI}
@@ -395,8 +528,8 @@ $\MI\ (V,X)\ u \in \powerset(\PiE)$
 \[\MI\ (V,X)\ u = \{ \Inst_V f\ u \mbar f \in \MF(V,X) \}\]
 \end{defin}
 \begin{lemma}[类型匹配系统的实例集的M等价] \label{Lem.MI.Meq}
-\[ \forall M_1\ M_2.\ (M_1 \Meq M_2) \Rightarrow (\MI M_1 \Meq \MI M_2)
-\]
+\[ \forall M_1\ M_2\ u.\ u \in \PiE\ \land\ (M_1 \Meq M_2) 
+\Rightarrow (\MI M_1\ u \Meq \MI M_2\ u) \]
 \end{lemma}
 \begin{proof} 由$\MI$的定义 \ref{Def.MI}，M等价的定义 \ref{Def.Meq}
 直接得到
@@ -409,10 +542,10 @@ $\MI\ (V,X)\ u \in \powerset(\PiE)$
 \begin{proof} 等价于
 \[ \Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
 \EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)\]
-对 $u$ 进行高度的归纳法，当 $\h u = 1$ 时，$u = \underline{(c)}$，
+对 $u$ 进行高度的归纳法，当 $\h u = 1$ 时，$u = \underline{(\ c\ )}$，
 $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 
-\noindent 当 $\h u = \Suc n$ 时，$u = \underline{(c\ v_1\ \cdots\ v_o)}
+\noindent 当 $\h u = \Suc n$ 时，$u = \underline{(\ c\ v_1\ \cdots\ v_o\ )}
 ,\ \h v_1 \leq n,\ \cdots,\ \h v_o \leq n$，且有
 \[ \Solved(V,X),\ \h u \leq n \vdash \Inst_V (\Inst_V g \circ
 \EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)
@@ -452,47 +585,409 @@ $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 引理 \ref{L.QIMI} 意味着很多，首先对于任意的类型匹配系统 $M \in \EQs$
 如果其有可解形式 $M'$ 即 $\Solved M'\ \land\ M \Meq M'$，
 那么必定存在存在一个 $q \in \PiAE$ 使得 $\QI q = \MI M$，
-其次，可以有一个算法由 $\Solved M'$ 求解 $q$
+其次，算法 \ref{alg:QIMI} 可以由 $\Solved M'$ 求解 $q$，
+其正确性直接由引理 \ref{L.QIMI} 得到。
 
 \begin{theo} \label{T.QIMI.S}
-\[ \forall M.\ \Solved M \Rightarrow \exists q.\ \QI q = \MI M \]
+\[ \forall M\ u.\ 
+\Solved M \Rightarrow \exists q.\ \QI q = \MI M\ u \]
 \end{theo}
 \begin{proof} 由引理 \ref{L.QIMI} 直接得到。
 \end{proof}
 
+
 \begin{algorithm}
-\caption{已解类型匹配系统的全称量化类型} %\label{alg:put-into-refri}
+\caption{已解类型匹配系统的实例化 MI} \label{alg:MI}
 \begin{algorithmic}[1]
-\Require 类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
-\Ensure $q \in \PiAE$ 满足 $\QI q = \MI (V,X)$
-\State 先热热身:)
-\For{$i=1,\dots ,N$} \Comment{我是个For循环}
-\If {是猪八戒}
-	\State 打开冰箱门，把第$i$个放进冰箱，关上冰箱门
-\Else 
-	\State 下一个
-\EndIf
-\EndFor
+\Require 已解的类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
+\Require 类型 $u \in \PiE$
+\Ensure $\Inst_V\ (\EI(\SF X))\ u$
+\State $\mathrm{AsFunc}(\SF X) \rightarrow f$
+\Comment {调用算法 \ref{alg:SF} 和算法 \ref{alg:AsFunc}，
+由引理 \ref{Lem.SFXF} $\SF X$ 满足
+算法 \ref{alg:AsFunc} 的条件 }
+\State 输出 $\Inst(V,f,u)$  \Comment {调用算法 \ref{alg:Iv}}
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{已解类型匹配系统的全称量化类型 QIMI} \label{alg:QIMI}
+\begin{algorithmic}[1]
+\Require 已解的类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
+\Require 类型 $u \in \PiE$
+\Ensure $q \in \PiAE$ 满足 $\QI q = \MI (V,X)\ u$
+\State $\MI((V,X),u) \rightarrow b$  \Comment {调用算法 \ref{alg:MI}}
+\State 输出 $\mathrm{MakeQT}(V,b)$
+\Comment {调用算法 \ref{alg:MakeQT}}
 \end{algorithmic}
 \end{algorithm}
 
-\begin{theo}[类型匹配系统有解与实例化类型集交集的关系]
-\[ \begin{split}
-\forall q_1\ q_2.\ &(\QV q_1 \cap \QV q_2 = \emptyset) \Rightarrow\\
-(\QI q_1 \cap \QI q_2 =\ &
-\MI(\QV q_1 \cup \QV a_2,\ \{\QB q_1 = \QB q_2\}))
-\end{split}\]
+\begin{defin}[无冲突全称量化类型]
+定义$\PiAE \times \PiAE$上的二元关系 $\NC$ 表示两个全称量化类型的全称量化变量不相互冲突。
+\[ q_1 \NC q_2 = (\QV q_1 \cap \Qv q_2 = \emptyset) \ \land\ 
+(\QV q_2 \cap \Qv q_1 = \emptyset) \]
+显然有
+\begin{equation}
+q_1 \NC q_2 \vdash \QV q_1 \cap \QV q_2 = \emptyset
+\end{equation}
+\end{defin}
+
+\begin{theo}[类型匹配系统与实例化类型集交集的关系]
+\[ q_1 \NC q_2 \vdash \QI q_1 \cap \QI q_2 =\ 
+\MI\ (\QV q_1 \cup \QV a_2,\ \{\QB q_1 = \QB q_2\})\ \QB(q_1)\]
 \end{theo}
-\begin{proof}
-\[\begin{split}
-\QV q_1 \cap \QV q_2&\ = \emptyset \vdash \{u \mbar
-  u = \Inst_{\ \QV(q_1)} f_1\ \QB(q_1) = \Inst_{\ \QV(q_2)} f_2\ 
-  \QB(q_2) \} = \\
-\{ \Inst_\forall f\ q_1 \mbar  \}
-\end{split}\]
+\begin{proof} 简洁起见，令
+\begin{align*}
+&u_1 = \QB q_1&&u_2 = \QB q_2&\\
+&V_1 = \QV q_1&&V_2 = \QV q_2&
+\end{align*}
+将QI的定义与MI的定义展开，原命题等价于
+\[ \begin{split} q_1\ &\NC q_2 \vdash \\
+&\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+= \{\Inst_{V_1 \cup V_2} f\ u_1 \mbar \Inst_{V_1 \cup V_2} f\ u_1
+= \Inst_{V_1 \cup V_2} f\ u_2 \} \end{split} \]
+由 $q_1 \NC q_2$ 可得
+$(V_1 \cup V_2) \cap V_1 = V_1$，
+$(V_1 \cup V_2) \cap V_2 = V_2$，
+用引理 \ref{Lem.Iv.V}，得到
+\begin{align*}
+&\Inst_{V_1 \cup V_2} f\ u_1 = \Inst_{V_1} f\ u_1&
+&\Inst_{V_1 \cup V_2} f\ u_2 = \Inst_{V_2} f\ u_2&
+\end{align*}
+带入命题，命题变为
+\[ q_1\ \NC q_2 \vdash
+\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+= \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+显然有
+\[ \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+\supseteq
+\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+只要证明
+\[ q_1\ \NC q_2 \vdash
+ \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+\subseteq
+\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+即证明命题
+\[ q_1\ \NC q_2 ,\ 
+\Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \vdash \exists h.\ 
+\Inst_{V_1} h\ u_1 = \Inst_{V_2} h\ u_2 \]
+$h = (\lambda v.\ \xif v \in V_1 \xthen f\ v \xelse g\ v)$ 
+是满足上述条件的实例，因为 $V_1 \cap V_2 = \emptyset$
+
+\noindent 这样命题得证。
 \end{proof}
 
+\begin{defin}[无解的类型匹配系统]
+谓词 $\NoSolution$ 表示一个类型匹配系统是无解的。
+\[ \NoSolution M = (\MF M = \emptyset) \]
+相反的 $\Solvable$ 表示有解
+\[ \Solvable M = (\MF M \neq \emptyset) \]
+$\MNS$ 是某个无解的类型匹配系统
+\[ \NoSolution \MNS \]
+$\MNS$ 具体的表达是无关紧要的，例如下面的类型匹配系统即可
+\[ (\emptyset,\ \{u_1 = u_2\})\quad\quad u_1 \neq u_2 \]
+\end{defin}
 
+\begin{defin}[类型方程组中全部的类型变量]
+对类型方程组 $X \in \powerset(\PiE \times \PiE)$
+\[ \MV\ X = \bigcup_{(x,y) \in X} \mathrm{v}(x) \cup \mathrm{v}(y) \]
+表示 $X$ 中每一个类型方程的所有类型变量的合并。
+\end{defin}
+
+\begin{defin}[类型匹配系统的实例化]
+$\IM : (\Uv \rightarrow \PiE) \rightarrow \EQs \rightarrow \EQs$ 
+将一个类型匹配系统的所有方程的等式两边都实例化
+\[ \IM f\ (V,X) = \{(\Inst_V f\ x,\ \Inst_V f\ y) \mbar (x,y) \in X\}\] 
+\end{defin}
+\begin{lemma} \label{L.IIuv}
+\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \PiE
+\vdash \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = \Inst_V\ g\ x \]
+\begin{proof} 对 $x$ 进行类型高度的归纳法，只需要证明叶子类型时的情况
+\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \Uv
+\vdash \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = \Inst_V\ g\ x \]
+由 $\Inst_V$ 的定义，此时 $\Inst_V\ \{(u,v)\}\ x = \{(u,v)\}\ x$
+
+\noindent 当 $x \neq v$，$\Inst_V\ \{(u,v)\}\ x = x$，命题显然成立
+
+\noindent 当 $x = v$，$\Inst_V\ \{(u,v)\}\ x = v$
+\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \Uv
+\vdash \Inst_V g\ v = \Inst_V\ g\ x \]
+于前提 $\Inst_V g\ u = \Inst_V g\ v$ 命题得证。
+\end{proof}
+\end{lemma}
+
+\begin{lemma}
+\[ (u,v) \in X,\ u \in V \vdash (V,X) 
+\Meq (V,(\IM\ \EI\{(u,v)\}\ \ (X - \{(u,v)\})) \cap \{(u,v)\})\]
+\begin{proof} 命题等价于
+\[ \begin{split} (u,v) \in X,\ &u \in V\ \vdash
+\{g \mbar (x,y) \in X\ \land\  \Inst_V g\ x = \Inst_V g\ y \} = \\
+\{g \mbar &(x,y) \in (X-\{(u,v)\})\ \land\  \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = 
+\Inst_V g\ (\Inst_V\ \{(u,v)\}\ y)\ \land\\
+&\quad\quad\Inst_V g\ u = \Inst_V g\ v \} \end{split} \]
+分步证明等式两端
+\begin{align}
+\begin{split} (u,v) \in X,\ u \in V,&\ 
+\forall x\ y.\ (x,y) \in X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\vdash \\ \forall x\ y.\ (x,y) \in\ (X-\{(u,v)\})&\Rightarrow
+(\Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = 
+\Inst_V g\ (\Inst_V\ \{(u,v)\}\ y))\\
+&\land\ (\Inst_V g\ u = \Inst_V g\ v)
+\end{split} \tag{1}\\ \notag \\
+\begin{split} (u,v) \in X,\ u \in V,&\ \Inst_V g\ u = \Inst_V g\ v,\ \\
+\forall x\ y.\ 
+(x,y) \in (X-\{(u,v)\})&\Rightarrow
+(\Inst_V g\ (\Inst_V\{(u,v)\}\ x) = 
+\Inst_V g\ (\Inst_V\{(u,v)\}\ y)) \vdash \\
+\forall x\ y.\ (x,&y) \in X\Rightarrow  \Inst_V g\ x = \Inst_V g\ y
+\end{split} \tag{2}
+\end{align}
+对于 (1) 有
+\[ \begin{split} (u,v) \in X,\ u \in V,\ 
+\forall x\ y.\ (x,y)\ &\in X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\vdash \\
+\Inst_V g\ u = \Inst_V g\ v
+\end{split} \]
+对于 (2) ，$\Inst_V g\ u = \Inst_V g\ v$ 就在前提列表中
+
+\noindent 在这两种情况都可以应用引理 \ref{L.IIuv}，这样命题就瞬间被简化成非常简单的形式
+\begin{align}
+\begin{split} (u,v) \in X,\ u \in V,&\ 
+\forall x\ y.\ (x,y) \in X\Rightarrow(\Inst_V g\ x = \Inst_V g\ y)
+\vdash \\ (\forall x\ y.\ 
+(x,y) \in &(X-\{(u,v)\})\Rightarrow \Inst_V g\ x = \Inst_V g\ y)\ 
+\land\ (\Inst_V g\ u = \Inst_V g\ v)
+\end{split} \tag{1'}\\
+\begin{split} (u,v) \in X,\ u \in V,&\ \Inst_V g\ u = \Inst_V g\ v,\\
+\forall x\ y.\ &(x,y)
+\in (X-\{(u,v)\})\Rightarrow \Inst_V g\ x = \Inst_V g\ y \vdash \\
+\forall x\ y.\ (x,y) \in &X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\end{split} \tag{2'}
+\end{align}
+这些显然是成立的。
+\end{proof}
+\end{lemma}
+
+\begin{defin}
+$\SBP\ (V_x,X_x)\ (V_o,X_o)$ 描述类型匹配系统 
+$(V_x,X_x),\ (V_o,X_o) \in \EQs$ 具有如下性质
+\[ \SBP\ (V_x,X_x)\ (V_o,X_o) = \Solved(V_o,X_o) \ \land\ 
+(V_x \cap V_o = \emptyset)\ \land\ (\MV X_x \cap V_o = \emptyset) \]
+\end{defin}
+\begin{lemma}
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,x) \in X_x \vdash
+\SBP\ (V_x,X_x - \{(x,x)\})\ (V_o,X_o)\ \land\\
+&((V_x,X_x - \{(x,x)\})\cup(V_o,X_o) \Meq (V_x,X_x)\cup(V_o,X_o)) \end{split}\]
+\begin{proof}
+$((V_x,X_x - \{(x,x)\})\cup(V_o,X_o) \Meq (V_x,X_x)\cup(V_o,X_o))$
+是显然的，由引理 \ref{L.Meq.refl} 直接得到。
+现证明
+\[ \SBP\ (V_x,X_x)\ (V_o,X_o),\ (x,x) \in X_x \vdash
+\SBP\ (V_x,X_x - \{(x,x)\})\ (V_o,X_o)\]
+由$\SBP$ 的定义
+\[ \SBP\ (V_x,X_x)\ (V_o,X_o),\ (x,x) \in X_x \vdash 
+(\MV (X_x - \{(x,x)\}) \cap V_o = \emptyset) \]
+这是显然的。
+\end{proof}
+\end{lemma}
+
+\begin{lemma}
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash\\
+&\SBP\ (V_x,X_x')\ (V_o,X_o)\ \land\ 
+((V_x,X_x')\cup(V_o,X_o) \Meq (V_x,X_x)\cup(V_o,X_o)) \end{split}\]
+\[ \text{其中\quad} X_x' = X_x - \{(x,y)\} \cup \bigcup_{i=1\cdots n} \{(v_i,w_i)\} \]
+\begin{proof}
+首先证明 $((V_x,X_x')\cup(V_o,X_o) \Meq (V_x,X_x)\cup(V_o,X_o))$ 部分，
+
+\noindent 这是成立的因为
+$x = \underline{(\ c\ v_1\ \cdots
+\ v_n\ )},\ y = \underline{(\ c\ w_1\ \cdots\ w_n\ )}$ 下
+\[ \{f \mbar \Inst_V f\ x = \Inst_V f\ y \} = 
+\{ f \mbar \bigwedge_{i=1\cdots n} \Inst_V f\ v_i = \Inst_V f\ w_i \} \]
+然后证明 $\SBP\ (V_x,X_x')\ (V_o,X_o)$ 只要证明如下命题即可
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash\\
+&\MV(X_x - \{(x,y)\} \cup \bigcup_{i=1\cdots n} \{(v_i,w_i)\}) = 
+\MV(X_x)
+\end{split} \]
+这是成立的因为
+\[ x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash
+\mathrm{v}(x)\cup\mathrm{v}(y) = \bigcup_{i=1\cdots n} \mathrm{v}(v_i)
+\cup \mathrm{v}(w_i) \]
+\end{proof}
+\end{lemma}
+
+\begin{lemma}
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ u\ )},\ u \in V_x \vdash\\
+&\SBP\ (V_x',X_x')\ (V_o',X_o')\ \land\ 
+((V_x',X_x')\cup(V_o',X_o') \Meq (V_x,X_x)\cup(V_o,X_o)) \end{split}\]
+其中
+\begin{align*}
+&X_x' = \IM\ (\EI \{(x,y)\})\ (X_x - \{(x,y)\})&
+&V_x' = V_x - \{u\}&\\
+&X_o' = X_o \cup \{(x,y)\}&
+&V_o' = V_o \cup \{u\}&
+\end{align*}
+\begin{proof}
+令$V = V_x \cup V_o$
+\[ V_x' \cup V_o' = (V_x - \{u\}) \cup (V_o \cup \{u\}) = V \]
+首先证明 $(V_x',X_x')\cup(V_o',X_o') \Meq (V_x,X_x)\cup(V_o,X_o)$ 部分，即
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ u\ )},\ u \in V_x \vdash\\
+&(\MF(V,X_x' \cup X_o') = \MF(V,X_x \cup X_o)) \end{split}\]
+由引理 \ref{L.MF.XUX}
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ u\ )},\ u \in V_x \vdash\\
+&(\MF(V,X_x') \cap \MF(V,X_o') = \MF(V,X_x) \cap \MF(V,X_o))
+\end{split}\]
+
+\noindent 这是成立的因为
+$x = \underline{(\ c\ v_1\ \cdots
+\ v_n\ )},\ y = \underline{(\ c\ w_1\ \cdots\ w_n\ )}$ 下
+\[ \{f \mbar \Inst_V f\ x = \Inst_V f\ y \} = 
+\{ f \mbar \bigwedge_{i=1\cdots n} \Inst_V f\ v_i = \Inst_V f\ w_i \} \]
+然后证明 $\SBP\ (V_x,X_x')\ (V_o,X_o)$ 只要证明如下命题即可
+\[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
+x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash\\
+&\MV(X_x - \{(x,y)\} \cup \bigcup_{i=1\cdots n} \{(v_i,w_i)\}) = 
+\MV(X_x)
+\end{split} \]
+这是成立的因为
+\[ x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash
+\mathrm{v}(x)\cup\mathrm{v}(y) = \bigcup_{i=1\cdots n} \mathrm{v}(v_i)
+\cup \mathrm{v}(w_i) \]
+\end{proof}
+\end{lemma}
+
+\begin{algorithm}
+\caption{ $\mathrm{SolveM_r}$ } \label{alg:SolveMr}
+\begin{algorithmic}[1]
+\Require 任意的类型匹配系统 $(V_x,X_x)$，
+已解的类型匹配系统 $\Solved(V_o,X_o)$
+\Statex 满足 $X_x \neq \emptyset \ \land\ \SBP\ (V_x,X_x)\ (V_o,X_o)$
+\Ensure 类型匹配系统 $(V_x',X_x')$，已解的类型匹配系统 $\Solved (V_o',X_o')$
+\Statex 满足 $\SBP\ (V_x,X_x)\ (V_o,X_o)
+\ \land\ ((V_x,X_x) \cup (V_o,X_o) \Meq (V_x',X_x') \cup 
+(V_o',X_o')) $
+\State 从 $X_x$ 中随意取出元素 $(x,y) \in X_x$，
+$x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
+y = \underline{(\ d\ w_1\ \cdots\ w_m \ )}$
+\State $X_x - (x,y) \rightarrow X_x$
+\Comment {接下来将削除方程组中的等式 $(x,y)$ 而保持方程组的解不变}
+\If {$x = y$} \label{l:mrif1}
+\State 输出 $((V_x,X_x),(V_o,X_o))$ \label{l:mro1}
+\Comment{恒等式的情况可以直接削除} \Else
+\If {$n \neq 0 \ \land\ m \neq 0$} \label{l:mrif2}
+\Comment {若等式两边均不是类型变量或单个类型}
+\If {$c = d$}
+\Comment {$(c = d) \Rightarrow (n = m)$}
+\For {$i = 1\cdots n$}
+\Comment {等式$(x,y)$就可以分解为$n$个子等式 $(v_i,w_i)$}
+\State $\{(v_i,w_i)\} \cup X_x \rightarrow X_x$
+\Comment{将这些等式分别加入方程组}
+\EndFor
+\State 输出 $((V_x,X_x),(V_o,X_o))$ \label{l:mro2}
+\Comment{就完成了$(x,y)$ 的削除}
+\Else \State 输出 $(\MNS,\MNS)$ \Comment{$c \neq d$ 时，方程组一定无解}
+\label{l:mro3} \EndIf
+\Else \Comment{等式两边某一方是类型变量或单个类型}
+\If {$c \in \Uv\ \lor\ d \in \Uv$} 
+\Comment{若等式两边某一方是类型变量}
+\State 令 $c,\ d$ 中属于 $\Uv$ 的为 $u$，另一方为 $v$
+\State $\{(u,v)\} \cup X_o \rightarrow X_o\quad,\quad
+\{u\} \cup V_o \rightarrow V_o\quad,\quad V_x - \{u\} \rightarrow
+V_x\quad,\quad \{\} \rightarrow X_x'$
+\For {$(s,t)\in X_x$}
+\State $\{(\MI((V_o,X_o),s),\MI((V_o,X_o),t))\} \cup X_x' \rightarrow X_x'$
+\Comment {$\MI$ 为算法 \ref{alg:MI}}
+\EndFor
+\State 输出 $((V_x,X_x'),(V_o,X_o))$ \label{l:mro4}
+\Else \Comment{若等式两边都是单个类型而不是类型变量}
+\State 输出 $(\MNS,\MNS)$ \Comment{因为$x \neq y$ 这时也是不可解的}
+\label{l:mro5} \EndIf
+ \EndIf \EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{求解类型匹配系统 SolveM } \label{alg:SolveM}
+\begin{algorithmic}[1]
+\Require 任意的类型匹配系统 $(V,X)$
+\Ensure $M' \in \EQs$ 满足 $M'$ 是已解的即 $\Solved M'$ 或者等于 $\MNS$ 
+，且 $M \Meq M'$
+\State $\{\} \rightarrow V' \quad,\quad \{\} \rightarrow X'$
+\While {$(V,X) \neq \MNS \ \land\ X \neq \emptyset$}
+\State $\mathrm{SolveM_r}((V,X),(V',X')) \rightarrow ((V,X),(V',X'))$
+\Comment {$\mathrm{SolveM_r}$ 是算法 \ref{alg:SolveMr}}
+\EndWhile
+\State 输出 $(V',X')$
+\end{algorithmic}
+\end{algorithm}
+
+
+算法 SolveM 用于求解任意给定的类型匹配系统，主要是对子算法 \SolveMr
+的迭代。接下来将分析 \SolveMr 的性质以证明 SolveM 的正确性。
+
+\begin{lemma}[\SolveMr 的正确性1]
+\[ \Solved\ M_o,\ X_x \neq \emptyset \vdash
+(\mathrm{SolveM_r}(M_x,M_o) = 
+(M_x',M_o'))\ \land\ (M_x \cup M_o \Meq M_x' \cup M_o') \]
+其中 \begin{align*}
+&M_x = (V_x,X_x)&&M_o = (V_o,X_o)&
+&M_x' = (V_x',X_x')&&M_o' = (V_o',X_o')&
+\end{align*}
+\begin{proof} 对任意的 $(x,y) \in X_x$，在行 \ref{l:mro1} 的情况下
+命题等价于
+\[ \Solved(V_o,X_o),(x,x) \in X_x \vdash
+(V_o \cup V_x, X_o \cup X_x) \Meq (V_o \cup V_x, X_o \cup X_x
+- \{(x,x)\})  \]
+由引理 \ref{L.Meq.refl} 直接证明。
+
+\hfill
+
+\noindent 行 \ref{l:mro2} 的输出，命题等价于
+\[ \begin{split}
+\Solved(V_o,X_o)&,\ (x,y) \in X_x,\ x = \underline{(\ c\ v_1\ \cdots
+\ v_n\ )},\ y = \underline{(\ c\ w_1\ \cdots\ w_n\ )} \vdash\\
+&(V_o \cup V_x, X_o \cup X_x) \Meq (V_o \cup V_x, X_o \cup X_x
+- \{(x,y)\} \cup \bigcup_{i=1\cdots n} (v_i,w_i)) \end{split} \]
+这是成立的，因为 $x = \underline{(\ c\ v_1\ \cdots
+\ v_n\ )},\ y = \underline{(\ c\ w_1\ \cdots\ w_n\ )}$ 下
+\[ \{f \mbar \Inst_V f\ x = \Inst_V f\ y \} = 
+\{ f \mbar \bigwedge_{i=1\cdots n} \Inst_V f\ v_i = \Inst_V f\ w_i \} \]
+
+\hfill
+
+\noindent 行 \ref{l:mro3} 的情况下，$M_x \cup M_o$ 是无解的因为
+$(x,y) \in X_x, x = \underline{(\ c\ v_1\ \cdots
+\ v_n\ )},\ y = \underline{(\ d\ w_1\ \cdots\ w_p\ )}$ 时
+\[ c \neq d \Rightarrow \nexists f.\ \Inst_V f\ x = \Inst_V f\ y \]
+行 \ref{l:mro5} 的无解情况也是一样的。
+
+\hfill
+
+\noindent 行 \ref{l:mro4} 的输出是主要的难点。
+
+\end{proof}
+\end{lemma}
+
+
+\begin{theo}[类型匹配系统的求解]
+\[ \forall M.\ \exists M'.\ (M \Meq M') \ \land\ (\Solved M' \lor 
+\NoSolution M') \]
+另一个等价的表达是
+\[ \forall M.\ \Solvable M \Rightarrow \exists M'.\ (M \Meq M')\ \land\ 
+\Solved M'\]
+\begin{proof} 使用下述算法对任意的 $M$ 找出与其M等价的 $M'$ 
+且要么是 $\Solved M'$ 要么是 $\NoSolution M'$
+\end{proof}
+\end{theo}
 
 \begin{theo} 
 \[ \forall q_1\ q_2.\ q_1,\ q_2 \in \Pi_\mathrm{E}^\forall 
@@ -519,7 +1014,7 @@ $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 \noindent 在 $n = 1$ 时，由定理 \ref{T.cah} 性质1
 $\quad \mathrm{h}\ q_1 = \mathrm{h}\ q_2 = 1\quad$
 由定理 \ref{T.cah} 性质3
-\[ u_1 = \underline{(c_1)} \quad\quad u_2 = \underline{(c_2)}
+\[ u_1 = \underline{(\ c_1\ )} \quad\quad u_2 = \underline{(\ c_2\ )}
 \quad\quad c_1,\ c_2 \in U \]
 \end{proof}
 
