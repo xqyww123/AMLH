@@ -53,12 +53,9 @@
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
 }
 \newcommand{\breduce}{\mathrel{\rightarrow_\beta}}
-\newcommand{\widesim}[2][1.5]{
-  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
-}
-\newcommand{\widesims}[3][1.5]{
-  \mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
-}
+\newcommand{\dotsim}{\mathrel{\dot{\sim}}}
+\newcommand{\widesim}[2][1.5]{\mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
+\newcommand{\widesims}[3][1.5]{\mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}}
 \renewcommand{\qedsymbol}{$\blacksquare$}
 \newcommand{\proctr}[2]{\ensuremath{\ {\prec}\frac{#1}{#2}{\succ}\ }}
 \newcommand{\vdashv}{\ensuremath{\ {\dashv}{\vdash}\ }}
@@ -90,7 +87,8 @@
 \DeclareMathOperator{\FVS}{FVS}
 \DeclareMathOperator{\BV}{v}
 \DeclareMathOperator{\TS}{w}
-\DeclareMathOperator{\EQS}{W}
+\DeclareMathOperator{\EQW}{W}
+\DeclareMathOperator{\TMW}{\mathcal{W}}
 \DeclareMathOperator{\FINITE}{FINITE}
 \DeclareMathOperator{\SF}{SF}
 \DeclareMathOperator{\UV}{UV}
@@ -103,7 +101,7 @@
 \newcommand{\SolveMr}{$\mathrm{SolveM_r}$}
 \newcommand{\MNS}{\ensuremath{\mathrm{M}_\emptyset}}
 \newcommand{\EI}{\ensuremath{\mathrm{E}_\mathrm{I}}}
-\newcommand{\EQs}{\ensuremath{\mathfrak{M}}}
+\newcommand{\TMs}{\ensuremath{\mathfrak{M}}}
 \newcommand{\Uv}{\ensuremath{U_{\mathrm{v}}}}
 \newcommand{\UE}{\ensuremath{U_{\mathrm{E}}}}
 \newcommand{\PiE}{\ensuremath{\Pi_{\mathrm{E}}}}
@@ -111,6 +109,8 @@
 \newcommand{\Meq}{\ensuremath{\overset{\mathrm{M}}{=\joinrel=}}}
 \newcommand{\Words}{\ensuremath{\mathbf{Words}}}
 \newcommand{\String}{\ensuremath{\mathbf{String}}}
+
+\newcommand{\TimeComplexity}{\item[\textbf{时间复杂度：}]}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”

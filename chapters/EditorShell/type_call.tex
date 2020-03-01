@@ -1,0 +1,69 @@
+\subsection{类型的调用}
+
+现在讨论诸如$\lamst$以及$\lambda2$中组合律的类型调用
+
+\hfill
+
+\begin{minipage}[b]{0.45\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash M : \sigma \leftarrow \tau$}
+\AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
+\BinaryInfC{$\Gamma \vdash M N : \tau$}
+\end{prooftree}
+\end{minipage}\begin{minipage}[b]{0.5\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma_1 \vdash M : \forall \alpha\ \sigma$}
+\AxiomC{$\Gamma_2 \vdash \tau : *$}
+\RightLabel{(全称组合律)}
+\BinaryInfC{$\Gamma_1,\ \Gamma_2 \vdash M\ \tau : \sigma$}
+\end{prooftree}\end{minipage}
+
+\hfill
+
+自然地期望在 $\ES$ 中也应有类似的组合运算。
+原本的 λ2 演算要求显示地实例化组合双方的类型，直到实例化成不具有全称量化的形式才可以进行
+组合，而组合的结果也一定不具有全称量化的。
+例如 $\forall x.\ x \rightarrow z \rightarrow x$ 与
+$\forall y.\ y$ 进行组合的结果只能是 $z \rightarrow x$ 或 $z \rightarrow y$，
+即进行了两次实例化，但其实只要一次实例化就可以的，更好的结果是 $\forall x.\ 
+z \rightarrow x$
+
+$\ES$ 对 λ2 主要的改进在于此，这也是几乎 $\ES$ 与 λ2 唯一的不同，$\ES$ 基于
+上一节论述的{\it 全称量化的交}提出一种对组合双方的全称量化进行最小实例化以尽可能保持
+全称量化而进行组合的运算，称作{\it 全称量化类型的函数调用}。
+这种运算只进行必要的实例化而在结果中尽可能地保留了全称量化，在 $\forall x.\ 
+x \rightarrow z \rightarrow x$ 与 $\forall y.\ y$ 的例子中，可以得到 
+$\forall x.\ z \rightarrow x$。
+
+接下来一步步地正式地数学定义{\it 全称量化类型的函数调用}
+（function application of universal quantified type）。
+
+\begin{defin}[函数类型]
+$\rightarrow$ 是函数类型的类型构造器。
+\begin{align*}
+&\underline{\rightarrow} \in \hat{U} - \hat{U}_v&
+&\mathrm{a}(\underline{\rightarrow}) = 2&
+\end{align*}
+诸如以下范式的类型被叫做从 $a$ 到 $b$ 的函数，简称函数。
+\[ \underline{(\ \rightarrow\ a\ b\ )} \]
+也可以使用记号$a \rightarrow b$表示 $\underline{(\ \rightarrow\ a\ b\ )}$
+
+\noindent 所有的函数构成的集合为 $\PiE^\rightarrow$
+\end{defin}
+
+\begin{defin}[普通类型的函数调用匹配]
+普通类型的函数调用匹配是$\PiE^\rightarrow \times \PiE$上的二元关系 $\dotsim$
+\[ \forall a\ b.\ (a \rightarrow b) \dotsim a \]
+\end{defin}
+
+\begin{defin}[普通类型集合的函数调用]
+普通类型集合的函数调用是$\powerset(\PiE^\rightarrow) \times \powerset(\PiE)$到
+$\powerset(\PiE)$的函数 $(\cdot)$
+\[ A \cdot B = \{b \mbar (a \rightarrow b) \in \PiE^\rightarrow\ \land\ a \in \PiE\} \]
+\end{defin}
+
+\begin{theo}
+\[ \forall q_1,\ q_2 \in \PiAE.\ (\QI q_1 \cdot \QI q_2 = \emptyset)\ \lor\ 
+(\exists q.\  \QI q_1 \cdot \QI q_2 = \QI q)\]
+\end{theo}
+

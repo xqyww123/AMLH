@@ -1,0 +1,259 @@
+\subsection{类型与全称量化类型}
+
+首先定义类型。
+
+\begin{defin}[类型集$\PiE$]
+无穷的单词集 $\hat{U}$ 为用于表示类型的字母表
+$\hat{U} \subseteq \Words$，
+函数$\xa : \hat{U} \mapsto \mathbb{N}$表示类型的元数（Arity），
+$\hat{U}$ 中同样无穷的元数为0的子集$\hat{U}_\mathrm{v}$：
+$\hat{U}_\mathrm{v} \subseteq \hat{U}\ \land\ \forall u.\ 
+u \in \hat{U}_\mathrm{v} \Rightarrow \xa(u) = 0$
+表示类型变量，主要用于全称量化。
+
+$\ES$ 的类型集 $\Pi_\mathrm{E}$ 是满足以下条件的$\String$的最小子集
+\begin{equation} \label{Def.PiE}
+\forall u.\ u \in U \Rightarrow \forall \bm{v}.\ \bm{v} 
+\in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow \underline{(\ u\ \bm{v}_1\ 
+\cdots\ \bm{v}_{\xa(u)}\ )} \in \Pi_\mathrm{E}
+\end{equation}
+其中 $\Pi_\mathrm{E}^{\xa(u)}$ 表示 $\Pi_\mathrm{E}$ 的 $\xa(u)$ 维向量
+空间，特别的 $\Pi_\mathrm{E}^0 = \{\mathbf{0}\}$
+\begin{align*}
+    \Uv &= \{\underline{(\ u\ )}\mbar u \in \hat{\mathrm{U}}_v\}&
+    U &= \{\underline{(\ u\ )}\mbar u \in \hat{\mathrm{U}}\}&
+\end{align*}
+\end{defin}
+
+\begin{example}[$\Pi_\mathrm{E}$] 以下命题成立：
+\[ \forall u.\ u \in \hat{U}\ \land\ (\xa(u) = 0)\ \Rightarrow\ 
+\underline{(\ u\ )} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in \hat{U}_\mathrm{v}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(\ u\ (\ v\ )\ )} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in U_\mathrm{v}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
+\[ \forall u\ v.\ u \in \hat{U}\ \land\ v \in \Pi_\mathrm{E}\ \land\ (\xa(u) = 1)
+\ \Rightarrow\ \underline{(\ u\ v\ )} \in \Pi_\mathrm{E} \]
+\end{example}
+
+\begin{theo}(类型的结构) \label{TS}
+\[ \forall u'.\ u' \in \PiE \Rightarrow \exists! u\ \bm{v}.\ 
+u \in \hat{U}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' = \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')}\ )}) \]
+\end{theo}
+\begin{proof} 首先唯一性是显然的，由字符串理论就可以得到。
+对存在性的证明使用反证法，假设
+\begin{equation} \label{Hypo.TS}
+\exists u'.\ u' \in \PiE \Rightarrow \forall u\ \bm{v}.\ 
+u \in \hat{U}\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ 
+(u' \neq \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u')}\ )})
+\end{equation}
+现证明 $\PiE - \{u'\}$ 满足条件 \ref{Def.PiE} 而
+$\PiE - \{u'\} \subset \PiE$ 这样就构造了悖论，因为 $\PiE$ 不再是满足
+条件 \ref{Def.PiE} 的最小子集，$\PiE - \{u'\}$ 比 $\PiE$更小。
+即证明
+\[ \forall u.\ u \in \hat{U} \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \PiE^{\xa(u)} - \{u'\} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \PiE - \{u'\} \]
+因为有
+\[ \forall u.\ u \in \hat{U} \Rightarrow \forall \bm{v}.\ 
+\bm{v} \in \Pi_\mathrm{E}^{\xa(u)} \Rightarrow
+\underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)})} \in \Pi_\mathrm{E} \]
+所以只要证明
+\[ \underline{(\ u\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)}\ )} \neq u' \]
+而由反证假设 \ref{Hypo.TS} 这是成立的，故而悖论被构造进而命题得证。
+\end{proof}
+
+定理 \ref{TS} 意味着一切类型$u$都具有且唯一地具有如下格式
+\[ \underline{u_0\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u_0\ )}} \]
+其中 $u_0 \in \hat{U}$，$\bm{v}_1,\ \cdots,\ \bm{v}_{\xa(u_0\ )} \in \PiE$
+
+即每一个类型都构成一颗树，类型变量与0元类型构造器是叶子。
+
+\begin{defin}[类型的构造器、元数、高度、变量集、重量] \label{Def.Th}
+函数 $\mathrm{c}:\Pi_\mathrm{E} \mapsto \hat{U}$ 表示类型的构造器。
+\[ \mathrm{c}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = u\]
+函数 $\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的元数。
+\[ \xa\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = n\]
+$\xa:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 不会跟上文定义的
+$\xa:\hat{U} \mapsto \mathbb{N}$冲突，因为定义域不重合，且两者具有相同的意义，
+不会造成歧义。
+
+\noindent 函数 $\mathrm{h}:\Pi_\mathrm{E} \mapsto \mathbb{N}$ 表示类型的高度。
+\[ \mathrm{h}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )} = 1 + \max(\mathrm{h}\ v_1,\ \cdots,\ 
+\mathrm{h}\ v_n) \]
+
+\noindent 函数 $\mathrm{v}:\Pi_\mathrm{E} \mapsto \powerset{(\Uv)}$ 
+表示类型中的所有变量。
+\[ \begin{split}
+&\mathrm{v}\ \underline{(\ c\ )}=\xif c \in \Uv \xthen \{
+\underline{(\ c\ )}\} \xelse \emptyset \\
+&\mathrm{v}\ \underline{(\ u\ v_1\ \cdots\ v_n\ )}=
+\bigcup_{i=1\cdots n} \mathrm{v}(v_i)
+\end{split} \]
+函数 $\TS : \PiE \rightarrow \mathbb{N}$ 表示类型的重量
+    \[ \TS \underline{(\ u\ v_1\ \cdots\ v_n\ )} = 1 + 
+    \sum_{i=1,\cdots,n} \TS v_i \]
+\end{defin}
+
+有如下性质
+
+\begin{lemma}[类型的元数、高度与重量的性质] \label{T.cah}
+\[ \forall u.\ \mathrm{h}\ u  \geq 1 \quad\quad\text{(1)}\quad\quad
+\quad\quad\quad\forall u.\ \xa(\mathrm{c}\ u) = \xa\ u \quad\quad\text{(2)} \quad\quad\quad
+\forall u.\ (\mathrm{h}\ u = 1) \Rightarrow u \in U
+\quad\quad\text{(3)} \]
+\[ \begin{split}
+\forall u.\ (\mathrm{h}\ u > 1) \Rightarrow \exists c\ &\bm{v}.\ c \in \hat{U}
+\ \land\ \bm{v} \in \PiE^{\xa(u)}\ \land\ u = \underline{
+(c\ \bm{v}_1\ \cdots\ \bm{v}_{\xa(u)}\ )} \ \land\ \\
+&(\forall i.\ 1 \leq i \leq \xa(u) \Rightarrow \mathrm{h}\ \bm{v}_i < \mathrm{h}\ u )
+\end{split} \tag{4} \]
+    \[ \forall u.\ \TS u \geq 1 \quad\quad\text{(5)}\quad\quad\quad
+    \forall u.\ (\TS u = 1) \Rightarrow u \in U\quad\quad\text{(6)}\]
+\begin{proof} 由定义 \ref{Def.Th} 与定理 \ref{TS} 直接得到。
+\end{proof}
+\end{lemma}
+
+这样就可以关于类型的高度进行归纳法。以后这些性质将暗含使用而不再另行引证。
+
+\begin{defin}[全称量化类型 $\PiAE$]
+集合 $\Pi_\mathrm{E}^\forall$ 表示全称量化类型，由所有满足如下语法的字符串构成。
+\[ \Pi_\mathrm{E} \mbar \forall \Uv\ \Pi_\mathrm{E} \]
+同样有记号 $\forall v_1\ \cdots\ v_n.\ b$ 表示 $\underline{\forall v_1
+\ \cdots\  \forall v_n\ b}$
+\end{defin}
+
+\begin{defin}[全称量化类型的相关属性]
+函数 $\mathrm{QV} : \Pi_\mathrm{E}^\forall \rightarrow \powerset(
+U_\mathrm{v})$ 表示全称量化类型的绑定变量集。
+\[ \mathrm{QV}(\forall v_1\ \cdots\ \v_n.\ b) = \{v_1,\ \cdots,\ v_n\} \]
+函数 $\mathrm{QB} : \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$
+表示全称量化的类型体。
+\[ \mathrm{QB}(\forall v_1\ \cdots\ \v_n.\ b) = b \]
+函数 $\Qv : \Pi_\mathrm{E}^\forall \rightarrow \powerset(
+U_\mathrm{v})$ 表示全称量化类型所有的变量集。
+\[ \Qv q = \QV q \cup \mathrm{v}(\QB q) \]
+\end{defin}
+
+\begin{defin}[实例化] \label{Def.Inst}
+函数 $\mathrm{Inst} : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
+\rightarrow \Pi_\mathrm{E} \rightarrow \Pi_\mathrm{E}$ 对类型
+进行变量实例化。
+\begin{align*}
+\mathrm{Inst}\ f\ \underline{(\ v\ )} &= \xif \underline{(\ v\ )}
+\in U_\mathrm{v} \xthen
+ f\ \underline{(\ v\ )} \xelse \underline{(\ v\ )} \\
+\mathrm{Inst}\ f\ \underline{(\ u\ v_1\ \cdots\ v_{\xa(u)}\ )} &= 
+\underline{(}\concat u \concat \Inst f\ v_1\concat\cdots\concat
+\Inst f\ v_{\xa(u)}\concat\underline{)}
+\end{align*}
+
+以及部分实例化 $\Inst_V$ 
+\[ \Inst_V f = \Inst\ (\lambda v.\ \xif v \in V \xthen f\ v \xelse v) \]
+
+函数 $\mathrm{Inst}_\forall : (U_\mathrm{v} \rightarrow \Pi_\mathrm{E})
+\rightarrow \Pi_\mathrm{E}^\forall \rightarrow \Pi_\mathrm{E}$ 
+实例化全称量化类型。
+\begin{gather*}
+\mathrm{Inst}_\forall\ f\ q = \Inst_{\ \mathrm{QV}(q)} f\ \mathrm{QB}(q)
+\end{gather*}
+即$\mathrm{Inst}_\forall$只会实例化全称量化的类型变量。
+\end{defin}
+
+\begin{algorithm}
+\caption{实例化函数 $\Inst$} \label{alg:Iv}
+\begin{algorithmic}[1]
+\Require 集合 $V \in \powerset(\Uv)$ 表示实例化的范围
+\Require 实例化函数 $f : \Uv \rightarrow \PiE$ 表示变量到值的对应
+\Require $u \in \PiE,\ u = \underline{(\ c\ v_1\ \cdots\ v_o\ )}$
+表示要实例化的目标
+\Ensure $\Inst_V f\ u \in \PiE$
+\If {$o = 0$}
+\If {\quad $u \in V$ \quad} \quad 输出 $f(u)$
+\Else {\quad 输出 $u$}
+\EndIf
+\Else
+\State $\underline{(\ c} \rightarrow s$
+\For{$i=1,\ \dots,\ o$}
+\State $s \concat \Inst(V,f,v_i) \rightarrow s$
+\EndFor
+\State 输出 $s \concat \underline{)}$
+\EndIf
+\TimeComplexity 若 $f$ 的时间复杂度为 $t$ 则算法 Inst 的时间复杂度为 $O(t\TS(u))$
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{全称量化的实例化函数 $\Inst_\forall$} \label{alg:IvQ}
+\begin{algorithmic}[1]
+\Require 实例化函数 $f : \Uv \rightarrow \PiE$ 表示变量到值的对应
+\Require $q \in \PiAE,\ q = \underline{\forall\ v_1\ \cdots \forall\ v_p
+\ u}$
+表示要实例化的目标
+\Ensure $\Inst_\forall f\ q \in \PiE$
+\State $\{\} \rightarrow s$
+\For{$i=1,\ \dots,\ p$}
+\State 集合 $s$ 加入 $q_i$
+\EndFor
+\State 调用算法 \ref{alg:Iv}：$\Inst(s,f,u)$ 将结果输出。
+\TimeComplexity 若 $f$ 的时间复杂度为 $t$ 则算法 Inst 的时间复杂度为 $O(t\TS(\QB(u)))$
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\caption{构造全称量化类型 $\mathrm{MakeQT}$} \label{alg:MakeQT}
+\begin{algorithmic}[1]
+\Require 集合 $V \in \powerset(\Uv)$
+\Require 类型 $u \in \PiE$
+\Ensure $q \in \PiAE$ 满足 $(\QV q = V) \ \land\ (\QB q = u)$
+\For{$v \in V$}
+\State $\underline{\forall} \concat v \concat u \rightarrow u$
+\EndFor
+\State 输出 $u$
+\TimeComplexity $O(\abs{V})$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemma} \label{Lem.Iv.V}
+\[ \Inst_V f\ u = \Inst_{\ V \cap \mathrm{v}(u)} f\ u \]
+\begin{proof} 对 $u$ 进行类型高度的归纳法即可。
+\end{proof}
+\end{lemma}
+\begin{lemma} \label{L.Iv.h}
+\[ \h(\Inst_V f\ u) \geq \h u \]
+\begin{proof} 对 $u$ 进行类型高度的归纳法。
+\end{proof}
+\end{lemma}
+
+\begin{defin}[α等价] \label{Def.aE}
+二元关系$\sim_\alpha$ 定义为
+\[ (q_1 \sim_\alpha q_2) = (\forall f.\ \mathrm{Inst}_\forall\ f\ q_1
+= \mathrm{Inst}_\forall\ f\ q_2) \]
+显然是一种等价关系，被叫做α等价。
+\end{defin}
+
+α等价类$\Pi_\mathrm{E}^\forall/[\sim_\alpha]$即是本质不同的全称量化类型。
+
+\begin{defin}[实例化类型集] \label{Def.QI}
+全称量化类型$q$的实例化类型集$\mathrm{QI}\ q$为
+\[ \mathrm{QI}\ q = \{\mathrm{Inst}_\forall\ f\ q\mbar f \in 
+(U_\mathrm{v} \rightarrow \Pi_\mathrm{E})\} \]
+\end{defin}
+\begin{lemma}[实例化类型集的相等即是$\sim_\alpha$等价]
+\[(q_1 \sim_\alpha q_2) = (\mathrm{QI}\ q_1 = \mathrm{QI}\ q_2)\]
+\end{lemma}
+\begin{proof} 由定义 \ref{Def.aE} 与定义 \ref{Def.QI} 直接得到。
+\end{proof}
+\begin{lemma}[实例化类型集非空]
+\[\forall q.\ \mathrm{QI}\ q \neq \emptyset\]
+\end{lemma}
+\begin{proof}
+因为 $\quad\forall q.\ \mathrm{Inst}_\forall\ \I\ q = \mathrm{QB}\ q 
+\quad$ 所以有 $\quad\forall q.\ \mathrm{QB}\ q \in \mathrm{QI}\ q$
+\end{proof}
+
+接下来尝试证明一个重要命题 
+\[ \forall q_1,\ q_2 \in \Pi_\mathrm{E}^\forall \Rightarrow
+(\mathrm{QI}\ q_1 \cap \mathrm{QI}\ q_2 = \emptyset)\ \lor\ 
+(\exists q \in \Pi_\mathrm{E}^\forall.\ \mathrm{QI}\ q_1
+\cap \mathrm{QI}\ q_2 = \mathrm{QI}\ q) \]
+并找到一个算法用于求解上述的 $q$，为此要引入诸多工具。
