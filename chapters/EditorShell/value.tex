@@ -1,0 +1,29 @@
+\subsection{值}
+
+现在定义值。
+
+\begin{defin}[值的单词集] 
+无穷单词集 $\hLv$ 为表示值变量的字母表 $\hLv \subseteq
+\Words$，无穷单词集 $\hLc$ 为用于表示预定义常量的字母表 $\hLc \subseteq
+\Words$，且 $\hLc$ 包含所有的数字单词、所有的小数单词、所有的字符串字面量
+单词
+\[ \underline{0},\ \underline{1},\ \underline{2},\cdots,\ 
+\underline{0.1},\ \underline{0.01},\cdots,\ \underline{\squote
+a \squote},\ \underline{\squote ab \squote},\ 
+\cdots \in \hLc \]
+\end{defin}
+
+\begin{defin}[值常量、值变量、值]
+值常量集 $L_c$ 值变量集 $L_v$ 值集 $L$ 量化值集 $L^2$
+\begin{align*} 
+L_c &= \bnf{\hLc : \PiAE}&L_v &= \bnf{\hLv : \PiE}&\\
+L &= \bnf{L_c \mbar L_v \mbar L\ L \mbar \lambda L_v\ L }&
+L^2 &= \bnf{L \mbar \Lambda \Uv\ L^2}& \end{align*}
+$\lambda x_1\ \lambda x_2\ \cdots u$ 同样可以被写作
+$\lambda x_1\ x_2\ \cdots.\ u$ \quad，\quad
+ $\Lambda \tau_1\ \Lambda \tau_2\ \cdots u$ 可以被写作
+$\Lambda \tau_1\ \tau_2\ \cdots.\ u$ \quad，\quad
+λ变量是有类型标记的，属于Church式。
+
+
+\end{defin}

@@ -901,7 +901,7 @@ $\mathbb{N} \times \mathbb{N}$ 上的良序关系 $<$
 \end{proof}
 \end{theo}
 
-\begin{theo}[SolveM 的时间复杂度]
+\begin{theo}[SolveM 的时间复杂度] \label{T.TMS.S.T}
     \[ \text{SolveM 的时间复杂度为}\quad O((\abs{V} + 1)(\EQW(X) + 1)) \]
 \begin{proof} 算法 SolveM 对算法 \SolveMr 的不断迭代中，行 \ref{l:mrot1} 
     花费时间 $O(1)$ 最多执行 $O(\EQW(X))$ 次，行 \ref{l:mrot2} 单次花费时间 $O(\EQW(X))$
@@ -941,10 +941,11 @@ $M' = \mathrm{SolveM}\ M$ 且由定理 \ref{T.TMS.S}
 \State $(\QV q_1' \cup \QV q_2',\ \{\QB q_1' = \QB q_2'\}) \rightarrow M$
 \Comment {构造类型匹配系统 $M \in \TMs$}
 \State $\mathrm{SolveM}(M) \rightarrow M'$ \Comment{算法 \ref{alg:SolveM} SolveM}
-\If {$M' = \MNS$}
+\If {$M' \neq \MNS$}
 \State $\mathrm{QIMI}(M',\ \QB q_1') \rightarrow q$ \Comment{算法 \ref{alg:QIMI} QIMI}
-\Else
 \State 输出 $q$
+\Else
+    \State 输出 {\it 无解}
 \EndIf
 \TimeComplexity $O(\ \ (\abs{\QV q_1} + \abs{\QV q_2} + 1)\ \ (\TS(\QB q_1) + \TS(
     \QB q_2))\ \ )$

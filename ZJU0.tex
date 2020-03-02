@@ -5,6 +5,7 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{ctex-xecjk-winfonts.def}
+\usepackage{textcomp} 
 \usepackage{tikz-network}
 \usepackage{bussproofs}
 \usepackage{listings}
@@ -20,6 +21,8 @@
 \usepackage{newunicodechar}
 \newfontfamily\miscsymfont{DejaVu Sans}
 \newunicodechar{→}{{\miscsymfont\symbol{"2192}}}
+\newunicodechar{。}{{.\ }}
+\newunicodechar{，}{{,\ }}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
 
 \allowdisplaybreaks
@@ -67,6 +70,8 @@
 \DeclareMathOperator{\F}{F}
 \DeclareMathOperator{\Ima}{ran}
 \DeclareMathOperator{\Dom}{dom}
+\newcommand{\DomF}{\Dom^{\rightarrow}}
+\newcommand{\ImaF}{\Ima^{\rightarrow}}
 \DeclareMathOperator{\EVERY}{EVERY}
 \DeclareMathOperator{\Suc}{Suc}
 \DeclareMathOperator{\INSERT}{\ INSERT\ }
@@ -74,6 +79,7 @@
 \DeclareMathOperator{\xthen}{\ then\ }
 \DeclareMathOperator{\xelse}{\ else\ }
 \DeclareMathOperator{\fupdate}{\ |+\ }
+\DeclareMathOperator{\fdelete}{\ |-\ }
 \DeclareMathOperator{\h}{h}
 \DeclareMathOperator{\QI}{QI}
 \DeclareMathOperator{\QV}{QV}
@@ -98,6 +104,7 @@
 \DeclareMathOperator{\Solvable}{Solvable}
 \DeclareMathOperator{\SBP}{SolvingBiPart}
 
+\newcommand{\squote}{\text{\textquotesingle}}
 \newcommand{\SolveMr}{$\mathrm{SolveM_r}$}
 \newcommand{\MNS}{\ensuremath{\mathrm{M}_\emptyset}}
 \newcommand{\EI}{\ensuremath{\mathrm{E}_\mathrm{I}}}
@@ -109,8 +116,27 @@
 \newcommand{\Meq}{\ensuremath{\overset{\mathrm{M}}{=\joinrel=}}}
 \newcommand{\Words}{\ensuremath{\mathbf{Words}}}
 \newcommand{\String}{\ensuremath{\mathbf{String}}}
+\newcommand{\hLv}{\ensuremath{\hat{L}_v}}
+\newcommand{\hLc}{\ensuremath{\hat{L}_c}}
 
 \newcommand{\TimeComplexity}{\item[\textbf{时间复杂度：}]}
+
+%\makeatletter
+%\def\moverlay{\mathpalette\mov@rlay}
+%\def\mov@rlay#1#2{\leavevmode\vtop{%
+%   \baselineskip\z@skip \lineskiplimit-\maxdimen
+%   \ialign{\hfil$\m@th#1##$\hfil\cr#2\crcr}}}
+%\newcommand{\charfusion}[3][\mathord]{
+%    #1{\ifx#1\mathop\vphantom{#2}\fi
+%        \mathpalette\mov@rlay{#2\cr#3}
+%      }
+%    \ifx#1\mathop\expandafter\displaylimits\fi}
+%\makeatother
+%
+%\newcommand{\multiset}{\charfusion[\mathbin]{\cup}{\leftarrow}}
+%\newcommand{\bigcupdot}{\charfusion[\mathop]{\bigcup}{\cdot}}
+\newcommand{\multiset}{\mathbin{\text{\miscsymfont\symbol{"228C}}}}
+\newcommand{\funion}{\multiset}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”

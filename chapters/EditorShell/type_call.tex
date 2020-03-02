@@ -49,11 +49,11 @@ $\rightarrow$ 是函数类型的类型构造器。
 也可以使用记号$a \rightarrow b$表示 $\underline{(\ \rightarrow\ a\ b\ )}$
 
 \noindent 所有的函数构成的集合为 $\PiE^\rightarrow$
-\end{defin}
 
-\begin{defin}[普通类型的函数调用匹配]
-普通类型的函数调用匹配是$\PiE^\rightarrow \times \PiE$上的二元关系 $\dotsim$
-\[ \forall a\ b.\ (a \rightarrow b) \dotsim a \]
+\noindent 函数 $\DomF : \PiE^\rightarrow \rightarrow \PiE$
+    \[ \DomF(a \rightarrow b) = a \]
+函数 $\ImaF : \PiE^\rightarrow \rightarrow \PiE$
+    \[ \ImaF(a \rightarrow b) = b \]
 \end{defin}
 
 \begin{defin}[普通类型集合的函数调用]
@@ -62,8 +62,51 @@ $\powerset(\PiE)$的函数 $(\cdot)$
 \[ A \cdot B = \{b \mbar (a \rightarrow b) \in \PiE^\rightarrow\ \land\ a \in \PiE\} \]
 \end{defin}
 
-\begin{theo}
+\begin{algorithm}
+\caption{全称量化类型的调用 QCall} \label{alg:QCall}
+\begin{algorithmic}[1]
+\Require 全称量化类型 $q_1,\ q_2 \in \PiAE$
+\Ensure $q \in \PiAE$ 满足 $\QI q_1 \cdot \QI q_2 = \QI q$，或者 $\QI q_1 \cdot \QI q_2 = 
+\emptyset$ 时输出 {\it 无解} 。
+\State $\NC(q_1,\ q_2) \rightarrow (q_1',\ q_2')$ \Comment{调用算法 \ref{alg:NC} NC}
+\State $(\QV q_1' \cup \QV q_2',\ \{\DomF \QB q_1' = \QB q_2'\}) \rightarrow M$ \label{l:qc1}
+\Comment {构造类型匹配系统 $M \in \TMs$}
+\State $\mathrm{SolveM}(M) \rightarrow M'$ \Comment{算法 \ref{alg:SolveM} SolveM}
+\If {$M' \neq \MNS$}
+\State $\mathrm{QIMI}(M',\ \ImaF \QB q_1') \rightarrow q$ \Comment{算法 \ref{alg:QIMI} QIMI} \label{l:qc2}
+\State 输出 $q$
+\Else
+    \State 输出 {\it 无解}
+\EndIf
+\TimeComplexity $O(\ \ (\abs{\QV q_1} + \abs{\QV q_2} + 1)\ \ (\TS(\QB q_1) + \TS(
+    \QB q_2))\ \ )$
+\item[\textbf{说明}] 
+这一算法非常类似算法 \ref{alg:QInter} QInter 仅在行 \ref{l:qc1}
+,\ref{l:qc2} 有区别，注意 $\DomF$ 和 $\ImaF$ 的调用。
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemma} \label{L.QC.I.I}
+\[ q_1 \NC q_2 \vdash \QI q_1 \cdot \QI q_2 =\ 
+\MI\ (\QV q_1 \cup \QV a_2,\ \{\DomF \QB q_1 = \QB q_2\})\ \ImaF \QB(q_1) \]
+    \begin{proof} 效仿定理 \ref{T.TMS.I.I} 的证明。
+    \end{proof}
+\end{lemma}
+
+\begin{theo}\label{T.QCall}
 \[ \forall q_1,\ q_2 \in \PiAE.\ (\QI q_1 \cdot \QI q_2 = \emptyset)\ \lor\ 
 (\exists q.\  \QI q_1 \cdot \QI q_2 = \QI q)\]
+\begin{proof} 算法 \ref{alg:QCall} QCall 即是寻找这样的 $q$，且其有限停机。
+算法 \ref{alg:QCall} QCall 的正确性与时间复杂度的证明
+    效仿引理 \ref{L.inter.q}，仅是将其中对定理 \ref{T.TMS.I.I} 的应用
+    替换成引理 \ref{L.QC.I.I} 即可。
+\end{proof}
 \end{theo}
 
+\begin{defin}[全称量化类型的调用] \label{D.QCall}
+    由定理 \ref{T.QCall} 可以定义全称量化类型的调用，
+    从 $\PiAE \times \PiAE$ 到 $\PiAE$ 的函数 $(\cdot)$
+\[ \forall q_1,\ q_2 \in \PiAE.\ (\QI q_1 \cdot \QI q_2 \neq \emptyset)
+\Rightarrow \QI (q_1 \cdot q_2) = \QI q_1 \cdot \QI q_2\]
+    算法 \ref{alg:QCall} QCall 即是计算 $(\cdot)$ 并包含无解情况的算法。
+\end{defin}
