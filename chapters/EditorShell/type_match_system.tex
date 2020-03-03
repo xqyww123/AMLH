@@ -34,13 +34,13 @@ $\abs{\UV X}$ 表示集合 $\UV X$ 的大小，$\EQW$ 仅在 $X$ 有限时被定
 一个类型匹配系统$(V,X)$的解$f$是一个$(\Uv \rightarrow \PiE)$函数，
 满足
 \[ \forall u_1\ u_2.\ (u_1,u_2) \in X \Rightarrow 
-\Inst f\ u_1 = \Inst f\ u_2 \]
+\inst f\ u_1 = \inst f\ u_2 \]
 所有这样的解构成的集合叫解集。
 
 函数 $\MF : \TMs \rightarrow \powerset(\Uv \rightarrow \PiE)$
 将一个类型匹配系统映射到其解集
 \[ \MF (V,X) = \{ f \mbar \forall u_1\ u_2.\ (u_1,u_2) \in X
-\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2 \} \]
+\Rightarrow \inst_V f\ u_1 = \inst_V f\ u_2 \} \]
 \end{defin}
 
 \begin{defin}[类型匹配系统的M等价] \label{Def.Meq}
@@ -58,12 +58,12 @@ $\abs{\UV X}$ 表示集合 $\UV X$ 的大小，$\EQW$ 仅在 $X$ 有限时被定
 \begin{proof} 将$\MF$ 的定义展开，命题等价于
 \begin{multline*}
 (\forall u_1\ u_2.\ (u_1,u_2) \in (X_1 \cup X_2)
-\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2) = \\
+\Rightarrow \inst_V f\ u_1 = \inst_V f\ u_2) = \\
 (\forall u_1\ u_2.\ 
 (u_1,u_2) \in X_1
-\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2)\ \land\\
+\Rightarrow \inst_V f\ u_1 = \inst_V f\ u_2)\ \land\\
 (\forall u_1\ u_2.\ (u_1,u_2) \in X_2
-\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2)
+\Rightarrow \inst_V f\ u_1 = \inst_V f\ u_2)
 \end{multline*}
 这时显然的。
 \end{proof}
@@ -138,13 +138,13 @@ $\EI\ f$ 将一个部分函数 $f$ 扩展成完全函数
 \end{defin}
 
 \begin{lemma} \label{L.vEi}
-\[ x \in V \vdash \mathrm{v}(\Inst_V\ (\EI \{(x,y)\})\ u) =
+\[ x \in V \vdash \mathrm{v}(\inst_V\ (\EI \{(x,y)\})\ u) =
 \mathrm{v}(u) - \{x\} \]
 \begin{proof} 对 $u$ 进行类型高度的归纳法，只需要证明叶子类型的情形
 命题就能得证。
-\[ x \in V,\ u\in \Uv \vdash \mathrm{v}(\Inst_V\ (\EI \{(x,y)\})\ u) =
+\[ x \in V,\ u\in \Uv \vdash \mathrm{v}(\inst_V\ (\EI \{(x,y)\})\ u) =
 \mathrm{v}(u) - \{x\} \]
-由 $\Inst_V$ 的定义 \ref{Def.Inst}
+由 $\inst_V$ 的定义 \ref{Def.inst}
 \[ x \in V,\ u\in \Uv \vdash \mathrm{v}(\EI \{(x,y)\}\ u) =
 \mathrm{v}(u) - \{x\} \]
 分类讨论 $u = x$ 的情况，结合$\mathrm{v}$的定义 \ref{Def.Th} 命题得证。
@@ -171,23 +171,23 @@ $\forall x\ y_1\ y_2.\ (x,y_1) \in f \ \land\ (x,y_2) \in f \Rightarrow
 \end{algorithm}
 
 \begin{theo}[已解方程组的解]
-\[ \Solved (V,X) \vdash \MF(V,X) = \{ \Inst_V g
+\[ \Solved (V,X) \vdash \MF(V,X) = \{ \inst_V g
 \circ \EI (\SF X) \mbar g \} \]
 \end{theo}
 \begin{proof} 由定义 \ref{Def.MF} 命题等价于
 \[ \begin{split}
 \Solved&(V,X) \vdash (\forall u_1\ u_2.\ (u_1,u_2) \in X
-\Rightarrow \Inst_V f\ u_1 = \Inst_V f\ u_2) = \\
+\Rightarrow \inst_V f\ u_1 = \inst_V f\ u_2) = \\
 &(\exists g.\ \forall x.\ x \in \Uv \Rightarrow 
-(f(x) = \Inst_V g(\EI (\SF X)\ x)))
+(f(x) = \inst_V g(\EI (\SF X)\ x)))
 \end{split} \]
 当 $X = \emptyset$ 时等式左边即是 $T$，右边也是 $T$ 因为
 $\Dom (\SF X) = \emptyset$ 故而 $\EI(\SF X) = I$ 这样右式就等于
 \[ \exists g.\ \forall x.\ x \in \Uv \Rightarrow
-(f\ x = \Inst_V\ g\ x)\]
+(f\ x = \inst_V\ g\ x)\]
 而这样的 $g$ 是始终存在的，令 $g = f$ 则有
-\[ \forall x.\ x \in \Uv \Rightarrow (f\ x = \Inst_V\ f\ x)\]
-而由 $\Inst_V$ 的定义，当 $x \in \Uv$ 时，$\Inst_V f\ x = f\ x$，
+\[ \forall x.\ x \in \Uv \Rightarrow (f\ x = \inst_V\ f\ x)\]
+而由 $\inst_V$ 的定义，当 $x \in \Uv$ 时，$\inst_V f\ x = f\ x$，
 故而右式就是恒真式。
 
 \hfill
@@ -197,37 +197,37 @@ $\Dom (\SF X) = \emptyset$ 故而 $\EI(\SF X) = I$ 这样右式就等于
 \[ \begin{split}
 X \neq \emptyset,\ 
 \Solved(V,X),\ (\forall x\ y.\ &(x, y) \in \SF X \Rightarrow
-(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+(\inst_V f\ x = \inst_V f\ y)) \vdash\\
 &\exists g.\ \forall u.\ u \in \Uv \Rightarrow
-(f(u) = \Inst_V g(\EI (\SF X)\ u)) \end{split}\]
+(f(u) = \inst_V g(\EI (\SF X)\ u)) \end{split}\]
 存在这样的 $g = f$，命题变为
 \[ \begin{split}
 X \neq \emptyset,\ 
 \Solved(V,X),\ (&\forall x\ y.\ (x, y) \in \SF X \Rightarrow
-(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+(\inst_V f\ x = \inst_V f\ y)) \vdash\\
 &\forall u.\ u \in \Uv \Rightarrow
-(f\ u = \Inst_V f(\EI (\SF X)\ u))
+(f\ u = \inst_V f(\EI (\SF X)\ u))
 \end{split} \]
 由引理 \ref{Lem.SFXF}，$\Dom(\SF X) = \UV X$，再由$\EI$的定义，
 当 $u \notin \UV X$ 时，$\EI(\SF X) u = u$，
-而由 $\Inst_V$ 的定义，在$u \in \Uv$时$\Inst_V u = u$，
+而由 $\inst_V$ 的定义，在$u \in \Uv$时$\inst_V u = u$，
 故而最后只要下述证明命题
 \[ \begin{split}
 X \neq \emptyset,\ 
 Solved(V,X),\ &(\forall x\ y.\ (x, y) \in \SF X \Rightarrow
-(\Inst_V f\ x = \Inst_V f\ y)) \vdash\\
+(\inst_V f\ x = \inst_V f\ y)) \vdash\\
 &\forall u.\ u \in \UV\ X
-\Rightarrow (f\ u = \Inst_V f\ (\SF X\ u)) \end{split} \]
+\Rightarrow (f\ u = \inst_V f\ (\SF X\ u)) \end{split} \]
 再由公式 \ref{UVX} 且 $X \neq \emptyset$
 \[X \neq \emptyset,\ 
 \Solved(V,X),\ (x, y) \in \SF X,\ 
-\Inst_V f\ x = \Inst_V f\ y \vdash f\ x = \Inst_V f\ (\SF X\ x)\]
+\inst_V f\ x = \inst_V f\ y \vdash f\ x = \inst_V f\ (\SF X\ x)\]
 引理 \ref{Lem.SFXapplied}
 \[X \neq \emptyset,\ 
 \Solved(V,X),\ (x, y) \in \SF X,\ 
-\Inst_V f\ x = \Inst_V f\ y \vdash f\ x = \Inst_V f\ y\]
+\inst_V f\ x = \inst_V f\ y \vdash f\ x = \inst_V f\ y\]
 而 $\Solved(V,X)\ \land\ (x, y) \in \SF X$ 所以 $x \in \Uv$ 所以
-$\Inst_V\ f\ x = x$ 于是命题得证。
+$\inst_V\ f\ x = x$ 于是命题得证。
 
 \hfill
 
@@ -235,50 +235,50 @@ $\Inst_V\ f\ x = x$ 于是命题得证。
 \[ \begin{split}
 X \neq \emptyset,\ 
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g(\EI (\SF X)\ u))) \vdash \\
+(f(u) = \inst_V g(\EI (\SF X)\ u))) \vdash \\
 &\forall x\ y.\ (x, y) \in \SF X \Rightarrow
-(\Inst_V f\ x = \Inst_V f\ y)
+(\inst_V f\ x = \inst_V f\ y)
 \end{split}\]
 等价于
 \[ \begin{split}
 X \neq \emptyset,\ 
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
 \vdash \\
-& \Inst_V f\ x = \Inst_V f\ y
+& \inst_V f\ x = \inst_V f\ y
 \end{split}\]
 $(x,y) \in \SF X$ 故而 $x \in \UV X$
-故而 $x \in \Uv$ 这样 $\Inst_V f\ x = f\ x$ 且
-$f\ x = \Inst_V g\ (\EI (\SF X)\ x)$
+故而 $x \in \Uv$ 这样 $\inst_V f\ x = f\ x$ 且
+$f\ x = \inst_V g\ (\EI (\SF X)\ x)$
 
 \noindent 且因为 $x \in \UV X$ 所以 $\EI (\SF X)\ x = \SF X\ x = y$
 最后命题等价于
 \[ \begin{split}
 X \neq \emptyset,\ 
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ (x, y) \in \SF X
 \vdash \\
-& \Inst_V g\ y = \Inst_V f\ y
+& \inst_V g\ y = \inst_V f\ y
 \end{split}\]
 对 $y$ 进行类型高度的递归法，只要证明下式命题就能得证。
 \[ \begin{split}
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
 \vdash \\
-& \Inst_V g\ y = \Inst_V f\ y
+& \inst_V g\ y = \inst_V f\ y
 \end{split}\]
 进而
 \[ \begin{split}
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv,\ (x, y) \in \SF X
 \vdash \\ & g\ y = f\ y
 \end{split}\]
 由前提中的 $(\forall u.\ u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u)))$
+(f(u) = \inst_V g\ (\EI (\SF X)\ u)))$
 \[ \begin{split}
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
-\vdash \\& g\ y = \Inst_V g\ (\EI (\SF X)\ y)
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
+\vdash \\& g\ y = \inst_V g\ (\EI (\SF X)\ y)
 \end{split}\]
 注意至今为止一直没用到的 $\Solved$ 的一个条件
 \[ \Solved(V,X),\ (x,y) \in \SF X \vdash \BV y \cap \UV X = \emptyset \]
@@ -286,16 +286,16 @@ X \neq \emptyset,\
 于是命题变成
 \[ \begin{split}
 \Solved(V,X),\ (\forall u.\ &u \in \Uv \Rightarrow
-(f(u) = \Inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
-\vdash \\& g\ y = \Inst_V g\ y
+(f(u) = \inst_V g\ (\EI (\SF X)\ u))),\ y \in \Uv ,\ (x, y) \in \SF X
+\vdash \\& g\ y = \inst_V g\ y
 \end{split}\]
-因为 $y \in \Uv$ 所以 $\Inst_V g\ y = g\ y$ 命题得证。
+因为 $y \in \Uv$ 所以 $\inst_V g\ y = g\ y$ 命题得证。
 \end{proof}
 
 \begin{defin}[类型匹配系统的实例集] \label{Def.MI}
 类型匹配系统 $(V,X) \in \TMs$ 在 $u \in \PiE$ 上的实例集 
 $\MI\ (V,X)\ u \in \powerset(\PiE)$
-\[\MI\ (V,X)\ u = \{ \Inst_V f\ u \mbar f \in \MF(V,X) \}\]
+\[\MI\ (V,X)\ u = \{ \inst_V f\ u \mbar f \in \MF(V,X) \}\]
 \end{defin}
 \begin{lemma}[类型匹配系统的实例集的M等价] \label{Lem.MI.Meq}
 \[ \forall M_1\ M_2\ u.\ u \in \PiE\ \land\ (M_1 \Meq M_2) 
@@ -306,49 +306,49 @@ $\MI\ (V,X)\ u \in \powerset(\PiE)$
 \end{proof}
 
 \begin{lemma} \label{Lem.RecIv}
-\[ \Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
-\EI\ (\SF X)) = \Inst_V g \circ \Inst_V (\EI\ (\SF X))\]
+\[ \Solved(V,X) \vdash \inst_V (\inst_V g \circ
+\EI\ (\SF X)) = \inst_V g \circ \inst_V (\EI\ (\SF X))\]
 \end{lemma}
 \begin{proof} 等价于
-\[ \Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
-\EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)\]
+\[ \Solved(V,X) \vdash \inst_V (\inst_V g \circ
+\EI\ (\SF X))\ u = \inst_V g\ (\inst_V (\EI\ (\SF X))\ u)\]
 对 $u$ 进行高度的归纳法，当 $\h u = 1$ 时，$u = \underline{(\ c\ )}$，
-$c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
+$c \in U$ 由 $\inst$ 的定义 \ref{Def.inst} 命题成立。
 
 \noindent 当 $\h u = \Suc n$ 时，$u = \underline{(\ c\ v_1\ \cdots\ v_o\ )}
 ,\ \h v_1 \leq n,\ \cdots,\ \h v_o \leq n$，且有
-\[ \Solved(V,X),\ \h u \leq n \vdash \Inst_V (\Inst_V g \circ
-\EI\ (\SF X))\ u = \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ u)
+\[ \Solved(V,X),\ \h u \leq n \vdash \inst_V (\inst_V g \circ
+\EI\ (\SF X))\ u = \inst_V g\ (\inst_V (\EI\ (\SF X))\ u)
 \tag{归纳假设} \]
-由 $\Inst$ 的定义 \ref{Def.Inst} 命题等价于
+由 $\inst$ 的定义 \ref{Def.inst} 命题等价于
 \begin{align*}
-\Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
-\EI\ (\SF X))\ v_1\ &= \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ v_1)\\
+\Solved(V,X) \vdash \inst_V (\inst_V g \circ
+\EI\ (\SF X))\ v_1\ &= \inst_V g\ (\inst_V (\EI\ (\SF X))\ v_1)\\
 \cdots&\\
-\Solved(V,X) \vdash \Inst_V (\Inst_V g \circ
-\EI\ (\SF X))\ v_o\ &= \Inst_V g\ (\Inst_V (\EI\ (\SF X))\ v_o)
+\Solved(V,X) \vdash \inst_V (\inst_V g \circ
+\EI\ (\SF X))\ v_o\ &= \inst_V g\ (\inst_V (\EI\ (\SF X))\ v_o)
 \end{align*}
 逐个应用归纳假设，命题得证。
 \end{proof}
 
 \begin{lemma} \label{L.QIMI}
 \[ \Solved(V,X),\ \QV q = V,\ \QB q = 
-\Inst_V\ (\EI (\SF X))\ u \vdash
+\inst_V\ (\EI (\SF X))\ u \vdash
 \QI q = \MI\ (V,X)\ u \]
 \end{lemma}
 \begin{proof}
 等价于
 \[ \begin{split}
 \Solved(V,&X),\ \QV q = V,\ \QB q = 
-\Inst_V\ (\EI (\SF X))\ u\vdash\\
-&\{\Inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\Inst_V (\Inst_V g \circ
+\inst_V\ (\EI (\SF X))\ u\vdash\\
+&\{\inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\inst_V (\inst_V g \circ
 \EI\ (\SF X))\ u \mbar g\} \end{split} \]
 由引理 \ref{Lem.RecIv}
 \[ \begin{split}
 \Solved(V,&X),\ \QV q = V,\ \QB q =  
-\Inst_V\ (\EI (\SF X))\ u\vdash\\
-&\{\Inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\Inst_V g\ (
-\Inst_V (\EI\ (\SF X))\ u) \mbar g\} \end{split} \]
+\inst_V\ (\EI (\SF X))\ u\vdash\\
+&\{\inst_{\ \QV q} f\ \QB(q)\mbar f\} = \{\inst_V g\ (
+\inst_V (\EI\ (\SF X))\ u) \mbar g\} \end{split} \]
 这是显然成立的。
 \end{proof}
 
@@ -365,28 +365,17 @@ $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 \begin{proof} 由引理 \ref{L.QIMI} 直接得到。
 \end{proof}
 
-
-\begin{algorithm}
-\caption{已解类型匹配系统的实例化 MI} \label{alg:MI}
-\begin{algorithmic}[1]
-\Require 已解的类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
-\Require 类型 $u \in \PiE$
-\Ensure $\Inst_V\ (\EI(\SF X))\ u$
-\State $\mathrm{AsFunc}(\SF X) \rightarrow f$
-\Comment {调用算法 \ref{alg:SF} 和算法 \ref{alg:AsFunc}，
-由引理 \ref{Lem.SFXF} $\SF X$ 满足
-算法 \ref{alg:AsFunc} 的条件 }
-\State 输出 $\Inst(V,f,u)$  \Comment {调用算法 \ref{alg:Iv}}
-    \TimeComplexity $O(\abs{X} + \TS u)$
-\end{algorithmic}
-\end{algorithm}
 \begin{algorithm}
 \caption{已解类型匹配系统的全称量化类型 QIMI} \label{alg:QIMI}
 \begin{algorithmic}[1]
 \Require 已解的类型匹配系统$(V,X)$ 满足 $\Solved(V,X)$
 \Require 类型 $u \in \PiE$
 \Ensure $q \in \PiAE$ 满足 $\QI q = \MI (V,X)\ u$
-\State $\MI((V,X),u) \rightarrow b$  \Comment {调用算法 \ref{alg:MI}}
+\State $\mathrm{AsFunc}(\SF X) \rightarrow f$
+\Comment {调用算法 \ref{alg:SF} 和算法 \ref{alg:AsFunc}，
+由引理 \ref{Lem.SFXF} $\SF X$ 满足
+算法 \ref{alg:AsFunc} 的条件 }
+\State $\inst(V,f,u) \rightarrow b$  \Comment {调用算法 \ref{alg:Iv}}
 \State 输出 $\mathrm{MakeQT}(V,b)$
 \Comment {调用算法 \ref{alg:MakeQT}}
     \TimeComplexity $O(\abs{X} + \abs{V} + \TS u)$
@@ -407,8 +396,8 @@ $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 \EndFor
 \For {$i=1,\cdots,m$} \State $\{(b_i,v_{n+i})\} \cup f_2 \rightarrow f_2$ 
 \EndFor
-\State $\Inst(\Dom f_1,\ f_1,\ u) \rightarrow q_1'\quad\quad \Inst(\Dom
-    f_2,\ f_2,\ w) \rightarrow q_2'$ \Comment{算法 \ref{alg:Iv} $\Inst$}
+\State $\inst(\Dom f_1,\ f_1,\ u) \rightarrow q_1'\quad\quad \inst(\Dom
+    f_2,\ f_2,\ w) \rightarrow q_2'$ \Comment{算法 \ref{alg:Iv} $\inst$}
 \For {$i=1,\cdots,n$} \State $\underline{\forall}\concat v_i \concat q_1'
     \rightarrow q_1'$ \EndFor
 \For {$i=1,\cdots,m$} \State $\underline{\forall}\concat v_{n+i} \concat q_2'
@@ -447,34 +436,34 @@ $c \in U$ 由 $\Inst$ 的定义 \ref{Def.Inst} 命题成立。
 \end{align*}
 将QI的定义与MI的定义展开，原命题等价于
 \[ \begin{split} q_1\ &\NC q_2 \vdash \\
-&\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
-= \{\Inst_{V_1 \cup V_2} f\ u_1 \mbar \Inst_{V_1 \cup V_2} f\ u_1
-= \Inst_{V_1 \cup V_2} f\ u_2 \} \end{split} \]
+&\{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1 = \inst_{V_2} g\ u_2 \}
+= \{\inst_{V_1 \cup V_2} f\ u_1 \mbar \inst_{V_1 \cup V_2} f\ u_1
+= \inst_{V_1 \cup V_2} f\ u_2 \} \end{split} \]
 由 $q_1 \NC q_2$ 可得
 $(V_1 \cup V_2) \cap V_1 = V_1$，
 $(V_1 \cup V_2) \cap V_2 = V_2$，
 用引理 \ref{Lem.Iv.V}，得到
 \begin{align*}
-&\Inst_{V_1 \cup V_2} f\ u_1 = \Inst_{V_1} f\ u_1&
-&\Inst_{V_1 \cup V_2} f\ u_2 = \Inst_{V_2} f\ u_2&
+&\inst_{V_1 \cup V_2} f\ u_1 = \inst_{V_1} f\ u_1&
+&\inst_{V_1 \cup V_2} f\ u_2 = \inst_{V_2} f\ u_2&
 \end{align*}
 带入命题，命题变为
 \[ q_1\ \NC q_2 \vdash
-\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
-= \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+\{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1 = \inst_{V_2} g\ u_2 \}
+= \{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1= \inst_{V_1} f\ u_2 \}\]
 显然有
-\[ \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+\[ \{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1 = \inst_{V_2} g\ u_2 \}
 \supseteq
-\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+\{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1= \inst_{V_1} f\ u_2 \}\]
 只要证明
 \[ q_1\ \NC q_2 \vdash
- \{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \}
+ \{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1 = \inst_{V_2} g\ u_2 \}
 \subseteq
-\{\Inst_{V_1} f\ u_1 \mbar \Inst_{V_1} f\ u_1= \Inst_{V_1} f\ u_2 \}\]
+\{\inst_{V_1} f\ u_1 \mbar \inst_{V_1} f\ u_1= \inst_{V_1} f\ u_2 \}\]
 即证明命题
 \[ q_1\ \NC q_2 ,\ 
-\Inst_{V_1} f\ u_1 = \Inst_{V_2} g\ u_2 \vdash \exists h.\ 
-\Inst_{V_1} h\ u_1 = \Inst_{V_2} h\ u_2 \]
+\inst_{V_1} f\ u_1 = \inst_{V_2} g\ u_2 \vdash \exists h.\ 
+\inst_{V_1} h\ u_1 = \inst_{V_2} h\ u_2 \]
 $h = (\lambda v.\ \xif v \in V_1 \xthen f\ v \xelse g\ v)$ 
 是满足上述条件的实例，因为 $V_1 \cap V_2 = \emptyset$
 
@@ -503,14 +492,14 @@ $\MNS$ 具体的表达是无关紧要的，例如下面的类型匹配系统即�
     \[ (x,y) \in X,\ x \in \BV y,\ x \neq y \vdash \NoSolution(V,X) \]
 \begin{proof}
     弱于以下命题
-    \[ x \in \BV y,\ x \neq y \vdash \nexists f.\ \Inst_V f\ x = \Inst_V f\ y \]
+    \[ x \in \BV y,\ x \neq y \vdash \nexists f.\ \inst_V f\ x = \inst_V f\ y \]
 证明等价的逆否命题
-\[ x \in \BV y,\ \Inst_V f\ x = \Inst_V f\ y \vdash x = y\]
+\[ x \in \BV y,\ \inst_V f\ x = \inst_V f\ y \vdash x = y\]
 因为 $x \in \Uv$ 命题等价于
-\[ x \in \BV y,\ x = \Inst_V f\ y \vdash x = y\]
-$\h x = 1$ 于是 $\h(\Inst_V f\ y) = 1$，由引理 \ref{L.Iv.h}，
-$\h y \leq \h(\Inst_V f\ y)$ 而 $\forall u.\ \h u \geq 1$
-于是 $\h y = 1$ 于是 $y \in U$ 于是 $\Inst_V f\ y = y$ 于是命题得证。
+\[ x \in \BV y,\ x = \inst_V f\ y \vdash x = y\]
+$\h x = 1$ 于是 $\h(\inst_V f\ y) = 1$，由引理 \ref{L.Iv.h}，
+$\h y \leq \h(\inst_V f\ y)$ 而 $\forall u.\ \h u \geq 1$
+于是 $\h y = 1$ 于是 $y \in U$ 于是 $\inst_V f\ y = y$ 于是命题得证。
 \end{proof}
 \end{lemma}
 
@@ -523,7 +512,7 @@ $\h y \leq \h(\Inst_V f\ y)$ 而 $\forall u.\ \h u \geq 1$
 \begin{defin}[类型匹配系统的实例化] \label{Def.IM}
 $\IM : (\Uv \rightarrow \PiE) \rightarrow \TMs \rightarrow \TMs$ 
 将一个类型匹配系统的所有方程的等式两边都实例化
-\[ \IM f\ (V,X) = \{(\Inst_V f\ x,\ \Inst_V f\ y) \mbar (x,y) \in X\}\]
+\[ \IM f\ (V,X) = \{(\inst_V f\ x,\ \inst_V f\ y) \mbar (x,y) \in X\}\]
 \end{defin}
 
 \begin{algorithm}
@@ -534,10 +523,10 @@ $\IM : (\Uv \rightarrow \PiE) \rightarrow \TMs \rightarrow \TMs$
 \Ensure $\IM\ f\ (V,X) \in \TMs$
 \State $\{\} \rightarrow X'$
 \For {$(x,y) \in X$}
-\State $\Inst(V,f,x) \rightarrow x'\quad\quad
-    \Inst(V,f,y) \rightarrow y' \quad\quad
+\State $\inst(V,f,x) \rightarrow x'\quad\quad
+    \inst(V,f,y) \rightarrow y' \quad\quad
     \{(x',y')\} \cup X' \rightarrow X'$
-\Comment {算法 \ref{alg:Iv} $\Inst$}
+\Comment {算法 \ref{alg:Iv} $\inst$}
 \EndFor
 \State 输出 $X'$
     \TimeComplexity $O(t\EQW(X))$，$t$ 是 $f$ 的时间复杂度
@@ -546,19 +535,19 @@ $\IM : (\Uv \rightarrow \PiE) \rightarrow \TMs \rightarrow \TMs$
 
 
 \begin{lemma} \label{L.IIuv}
-\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \PiE
-\vdash \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = \Inst_V\ g\ x \]
+\[ (u,v) \in X,\ u \in V,\ \inst_V g\ u = \inst_V g\ v,\ x \in \PiE
+\vdash \inst_V g\ (\inst_V\ \{(u,v)\}\ x) = \inst_V\ g\ x \]
 \begin{proof} 对 $x$ 进行类型高度的归纳法，只需要证明叶子类型时的情况
-\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \Uv
-\vdash \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = \Inst_V\ g\ x \]
-由 $\Inst_V$ 的定义，此时 $\Inst_V\ \{(u,v)\}\ x = \{(u,v)\}\ x$
+\[ (u,v) \in X,\ u \in V,\ \inst_V g\ u = \inst_V g\ v,\ x \in \Uv
+\vdash \inst_V g\ (\inst_V\ \{(u,v)\}\ x) = \inst_V\ g\ x \]
+由 $\inst_V$ 的定义，此时 $\inst_V\ \{(u,v)\}\ x = \{(u,v)\}\ x$
 
-\noindent 当 $x \neq v$，$\Inst_V\ \{(u,v)\}\ x = x$，命题显然成立
+\noindent 当 $x \neq v$，$\inst_V\ \{(u,v)\}\ x = x$，命题显然成立
 
-\noindent 当 $x = v$，$\Inst_V\ \{(u,v)\}\ x = v$
-\[ (u,v) \in X,\ u \in V,\ \Inst_V g\ u = \Inst_V g\ v,\ x \in \Uv
-\vdash \Inst_V g\ v = \Inst_V\ g\ x \]
-于前提 $\Inst_V g\ u = \Inst_V g\ v$ 命题得证。
+\noindent 当 $x = v$，$\inst_V\ \{(u,v)\}\ x = v$
+\[ (u,v) \in X,\ u \in V,\ \inst_V g\ u = \inst_V g\ v,\ x \in \Uv
+\vdash \inst_V g\ v = \inst_V\ g\ x \]
+于前提 $\inst_V g\ u = \inst_V g\ v$ 命题得证。
 \end{proof}
 \end{lemma}
 
@@ -567,47 +556,47 @@ $\IM : (\Uv \rightarrow \PiE) \rightarrow \TMs \rightarrow \TMs$
 \Meq (V,(\IM\ \EI\{(u,v)\}\ \ (X - \{(u,v)\})) \cap \{(u,v)\})\]
 \begin{proof} 命题等价于
 \[ \begin{split} (u,v) \in X,\ &u \in V\ \vdash
-\{g \mbar (x,y) \in X\ \land\  \Inst_V g\ x = \Inst_V g\ y \} = \\
-\{g \mbar &(x,y) \in (X-\{(u,v)\})\ \land\  \Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = 
-\Inst_V g\ (\Inst_V\ \{(u,v)\}\ y)\ \land\\
-&\quad\quad\Inst_V g\ u = \Inst_V g\ v \} \end{split} \]
+\{g \mbar (x,y) \in X\ \land\  \inst_V g\ x = \inst_V g\ y \} = \\
+\{g \mbar &(x,y) \in (X-\{(u,v)\})\ \land\  \inst_V g\ (\inst_V\ \{(u,v)\}\ x) = 
+\inst_V g\ (\inst_V\ \{(u,v)\}\ y)\ \land\\
+&\quad\quad\inst_V g\ u = \inst_V g\ v \} \end{split} \]
 分步证明等式两端
 \begin{align}
 \begin{split} (u,v) \in X,\ u \in V,&\ 
-\forall x\ y.\ (x,y) \in X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\forall x\ y.\ (x,y) \in X\Rightarrow (\inst_V g\ x = \inst_V g\ y)
 \vdash \\ \forall x\ y.\ (x,y) \in\ (X-\{(u,v)\})&\Rightarrow
-(\Inst_V g\ (\Inst_V\ \{(u,v)\}\ x) = 
-\Inst_V g\ (\Inst_V\ \{(u,v)\}\ y))\\
-&\land\ (\Inst_V g\ u = \Inst_V g\ v)
+(\inst_V g\ (\inst_V\ \{(u,v)\}\ x) = 
+\inst_V g\ (\inst_V\ \{(u,v)\}\ y))\\
+&\land\ (\inst_V g\ u = \inst_V g\ v)
 \end{split} \tag{1}\\ \notag \\
-\begin{split} (u,v) \in X,\ u \in V,&\ \Inst_V g\ u = \Inst_V g\ v,\ \\
+\begin{split} (u,v) \in X,\ u \in V,&\ \inst_V g\ u = \inst_V g\ v,\ \\
 \forall x\ y.\ 
 (x,y) \in (X-\{(u,v)\})&\Rightarrow
-(\Inst_V g\ (\Inst_V\{(u,v)\}\ x) = 
-\Inst_V g\ (\Inst_V\{(u,v)\}\ y)) \vdash \\
-\forall x\ y.\ (x,&y) \in X\Rightarrow  \Inst_V g\ x = \Inst_V g\ y
+(\inst_V g\ (\inst_V\{(u,v)\}\ x) = 
+\inst_V g\ (\inst_V\{(u,v)\}\ y)) \vdash \\
+\forall x\ y.\ (x,&y) \in X\Rightarrow  \inst_V g\ x = \inst_V g\ y
 \end{split} \tag{2}
 \end{align}
 对于 (1) 有
 \[ \begin{split} (u,v) \in X,\ u \in V,\ 
-\forall x\ y.\ (x,y)\ &\in X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\forall x\ y.\ (x,y)\ &\in X\Rightarrow (\inst_V g\ x = \inst_V g\ y)
 \vdash \\
-\Inst_V g\ u = \Inst_V g\ v
+\inst_V g\ u = \inst_V g\ v
 \end{split} \]
-对于 (2) ，$\Inst_V g\ u = \Inst_V g\ v$ 就在前提列表中
+对于 (2) ，$\inst_V g\ u = \inst_V g\ v$ 就在前提列表中
 
 \noindent 在这两种情况都可以应用引理 \ref{L.IIuv}，这样命题就瞬间被简化成非常简单的形式
 \begin{align}
 \begin{split} (u,v) \in X,\ u \in V,&\ 
-\forall x\ y.\ (x,y) \in X\Rightarrow(\Inst_V g\ x = \Inst_V g\ y)
+\forall x\ y.\ (x,y) \in X\Rightarrow(\inst_V g\ x = \inst_V g\ y)
 \vdash \\ (\forall x\ y.\ 
-(x,y) \in &(X-\{(u,v)\})\Rightarrow \Inst_V g\ x = \Inst_V g\ y)\ 
-\land\ (\Inst_V g\ u = \Inst_V g\ v)
+(x,y) \in &(X-\{(u,v)\})\Rightarrow \inst_V g\ x = \inst_V g\ y)\ 
+\land\ (\inst_V g\ u = \inst_V g\ v)
 \end{split} \tag{1'}\\
-\begin{split} (u,v) \in X,\ u \in V,&\ \Inst_V g\ u = \Inst_V g\ v,\\
+\begin{split} (u,v) \in X,\ u \in V,&\ \inst_V g\ u = \inst_V g\ v,\\
 \forall x\ y.\ &(x,y)
-\in (X-\{(u,v)\})\Rightarrow \Inst_V g\ x = \Inst_V g\ y \vdash \\
-\forall x\ y.\ (x,y) \in &X\Rightarrow (\Inst_V g\ x = \Inst_V g\ y)
+\in (X-\{(u,v)\})\Rightarrow \inst_V g\ x = \inst_V g\ y \vdash \\
+\forall x\ y.\ (x,y) \in &X\Rightarrow (\inst_V g\ x = \inst_V g\ y)
 \end{split} \tag{2'}
 \end{align}
 这些显然是成立的。
@@ -657,8 +646,8 @@ y = \underline{(\ c\ w_1\ \cdots\ w_n \ )} \vdash\\
 \noindent 这是成立的因为
 $x = \underline{(\ c\ v_1\ \cdots
 \ v_n\ )},\ y = \underline{(\ c\ w_1\ \cdots\ w_n\ )}$ 下
-\[ \{f \mbar \Inst_V f\ x = \Inst_V f\ y \} = 
-\{ f \mbar \bigwedge_{i=1\cdots n} \Inst_V f\ v_i = \Inst_V f\ w_i \} \]
+\[ \{f \mbar \inst_V f\ x = \inst_V f\ y \} = 
+\{ f \mbar \bigwedge_{i=1\cdots n} \inst_V f\ v_i = \inst_V f\ w_i \} \]
 然后证明 $\SBP\ (V_x,X_x')\ (V_o,X_o)$ ，只要证明如下命题即可
 \[ \begin{split} \SBP\ &(V_x,X_x)\ (V_o,X_o),\ (x,y) \in X_x,\ 
 x = \underline{(\ c\ v_1\ \cdots\ v_n \ )},\ 
@@ -848,7 +837,7 @@ y = \underline{(\ d\ w_1\ \cdots\ w_m \ )}$
 行 \ref{l:mro3} 的情况下，$M_x \cup M_o$ 是无解的因为
 $(x,y) \in X_x, x = \underline{(\ c\ v_1\ \cdots
 \ v_n\ )},\ y = \underline{(\ d\ w_1\ \cdots\ w_p\ )}$ 时
-\[ c \neq d \Rightarrow \nexists f.\ \Inst_V f\ x = \Inst_V f\ y \]
+\[ c \neq d \Rightarrow \nexists f.\ \inst_V f\ x = \inst_V f\ y \]
 行 \ref{l:mro5} 的无解情况也是一样的。
 行 \ref{l:mro6} 的无解情况由引理 \ref{L.Rec.NoSolution} 证明。
 行 \ref{l:mro4} 的输出的正确性则是引理 \ref{L.SBP.subst}。

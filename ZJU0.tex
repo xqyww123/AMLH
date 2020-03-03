@@ -21,7 +21,8 @@
 \usepackage{newunicodechar}
 \newfontfamily\miscsymfont{DejaVu Sans}
 \newunicodechar{→}{{\miscsymfont\symbol{"2192}}}
-\newunicodechar{。}{{.\ }}
+\newunicodechar{。}{{\watermark.\ }}
+%\newunicodechar{。}{{.\ }}
 \newunicodechar{，}{{,\ }}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
 
@@ -38,8 +39,8 @@
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
-\newcommand{\ES}{\raisebox{-.05\baselineskip}
-{\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(}\cdot}}
+\newcommand{\ES}{\ \raisebox{-.05\baselineskip}
+{$\mathrm{E}$}$\mathcal{x}$\ }
 \newcommand{\Eamlh}[0]{\raisebox{-.05\baselineskip}
 {\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(A}_{\HOL}^{\lamcr}}}
 \newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
@@ -56,6 +57,7 @@
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
 }
 \newcommand{\breduce}{\mathrel{\rightarrow_\beta}}
+\newcommand{\bbreduce}{\mathrel{\twoheadrightarrow_\beta}}
 \newcommand{\dotsim}{\mathrel{\dot{\sim}}}
 \newcommand{\widesim}[2][1.5]{\mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
 \newcommand{\widesims}[3][1.5]{\mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}}
@@ -63,6 +65,15 @@
 \newcommand{\proctr}[2]{\ensuremath{\ {\prec}\frac{#1}{#2}{\succ}\ }}
 \newcommand{\vdashv}{\ensuremath{\ {\dashv}{\vdash}\ }}
 \newcommand{\abs}[1]{\ensuremath{\ {|}#1{|}\ }}
+\newcommand{\when}{\text{当}}
+\newcommand{\vcalls}{\mathbin{\cdot}}
+\newcommand{\vcall}{\mathbin{\cdot}}
+\newcommand{\tcallable}{\mathbin{\textbf{suit}}}
+\newcommand{\vcallable}{\mathbin{\textbf{suit}}}
+\newcommand{\vcallablen}{suit}
+\newcommand{\Bool}{\mathbf{Bool}}
+\DeclareMathOperator{\type}{type}
+\DeclareMathOperator{\B}{B}
 \DeclareMathOperator{\xa}{a}
 \DeclareMathOperator{\K}{K}
 \DeclareMathOperator{\I}{I}
@@ -82,18 +93,28 @@
 \DeclareMathOperator{\fdelete}{\ |-\ }
 \DeclareMathOperator{\h}{h}
 \DeclareMathOperator{\QI}{QI}
+\DeclareMathOperator{\VI}{VI}
 \DeclareMathOperator{\QV}{QV}
 \DeclareMathOperator{\Qv}{Qv}
 \DeclareMathOperator{\QB}{QB}
 \DeclareMathOperator{\MF}{MF}
 \DeclareMathOperator{\MI}{MI}
 \DeclareMathOperator{\IM}{IM}
+\DeclareMathOperator{\inst}{inst}
 \DeclareMathOperator{\Inst}{Inst}
 \DeclareMathOperator{\Solved}{Solved}
 \DeclareMathOperator{\FVS}{FVS}
 \DeclareMathOperator{\BV}{v}
 \DeclareMathOperator{\TS}{w}
+\newcommand{\vwt}{\mathbin{\mathrm{w}_\tau}}
+\newcommand{\Vwt}{\vwt^\Lambda}
+\DeclareMathOperator{\vw}{w}
+\newcommand{\Vw}{\vw^\Lambda}
+\DeclareMathOperator{\vW}{W}
+\newcommand{\VW}{\vW^\Lambda}
 \DeclareMathOperator{\EQW}{W}
+\DeclareMathOperator{\LV}{LV}
+\DeclareMathOperator{\LB}{LB}
 \DeclareMathOperator{\TMW}{\mathcal{W}}
 \DeclareMathOperator{\FINITE}{FINITE}
 \DeclareMathOperator{\SF}{SF}
@@ -112,6 +133,7 @@
 \newcommand{\Uv}{\ensuremath{U_{\mathrm{v}}}}
 \newcommand{\UE}{\ensuremath{U_{\mathrm{E}}}}
 \newcommand{\PiE}{\ensuremath{\Pi_{\mathrm{E}}}}
+\newcommand{\LE}{\ensuremath{L_{\mathrm{E}}}}
 \newcommand{\PiAE}{\ensuremath{\Pi^{\forall}_{\mathrm{E}}}}
 \newcommand{\Meq}{\ensuremath{\overset{\mathrm{M}}{=\joinrel=}}}
 \newcommand{\Words}{\ensuremath{\mathbf{Words}}}
@@ -120,6 +142,27 @@
 \newcommand{\hLc}{\ensuremath{\hat{L}_c}}
 
 \newcommand{\TimeComplexity}{\item[\textbf{时间复杂度：}]}
+
+\newcommand{\algcase}{
+\algblockdefx{Case}{EndCase}[1]{\textbf{Case}\ ##1}{\textbf{EndCase}}
+\algcblockdefx[Case]{Case}{When}{EndCase}[1]{\textbf{When}\ ##1}{\textbf{EndCase}}
+\algcblockdefx{Case}{ElseCase}{EndCase}{\textbf{Else}}{\textbf{EndCase}}
+}
+
+\newcommand\watermark[1]{%
+    #1%
+    \sbox0{#1}%
+    \llap{%
+    \makebox[\wd0][c]{%  hor. centering
+    \raisebox{.5\ht0}{%  approx. vert. centering
+    \csname Gin@isotrue\endcsname% = "keepaspectratio"
+    \resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
+    \parbox{10em}{% Allow line breaks
+            \color{black!90}%  
+            草案 \today
+        }%
+    }}}}%
+}
 
 %\makeatletter
 %\def\moverlay{\mathpalette\mov@rlay}

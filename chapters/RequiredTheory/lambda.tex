@@ -25,7 +25,8 @@ V = \{v_0,v_1,\cdots\}
 L = \bnf{V\ |\ (L\ L)\ |\ (\lambda V \ L)}
 \end{equation}
 
-简写 $\lambda x_1\ \lambda x_2\ \cdots\ \lambda x_n\ y$ 为
+简写 $\underline{(\ \lambda\ x_1\ (\ \lambda\ x_2\ \cdots\ (\ 
+    \lambda\ x_n\ y\ )\ \cdots\ )\ )}$ 为
     $\lambda x_1\ x_2\ \cdots\ x_n.\ y$
 
 \item 集合$U$是另一个无穷的字母表，表示类型变量集（type variables）。
@@ -152,12 +153,13 @@ Church 式$\lamst$就是三元组 $(L_C, \Pi, \vdash)$
 λ2 演算基于Church式λ→演算论述。
 
 \begin{defin}[λ2]
-\[ L_* = \bnf{L \mbar \Lambda U\ L_*} \]
+\[ L_* = \bnf{L \mbar \Lambda\ U\ L_*} \]
 并类似地记号 $\Lambda t_1\ t_2\ \cdots\ t_n.\ b$ 表示
-$\Lambda t_1\ \Lambda t_2\ \cdots\ \Lambda t_n\ b$，
-\[ \Pi_* = \bnf{\Pi \mbar \forall U\ \Pi_*} \]
+    $\underline{\Lambda\ t_1\ \Lambda\ t_2\ \cdots\ \Lambda\ t_n\ b}$，
+\[ \Pi_* = \bnf{\Pi \mbar \forall\ U\ \Pi_*} \]
 记号 $\forall \tau_1\ \tau_2\ \cdots\ \tau_n.\ b$ 表示
-$\forall \tau_1\ \forall \tau_2\ \cdots\ \forall \tau_n\ b$
+$\underline{\forall\ \tau_1\ \forall\ \tau_2\ \cdots\ \forall\
+    \tau_n\ b}$
 \[ C_* = \powerset \bnf{V:\Pi \mbar U:*} \]
 $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 定义 $C_* \times \mathcal{L}_*$上的关系 $\vdash$
@@ -226,16 +228,32 @@ $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 的变量 $x'$
 \end{notation}
 
-\begin{defin}[β规约] β规约$\breduce$是集合$L$即 λ 表达式上满足
+\begin{defin}[β规约] \label{D.breduce}
+β规约$\breduce$是集合$L$即 λ 表达式上满足
     \[ (\lambda x\ b)\ a \breduce b[x/a] \]
 且在下述规则下闭合的最小关系
-\begin{align*}
-    &P \breduce P'& &\Rightarrow& &\forall x \in V:\quad\lambda x.P 
-    \breduce \lambda x. P'&\\
-    &P \breduce P'& &\Rightarrow& &\forall Z \in L:\quad P\ Z
-    \breduce P'\ Z&\\
-    &P \breduce P'& &\Rightarrow& &\forall Z \in L:\quad Z\ P
-    \breduce Z\ P'&
-\end{align*}
+\[ \begin{array}{lcrcl}
+    P \breduce P' &\Rightarrow&\forall x \in V&:&\lambda x.P 
+    \breduce \lambda x. P'\\
+    P \breduce P' &\Rightarrow&\forall Z \in L&:&P\ Z
+    \breduce P'\ Z\\
+    P \breduce P' &\Rightarrow&\forall Z \in L&:& Z\ P
+    \breduce Z\ P'
+\end{array} \]
+多步 β 规约 $\bbreduce$ 是 $\breduce$ 的传递性自反性闭包，即
+$\bbreduce$ 是最小的在下述规则下闭合的关系
+\[ \begin{array}{lcl}
+    P \breduce P' & \Rightarrow & P \bbreduce P'\\
+    P \bbreduce P'\ \land\ P' \bbreduce P'' & \Rightarrow & P \bbreduce
+    P''\\ & \Rightarrow & P \bbreduce P
+\end{array} \]
 \end{defin}
+
+\begin{theo}[多步β规约的唯一性] \label{T.bbreduce.11}
+    \[ \forall P\ P'\ P''.\ P \bbreduce P'\ \land\ P \bbreduce P''
+    \Rightarrow (P' = P'')\]
+\begin{proof} 不是本文的重点，参见 Sørensen 的讲义
+    \cite{sorensen2006lecturesC1}。
+\end{proof}
+\end{theo}
 

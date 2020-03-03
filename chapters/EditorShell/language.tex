@@ -1,0 +1,71 @@
+\ES  形式语言基本是一种具有 System F 式类型系统的函数式程序语言，
+且具有到 SML 语言的映射，可以翻译到 SML 。
+\ES 的类型系统跟标准 System F 的差异在于，标准 System F 中全称量化必须被
+显示地特化成非量化类型后才可被调用，而 \ES 形式语言设计了一种方式直接
+调用两个全称量化类型。
+
+尽管标准的 System F 中全称量化与其他要素相同都只是普通的不需要有任何
+其他意义的符号，\ES 形式语言这样看待全称量化：
+全称量化类型对应于所有可以由其特化而出的非全称量化类型，这些类型构成一
+集合叫做特化集，全称量化类型对应于这特化集。即全称量化表示了一系列
+具有同一结构的类型。全称量化类型的调用应是这种结构上的调用。
+更具体地，两个特化集的各个元素依次调用，所有可行的调用的结果构成了另一个
+集合，而可以证明这集合恰好就是某个全称量化类型的特化集。
+这一定理意味着全称量化所表示的那些相似结构间确实可以调用，
+而调用的结果是调用双方进行最小特化后能满足调用要求的最大泛化的结构。
+
+例如全称量化类型 $\forall \alpha.\ (\alpha,\ \mathrm{int})\ 
+\mathrm{pair}\rightarrow (\mathrm{int},\ \alpha)\ \mathrm{pair}$ 在
+$\forall \beta.\ (\mathrm{string},\ \beta)\ \mathrm{pair}$ 上的调用，
+双方进行所有可能的特化后只有类型 $(\mathrm{string},\ 
+\mathrm{int})\ \mathrm{pair} \rightarrow (\mathrm{int},\ 
+\mathrm{string})\ \mathrm{pair}$ 与 $(\mathrm{string},\ \mathrm{int})
+\ \mathrm{pair}$ 
+可以被调用，于是调用结果自然是 $(\mathrm{int},\ \mathrm{string})
+\ \mathrm{pair}$。
+但若函数的全称量化类型被适当扩大，
+$\forall \alpha\ \gamma.\ (\alpha,\ \gamma)\ 
+\mathrm{pair}\rightarrow (\gamma,\ \alpha)\ \mathrm{pair}$
+那么此时所有诸如 $(\mathrm{int},\ *)\ 
+\mathrm{pair}\rightarrow (*,\ \mathrm{int})\ \mathrm{pair}$
+与 $(*,\ \mathrm{int})\ \mathrm{pair}$ 的结构的类型都可被调用，
+所有的调用结果具有 $(\mathrm{int},\ *)\ \mathrm{pair}$ 结构，
+是全称量化类型 $\forall \delta.\ (\mathrm{int},\ \delta)\ 
+\mathrm{pair}$ 的特化集。故可以说全称量化类型
+$\forall \delta.\ (\mathrm{int},\ \delta)\ \mathrm{pair}$
+是全称量化类型 
+$\forall \alpha\ \gamma.\ (\alpha,\ \gamma)\ 
+\mathrm{pair}\rightarrow (\gamma,\ \alpha)\ \mathrm{pair}$
+调用在同为全称量化类型的
+$\forall \beta.\ (\mathrm{string},\ \beta)\ \mathrm{pair}$
+的结果。
+此即全称量化类型的调用。
+
+相应的，全称量化的值也有如此的调用。
+
+现在 $\I : \forall \alpha.\ \alpha \rightarrow
+\alpha $ 调用 $x : \forall \alpha.\ \alpha$ 的结果就是
+$x : \forall \alpha.\ \alpha$ 其本身。
+
+在 SML 语言中，全称量化的特化只发生在函数，参数是无法全称量化特化的，
+且无法产生具有所谓任意类型 $\forall x.\ x$ 的值。\ES 中参数是可以
+自由地量化特化的，具有任意类型 $\forall x.\ x$ 的值可以调用于任何函数。
+另外 SML 的类型系统并非完全的 System F，而是 Hindley-Milner
+算法下被限制的，因为完全的 System F 中类型无法被自动推导，
+而 Hindley-Milner 算法给出了在近似 System F 类型系统下的
+自动类型推导算法。XEE!!! 引用！
+但在 \ES 的情况，类型是不需要被自动推导的，因为根本没有文本，没有
+文本形式的源代码，一切用户操作都只是 \ES 机器上定义的那两种。
+严格来说，用户没法用什么文本去产生一个
+全新的值，一切值都已经是存在的，而新的值只能通过操纵 \ES 机器
+执行已有的函数的计算而产生，这样实际不需要自动类型推导。甚至函数变量
+也不是由用户创造的，而是计算产生的，\ES 上的一切函数的定义都是
+通过执行一个用于定义函数的函数完成，即用户调用用于定义函数的函数以
+定义新的函数。因为函数对应编辑操作，而新建一个编辑器操作也是一种操作，
+自然也应当调用某个函数以进行。
+这点很天马行空，将在接下来几节详细阐述。
+最后 \ES 的类型系统完整地包含了 System F。
+
+这意味着 \ES 的类型系统相当的灵活。
+
+

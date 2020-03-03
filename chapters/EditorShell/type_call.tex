@@ -1,4 +1,4 @@
-\subsection{类型的调用}
+\subsection{类型的调用} \label{S.T.Call}
 
 现在讨论诸如$\lamst$以及$\lambda2$中组合律的类型调用
 
@@ -20,7 +20,7 @@
 
 \hfill
 
-自然地期望在 $\ES$ 中也应有类似的组合运算。
+自然地期望在 \ES  中也应有类似的组合运算。
 原本的 λ2 演算要求显示地实例化组合双方的类型，直到实例化成不具有全称量化的形式才可以进行
 组合，而组合的结果也一定不具有全称量化的。
 例如 $\forall x.\ x \rightarrow z \rightarrow x$ 与
@@ -28,7 +28,7 @@ $\forall y.\ y$ 进行组合的结果只能是 $z \rightarrow x$ 或 $z \rightar
 即进行了两次实例化，但其实只要一次实例化就可以的，更好的结果是 $\forall x.\ 
 z \rightarrow x$
 
-$\ES$ 对 λ2 主要的改进在于此，这也是几乎 $\ES$ 与 λ2 唯一的不同，$\ES$ 基于
+\ES  对 λ2 主要的改进在于此，这也是几乎 \ES  与 λ2 唯一的不同，\ES  基于
 上一节论述的{\it 全称量化的交}提出一种对组合双方的全称量化进行最小实例化以尽可能保持
 全称量化而进行组合的运算，称作{\it 全称量化类型的函数调用}。
 这种运算只进行必要的实例化而在结果中尽可能地保留了全称量化，在 $\forall x.\ 
@@ -66,7 +66,10 @@ $\powerset(\PiE)$的函数 $(\cdot)$
 \caption{全称量化类型的调用 QCall} \label{alg:QCall}
 \begin{algorithmic}[1]
 \Require 全称量化类型 $q_1,\ q_2 \in \PiAE$
-\Ensure $q \in \PiAE$ 满足 $\QI q_1 \cdot \QI q_2 = \QI q$，或者 $\QI q_1 \cdot \QI q_2 = 
+\Ensure $(q,f) \in \PiAE \times (\Uv \rightarrow \PiE)$ 满足 
+$\QI q_1 \cdot \QI q_2 = \QI q\ \land\ \QB q = \inst f\ (
+    \Dom^\rightarrow \QB q_1)$
+\Statex 或者 $\QI q_1 \cdot \QI q_2 = 
 \emptyset$ 时输出 {\it 无解} 。
 \State $\NC(q_1,\ q_2) \rightarrow (q_1',\ q_2')$ \Comment{调用算法 \ref{alg:NC} NC}
 \State $(\QV q_1' \cup \QV q_2',\ \{\DomF \QB q_1' = \QB q_2'\}) \rightarrow M$ \label{l:qc1}
@@ -74,7 +77,7 @@ $\powerset(\PiE)$的函数 $(\cdot)$
 \State $\mathrm{SolveM}(M) \rightarrow M'$ \Comment{算法 \ref{alg:SolveM} SolveM}
 \If {$M' \neq \MNS$}
 \State $\mathrm{QIMI}(M',\ \ImaF \QB q_1') \rightarrow q$ \Comment{算法 \ref{alg:QIMI} QIMI} \label{l:qc2}
-\State 输出 $q$
+    \State 输出 $(q,\ \mathrm{AsFunc}\ M')$
 \Else
     \State 输出 {\it 无解}
 \EndIf
@@ -104,9 +107,16 @@ $\powerset(\PiE)$的函数 $(\cdot)$
 \end{theo}
 
 \begin{defin}[全称量化类型的调用] \label{D.QCall}
-    由定理 \ref{T.QCall} 可以定义全称量化类型的调用，
-    从 $\PiAE \times \PiAE$ 到 $\PiAE$ 的函数 $(\cdot)$
-\[ \forall q_1,\ q_2 \in \PiAE.\ (\QI q_1 \cdot \QI q_2 \neq \emptyset)
+    由定理 \ref{T.QCall} 可以定义全称量化类型的调用。先定义可调用性
+    $\tcallable : \PiAE \times \PiAE \rightarrow \Bool$
+    \[ q_1 \tcallable q_2 = (\QI q_1 \cdot \QI q_2 \neq \emptyset) \]
+算法 \ref{alg:QCall} QCall 的有无解即是对 $\tcallable$ 的计算，
+    $\mathrm{QCall}(q_1,\ q_2)$有解时 $q_1 \tcallable q_2 = \T$ 无解时
+$q_1 \tcallable q_2 = \F$
+
+    从 $\PiAE \times \PiAE$ 到 $\PiAE$ 的函数 $(\cdot)$ 表示可调用时的
+    全称类型调用
+    \[ \forall q_1,\ q_2 \in \PiAE.\ (q_1 \tcallable q_2) 
 \Rightarrow \QI (q_1 \cdot q_2) = \QI q_1 \cdot \QI q_2\]
-    算法 \ref{alg:QCall} QCall 即是计算 $(\cdot)$ 并包含无解情况的算法。
+    算法 \ref{alg:QCall} QCall 即是计算 $(\cdot)$ 在可调用时的结果。
 \end{defin}
