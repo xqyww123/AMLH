@@ -1,0 +1,65 @@
+\section{\ES 机器}
+
+\subsection{\ES 机器的形式定义}
+
+\begin{defin}[标识、编辑变量空间、编辑上下文]
+索引集（index set）$I$ 表示所有的标识，这些标识用于命名编辑器变量。
+一个编辑变量空间是一个 $I$ 到 $\LE^2$ 的有限映射 $I \mapsto \LE^2$，
+在实现上可以用哈希表表示。
+所有的编辑变量空间构成集合 $\vspac$。
+另一个索引集 $\Is$ 中的元素标识编辑变量空间，$\Is$ 到 $\vspac$ 
+的有限映射叫做 \ES 机器的上下文 $\{\vspa{i}\},\ \vspa{i} \in \vspac,\ 
+i \in \Is$ 构成变量空间$\vspac$的族（families of set $\vspac$），
+所有的上下文构成集合 $\CE$。
+\end{defin}
+
+对一个变量空间 $\Psi$，项 $\Psi(name),\ name \in I$ 是变量空间中名为
+$name$的值。
+一个上下文 $\{\vspa{i}\}$，项 $\vspaR,\ \mathbf{0} \in \Is$ 表示
+标识为 $\mathbf{0}$ 的变量空间，继而 $\vspaR(name)$ 表示
+标识为 $\mathbf{0}$ 的变量空间中名为 $name$ 的变量。
+
+\ES 机器中非常重要的一点是预定义函数，这些函数是一些 \ES 形式语言上的值
+，但与编辑器上预先实现的一些功能关联，当这些值进行 β 规约时，关联的
+功能将被激活，编辑器上特定的程序过程将被执行，而这些值的参数将传入
+这些过程作为参数。以此实现诸如编译、读取文件，或者在屏幕上打印一些
+内容的功能。可以说，\ES 形式语言是为调用这些功能的脚本。
+
+现在形式地说明这些预定义值与功能，但绝非说这些功能就是如此按数学定义来
+实现的，它们在软件中的具体实现参见？？？章，而此处的形式定义仅仅是为了
+方便论述它们的含义，以及精确论述 \ES 状态的抽象模型。
+预定义值此处的定义仅仅是理论上的工具，暂且把具体实现搁置。
+
+\begin{defin}[预定义值与编辑器功能]
+编辑器功能的理论模型是 $\CE \times \{\LE\}_n$ 到 
+$\CE \times \LE$ 的函数。对于输入上下文 $\gamma$，长度为$n$的输入参数
+列表$\{a_i\}_n$，编辑器功能 $f$ 的执行结果 \[f(\gamma,\{a_i\}_n) = 
+(\gamma',y)\] 表示新的上下文 $\gamma'$ 以及返回值 $y$。
+所有的编辑器功能构成集合 $\FE$。
+量化常量值 $L_c^2$ 中所有链接到编辑器功能的值构成集合 $\Lp^2$，
+$\Lp^2 \subseteq L_c^2$，其中每个值$z_p$对应的编辑器功能为
+$\fE(z_p)$，$\fE$ 是 $\Lp^2$ 到 $\FE$ 的函数。
+每个编辑器功能$f$都有一个自然数对应$\omega(f)$ 表示参数数目。
+因为 $\Lp$ 集中每个值$z_p$都对应了唯一的一个编辑器功能 $\fE(z_p)$，
+就也能得到对应编辑器功能的参数数目 $\omega(\fE z_p)$，
+不会引起混淆地同样写作$\omega(z_p)$
+\[ \omega(z_p) = \omega(\fE\ z_p) \]
+\end{defin}
+
+\begin{defin}[\ES 状态与\ES 机器]
+\ES 状态是上下文$\{\vspac{i}\}$ 与值 $z$ 的二元组 $(\{\vspac{i}\}, z)$，
+所有的状态构成集合 $\mathbf{State} = \CE \times \LE^2$。
+一个特殊的变量空间 $\vspaR$ 表示全局变量空间，初始状态 $s_0$
+\[ s_0 = (\vspaR,\ \I) \]
+定义操作集为 $\mathbf{Choice} = \{\rightarrow,\ \leftarrow\}$，
+输入集为 $\mathbf{Input} = \mathbf{Choice} \times \LE^2$，
+状态转移函数 $\delta : \mathbf{State}\times\mathbf{Input} \rightarrow
+\mathbf{State}$
+\begin{align*}
+\delta((\Psi,\ z),\ \leftarrow, z') &= (\Psi,\     )
+\end{align*}
+
+\ES 机器是状态机。
+\end{defin}
+
+

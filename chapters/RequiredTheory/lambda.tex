@@ -71,7 +71,7 @@ U = \{\alpha,\beta,\cdots\}
 \begin{minipage}[b]{0.4\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma, x : \sigma \vdash M : \tau$} \RightLabel{(抽象律)}
-\UnaryInfC{$\Gamma \vdash \lambda x. M : \sigma \leftarrow \tau$}
+\UnaryInfC{$\Gamma \vdash \lambda x. M : \sigma \rightarrow \tau$}
 \end{prooftree}
 \end{minipage}
 
@@ -79,7 +79,7 @@ U = \{\alpha,\beta,\cdots\}
 
 \begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
-\AxiomC{$\Gamma \vdash M : \sigma \leftarrow \tau$}
+\AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
 \AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
 \BinaryInfC{$\Gamma \vdash M N : \tau$}
 \end{prooftree}
@@ -124,7 +124,7 @@ L_C = \bnf{V \mbar (L\ L) \mbar (\lambda V_C\ L)} \\
 \begin{minipage}[b]{0.4\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma, x : \sigma \vdash M : \tau$} \RightLabel{(抽象律)}
-\UnaryInfC{$\Gamma \vdash \lambda x{:}\sigma. M : \sigma \leftarrow \tau$}
+\UnaryInfC{$\Gamma \vdash \lambda x{:}\sigma. M : \sigma \rightarrow \tau$}
 \end{prooftree}
 \end{minipage}
 
@@ -132,7 +132,7 @@ L_C = \bnf{V \mbar (L\ L) \mbar (\lambda V_C\ L)} \\
 
 \begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
-\AxiomC{$\Gamma \vdash M : \sigma \leftarrow \tau$}
+\AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
 \AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
 \BinaryInfC{$\Gamma \vdash M N : \tau$}
 \end{prooftree}
@@ -175,7 +175,7 @@ $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 \begin{minipage}[b]{0.4\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma, x : \sigma \vdash M : \tau$} \RightLabel{(抽象律)}
-\UnaryInfC{$\Gamma \vdash \lambda x{:}\sigma. M : \sigma \leftarrow \tau$}
+\UnaryInfC{$\Gamma \vdash \lambda x{:}\sigma. M : \sigma \rightarrow \tau$}
 \end{prooftree}
 \end{minipage}
 
@@ -183,7 +183,7 @@ $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 
 \begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
-\AxiomC{$\Gamma \vdash M : \sigma \leftarrow \tau$}
+\AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
 \AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
 \BinaryInfC{$\Gamma \vdash M N : \tau$}
 \end{prooftree}
