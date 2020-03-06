@@ -5,6 +5,8 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{ctex-xecjk-winfonts.def}
+\usepackage{xifthen}
+\usepackage{hhline}
 \usepackage{textcomp} 
 \usepackage{tikz-network}
 \usepackage{bussproofs}
@@ -40,7 +42,8 @@
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
 \newcommand{\ES}{\ \raisebox{-.05\baselineskip}
-{$\mathrm{E}$}$\mathcal{x}$\ }
+{$\mathrm{E}$}$|$\ }
+\newcommand{\ESm}[1]{$\mathrm{E}^{#1}|$}
 \newcommand{\Eamlh}[0]{\raisebox{-.05\baselineskip}
 {\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(A}_{\HOL}^{\lamcr}}}
 \newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
@@ -56,8 +59,16 @@
 \newcommand{\widesqa}[2][1.5]{
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
 }
+\newcommand{\etaf}{\mathop{\eta_\mathrm{f}}}
+\newcommand{\etaa}{\mathop{\eta_\mathrm{a}}}
+\newcommand{\etan}{\mathop{\eta_\mathrm{n}}}
 \newcommand{\breduce}{\mathrel{\rightarrow_\beta}}
+\newcommand{\bsreduce}{\mathrel{\rightarrow_{\beta^\ast}}}
 \newcommand{\bbreduce}{\mathrel{\twoheadrightarrow_\beta}}
+\newcommand{\bbsreduce}{\mathrel{\twoheadrightarrow_{\beta^\ast}}}
+\newcommand{\sequence}[1]{\{#1\}_{n\in\mathbb{N}}}
+\newcommand{\sequenc}[2]{\{#1\}_{#2\in\mathbb{N}}}
+\newcommand{\gcall}[1]{\mathrel{\underset{#1}{*}}}
 \newcommand{\dotsim}{\mathrel{\dot{\sim}}}
 \newcommand{\widesim}[2][1.5]{\mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
 \newcommand{\widesims}[3][1.5]{\mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}}
@@ -72,6 +83,8 @@
 \newcommand{\vcallable}{\mathbin{\textbf{suit}}}
 \newcommand{\vcallablen}{suit}
 \newcommand{\Bool}{\mathbf{Bool}}
+\newcommand{\CMT}[3]{\combtyp{CallingMethod}{(#1,\ #2,\ #3)}}
+\newcommand{\CMS}{\mathrm{CM}}
 \DeclareMathOperator{\type}{type}
 \DeclareMathOperator{\B}{B}
 \DeclareMathOperator{\xa}{a}
@@ -125,6 +138,30 @@
 \DeclareMathOperator{\Solvable}{Solvable}
 \DeclareMathOperator{\SBP}{SolvingBiPart}
 
+\newcommand{\eset}{\mathrel{\texttt{--}}}
+\newcommand{\combtyp}[2]{#2\ \mathrm{#1}}
+\newenvironment{estable}{
+\begin{tabular}{ | p{1.3cm} | p{2cm} | p{12cm} | } \hline
+\textbf{种类} & \textbf{标识} & \textbf{类型与介绍} \\
+\hhline{|=|=|=|}}{\end{tabular}}
+\newcommand{\xconstrn}[3]{
+\textbf{构造\newline 函数}&#1&$#2$ \quad\quad #3\\ \hline
+}
+\newcommand{\xvaluen}[3]{
+\textbf{值}&#1&$#2$\quad\quad #3\\ \hline
+}
+\newcommand{\modifiern}[3]{
+\textbf{修饰符}&#1&$#2$\quad\quad #3\\ \hline
+}
+\newcommand{\xconstr}[3]{
+\textbf{构造\newline 函数}&#1&$#2$\newline #3\\ \hline
+}
+\newcommand{\xvalue}[3]{
+\textbf{值}&#1&$#2$\newline #3\\ \hline
+}
+\newcommand{\modifier}[3]{
+\textbf{修饰符}&#1&$#2$\newline #3\\ \hline
+}
 \newcommand{\squote}{\text{\textquotesingle}}
 \newcommand{\SolveMr}{$\mathrm{SolveM_r}$}
 \newcommand{\MNS}{\ensuremath{\mathrm{M}_\emptyset}}
@@ -143,6 +180,7 @@
 \newcommand{\Is}{\ensuremath{\tilde{I}}}
 \newcommand{\CE}{\ensuremath{\Gamma_\mathrm{E}}}
 \newcommand{\vspa}[1]{\ensuremath{\Psi_{#1}}}
+\newcommand{\vspaC}[1][i]{\ensuremath{\{\Psi_{#1}\}_{#1\in \tilde{I}}}}
 \newcommand{\vspaR}{\ensuremath{\Psi_{\mathbf{0}}}}
 \newcommand{\vspac}{\ensuremath{\bm{\Psi}}}
 \newcommand{\Lp}{\ensuremath{L_\mathrm{p}}}

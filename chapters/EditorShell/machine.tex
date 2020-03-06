@@ -1,65 +1,321 @@
 \section{\ES 机器}
 
-\subsection{\ES 机器的形式定义}
+\ES 机器包括 \ESm{0} 状态机以及一系列以它为基础的状态机。
 
-\begin{defin}[标识、编辑变量空间、编辑上下文]
-索引集（index set）$I$ 表示所有的标识，这些标识用于命名编辑器变量。
-一个编辑变量空间是一个 $I$ 到 $\LE^2$ 的有限映射 $I \mapsto \LE^2$，
-在实现上可以用哈希表表示。
-所有的编辑变量空间构成集合 $\vspac$。
-另一个索引集 $\Is$ 中的元素标识编辑变量空间，$\Is$ 到 $\vspac$ 
-的有限映射叫做 \ES 机器的上下文 $\{\vspa{i}\},\ \vspa{i} \in \vspac,\ 
-i \in \Is$ 构成变量空间$\vspac$的族（families of set $\vspac$），
-所有的上下文构成集合 $\CE$。
-\end{defin}
+\subsection{\ESm{0} 状态机}
 
-对一个变量空间 $\Psi$，项 $\Psi(name),\ name \in I$ 是变量空间中名为
-$name$的值。
-一个上下文 $\{\vspa{i}\}$，项 $\vspaR,\ \mathbf{0} \in \Is$ 表示
-标识为 $\mathbf{0}$ 的变量空间，继而 $\vspaR(name)$ 表示
-标识为 $\mathbf{0}$ 的变量空间中名为 $name$ 的变量。
+\ESm{0} 状态机支持了最基本的外部编辑壳层功能的调用。
 
-\ES 机器中非常重要的一点是预定义函数，这些函数是一些 \ES 形式语言上的值
-，但与编辑器上预先实现的一些功能关联，当这些值进行 β 规约时，关联的
-功能将被激活，编辑器上特定的程序过程将被执行，而这些值的参数将传入
+\ES 语言环境中，预定义函数是一些 \ES 形式语言上的值，
+与编辑壳层上预先实现的功能关联，当这些值进行 β 规约时，关联的
+功能将被激活，编辑壳层上特定的程序过程将被执行，而这些值的参数将传入
 这些过程作为参数。以此实现诸如编译、读取文件，或者在屏幕上打印一些
 内容的功能。可以说，\ES 形式语言是为调用这些功能的脚本。
 
-现在形式地说明这些预定义值与功能，但绝非说这些功能就是如此按数学定义来
-实现的，它们在软件中的具体实现参见？？？章，而此处的形式定义仅仅是为了
+现在尽可能形式地说明这些预定义值与功能，
+但绝非说这些功能就是如此按数学定义来实现的，
+它们在软件中的具体实现参见？？？章，而此处的形式定义仅仅是为了
 方便论述它们的含义，以及精确论述 \ES 状态的抽象模型。
-预定义值此处的定义仅仅是理论上的工具，暂且把具体实现搁置。
 
-\begin{defin}[预定义值与编辑器功能]
-编辑器功能的理论模型是 $\CE \times \{\LE\}_n$ 到 
+\begin{defin}[上下文] 未明确定义的集合 $\CE$ 表示 \ES 机器的上下文。
+$\CE$ 具体的定义是不影响 \ESm{0} 状态机理论的，可以根据实现的需要定制，
+后文的各种基于 \ESm{0} 的状态机也会定制对 $\CE$ 的要求。
+\end{defin}
+
+\begin{defin}[预定义值与壳层功能]
+壳层功能的理论模型是 $\CE \times \{\LE\}_n$ 到 
 $\CE \times \LE$ 的函数。对于输入上下文 $\gamma$，长度为$n$的输入参数
-列表$\{a_i\}_n$，编辑器功能 $f$ 的执行结果 \[f(\gamma,\{a_i\}_n) = 
+列表$\{a_i\}_n$，壳层功能 $f$ 的执行结果 \[f(\gamma,\{a_i\}_n) = 
 (\gamma',y)\] 表示新的上下文 $\gamma'$ 以及返回值 $y$。
-所有的编辑器功能构成集合 $\FE$。
-量化常量值 $L_c^2$ 中所有链接到编辑器功能的值构成集合 $\Lp^2$，
-$\Lp^2 \subseteq L_c^2$，其中每个值$z_p$对应的编辑器功能为
+所有的壳层功能构成集合 $\FE$。
+量化常量值 $L_c^2$ 中所有链接到壳层功能的值构成集合 $\Lp^2$，
+$\Lp^2 \subseteq L_c^2$，其中每个值$z_p$对应的壳层功能为
 $\fE(z_p)$，$\fE$ 是 $\Lp^2$ 到 $\FE$ 的函数。
-每个编辑器功能$f$都有一个自然数对应$\omega(f)$ 表示参数数目。
-因为 $\Lp$ 集中每个值$z_p$都对应了唯一的一个编辑器功能 $\fE(z_p)$，
-就也能得到对应编辑器功能的参数数目 $\omega(\fE z_p)$，
+每个壳层功能$f$都有一个自然数对应$\omega(f)$ 表示参数数目。
+因为 $\Lp$ 集中每个值$z_p$都对应了唯一的一个壳层功能 $\fE(z_p)$，
+就也能得到对应壳层功能的参数数目 $\omega(\fE\ z_p)$，
 不会引起混淆地同样写作$\omega(z_p)$
 \[ \omega(z_p) = \omega(\fE\ z_p) \]
 \end{defin}
 
-\begin{defin}[\ES 状态与\ES 机器]
-\ES 状态是上下文$\{\vspac{i}\}$ 与值 $z$ 的二元组 $(\{\vspac{i}\}, z)$，
-所有的状态构成集合 $\mathbf{State} = \CE \times \LE^2$。
-一个特殊的变量空间 $\vspaR$ 表示全局变量空间，初始状态 $s_0$
-\[ s_0 = (\vspaR,\ \I) \]
-定义操作集为 $\mathbf{Choice} = \{\rightarrow,\ \leftarrow\}$，
-输入集为 $\mathbf{Input} = \mathbf{Choice} \times \LE^2$，
-状态转移函数 $\delta : \mathbf{State}\times\mathbf{Input} \rightarrow
-\mathbf{State}$
-\begin{align*}
-\delta((\Psi,\ z),\ \leftarrow, z') &= (\Psi,\     )
-\end{align*}
+\begin{defin}[$\LE$ 中调用的函数与参数以及数目]
+递归函数 $\etaf : \LE \rightarrow \LE$ 计算 $\LE$ 中调用的函数头
+\[ \begin{array}{lclcl} 
+\etaf\ \underline{(\ x:\tau\ )} &=& \underline{(\ x:\tau\ )} &\when&
+\underline{(\ x:\tau\ )} \in \LE\\
+\etaf\ \underline{(\ f\ x\ )} &=& \etaf(f) &\when& \underline{(\ f\ x\ )} \in \LE\\
+\etaf\ \underline{(\ \lambda\ v\ x\ )} &=&\underline{(\ \lambda\ v\ x\ )}
+&\when& \underline{(\ \lambda\ v\ x\ )} \in \LE
+\end{array} \]
+递归函数 $\etaa : \LE \rightarrow \sequence{\LE}$ 计算
+ $\LE$ 中调用的参数序列
+\[ \begin{array}{lclcl} 
+\etaa\ \underline{(\ x:\tau\ )} &=& \{\} &\when& \underline{(\ x:\tau\ )} \in \LE\\
+\etaa\ \underline{(\ f\ x\ )} &=& \etaa(f) \mathbin\Vert \{x\} &\when& \underline{(\ f\ x\ )} \in \LE\\
+\etaa\ \underline{(\ \lambda\ v\ x\ )} &=& \{\} &\when& \underline{(\ \lambda\ v\ x\ )} \in \LE
+\end{array} \]
+函数 $\etan : \LE \rightarrow \mathbb{N}$ 计算$\LE$ 中调用的参数数目
+\[ \etan x = \abs{\etaa x} \]
+\end{defin}
 
-\ES 机器是状态机。
+\begin{defin}[触发壳层功能的 β* 规约与值调用]
+β*规约$\bsreduce$是集合 $\CE \times \LE$ 上满足
+\[ (\gamma,\ \underline{(\ (\ \lambda\ x\ b\ )\ a\ )}\ ) 
+\bsreduce (\gamma,\ b[x/a]) \]
+\[ x \in \LE\ \land\ \eta(x) \in \Lp\ \land\ (\etan x = \omega\ x)
+\Rightarrow (\gamma,\ x) \bsreduce \fE(\etaf\ x)(\gamma,\ \etaa\ x) \]
+且同样在下述规则下闭合的最小关系
+\[ \begin{array}{lcrcl}
+    P \breduce P' &\Rightarrow&\forall x \in V&.&(\gamma,\ \lambda x.P)
+    \breduce (\gamma,\ \lambda x. P')\\
+    P \breduce P' &\Rightarrow&\forall Z \in L&.&(\gamma,\ P\ Z)
+    \breduce (\gamma,\ P'\ Z)\\
+    P \breduce P' &\Rightarrow&\forall Z \in L&.& (\gamma,\ Z\ P)
+    \breduce (\gamma,\ Z\ P')
+\end{array} \]
+而后同样有多步 β* 规约 $\bbsreduce$，并同样地按照值调用的
+定义 \ref{D.V.call} 与量化值调用的定义 \ref{D.V.Call} 定义
+带有壳层功能的基于 β* 规约的值与量化值调用
+$(\gcall{\cdot}) : \CE \times \LE \times \LE \rightarrow \CE \times \LE$
+以及同样符号的
+$(\gcall{\cdot}) : \CE \times \LE^2 \times \LE^2 \rightarrow \CE \times \LE^2$。
+$z_1 \gcall{\gamma} z_2$ 表示对值或量化值 $z_1,\ z_2$ 在上下文 
+$\gamma$ 下进行带有壳层功能的调用，返回作为结果的值以及新的上下文。
 \end{defin}
 
 
+\begin{defin}[\ESm{0} 机器]
+\ESm{0} 状态是上下文$\gamma \in \CE$ 与量化值 $z$ 的二元组
+ $(\gamma, z)$，所有的状态构成集合 $\mathbf{Status} = \CE \times \LE^2$
+ 。状态中的量化值被称作状态值。
+一个特殊的变量空间 $\vspaR$ 表示全局变量空间，初始上下文 
+$\gamma_0 = (\Psi_0,\ C_0)$，初始状态 $s_0$
+\[ s_0 = (\gamma_0,\ \I)\quad,\quad \I \in \LE^2 \]
+定义操作集为 $\mathbf{Choice} = \{\rightarrow,\ \leftarrow\}$，
+输入集为 $\mathbf{Input} = \mathbf{Choice} \times \LE^2$，
+状态转移函数 $\delta : \mathbf{Status}\times\mathbf{Input} \rightarrow
+\mathbf{Status}$
+\[ \left\{ \begin{array}{c}
+\delta((\gamma,\ z),\ \leftarrow, z') = z \gcall{\gamma} z' \\
+\delta((\gamma,\ z),\ \rightarrow, z') = z' \gcall{\gamma} z
+\end{array} \right. \]
+最后终态 $\mathbf{Fin} = \emptyset$。
+
+\ESm{0}机器是状态机 $(\mathbf{Input},\ \mathbf{Status},\ s_0,\ \delta,\ 
+\mathbf{Fin})$。
+\end{defin}
+
+初始状态的值是 $\I$，作为一个函数无论输入何参数都原封不动地返回此参数，
+于是此时简单地输入 $(\rightarrow,\ x)$，就将状态值变为 $x$。
+
+\subsection{调用算子与 \ESm{C}状态机}
+
+当用户尝试调用具有类型 $\tau$ 的函数与类型 $\sigma$ 的值而 $\tau$ 并
+不是函数类型或者其参数并不与 $\tau$ 匹配时，本应当发生错误。
+但有些时候，这种调用可以具有些特定的功能，例如
+尝试以 string 类型对 string 类型的调用可以暗含字符串拼接的期望，
+再如定理类型 thm 对 thm 的调用可能暗含肯定前件式（Modus ponens）的演绎。
+
+\begin{defin}[调用算子]
+一个描述从类型 $\alpha$ 到类型 $\beta$ 并返回 $\zeta$ 的调用算子
+类型为 \[\CMT{\alpha}{\beta}{\zeta}\]
+一个调用算子是一个返回调用$\CMT{\alpha}{\beta}{\zeta}$类型的值，
+此值可以是个函数并接受其他多个
+具有类型 $\CMT{\delta}{\sigma}{\zeta}$ 的值。
+\[\mathrm{InvokeMethod}_\gamma(c,\ f,\ x)\]
+在上下文 $\gamma$ 下以调用方法 $c$ 参数 $x$ 调用 f。
+\end{defin}
+例如
+\begin{gather*}
+  \CMT{\mathrm{thm}}{\mathrm{thm}}{\mathrm{thm}} \tag{1} \\
+  \CMT{\alpha_1}{\beta_1}{\gamma_1} \rightarrow \CMT{\beta_1}{\beta_2}
+  {\beta_2} \rightarrow\\ \CMT{(\alpha_1,\ \alpha_2)}
+  {(\beta_1,\ \beta_2)}{(\gamma_1,\ \gamma_2)} \tag{2} \\
+\end{gather*}
+类型 (1) 表示直接给出了一种以 thm 调用 thm 而返回 thm 的调用方法，
+(2) 接受两个参数，表示如果给予一个以 $\alpha_1$ 调用 $\beta_1$
+而返回 $\gamma_1$ 的调用方法以及另一个以 $\alpha_2$ 调用 $\beta_2$
+而返回 $\gamma_2$ 的调用方法，则能得到一个以二元组 $(\alpha_1,\ 
+\alpha_2)$ 调用 $(\beta_1,\ \beta_2)$ 返回 $(\gamma_1,\ \gamma_2)$
+类型的调用方法。
+
+所有的调用算子构成集合 $\CMS$。
+
+调用算子的集合 $C$ 构建了一套调用方法。给定被调用方 $f : \sigma$ 
+与调用参数 $a : \tau$，$C$ 构建的调用方法从 $C$ 中搜寻返回类型为
+$\CMT{\sigma}{\tau}{\gamma}$，$\gamma$ 是某个类型，的调用算子。
+这个算子可能要求别的调用算子作为参数，进而继续搜索这样的调用方法，
+以此递归，直到构建起完整的调用方法，或者在某一环节缺失了必要的调用
+方法而引起调用违例，再或超过限定的搜索深度。算法 \ref{alg:FC} 
+FindCalling 形式地描述了此。
+
+\begin{algorithm}
+\caption{调用方法 FindCalling} \label{alg:FC} \algcase
+\algloopdefx{Unless}[1]{\textbf{unless}\ \ #1}
+\begin{multicols}{2}
+\begin{algorithmic}[1]
+\Require 调用算子构成的集合 $C \in \CMS$，
+量化类型 $\phi,\ \tau,\ \zeta \in \PiAE$
+\Ensure $f : \CMT{\phi}{\tau}{\zeta} $ 或者产生错误\ {\it 调用违例}
+\For {$c \in C$} \label{ln:for}  \State $\type(c) \rightarrow t$
+\While {$t$ 是一个函数类型} \State $\Ima t \rightarrow t$
+\EndWhile
+\Unless {$t\ $ 匹配 $\ \CMT{\phi}{\tau}{\zeta}$}
+\State 继续 \ref{ln:for} 行的循环
+\State $\type(c) \rightarrow t$
+\While {$t$ 是一个函数类型} \State $\Dom t \rightarrow \CMT{\alpha}
+{\beta}{\gamma}$
+\State $c \cdot \mathrm{FindCalling}(C,\ \alpha,\ \beta,\ \gamma)
+\rightarrow c$
+\EndWhile
+\State 输出 $c$
+\EndFor
+\State 抛出错误\ {\it 调用违例}
+\end{algorithmic}
+\end{multicols}
+\end{algorithm}
+
+\begin{defin}[\ESm{C} 状态机]
+\ESm{C} 状态机是 \ESm{0} 状态机的修改。
+\ESm{C} 上下文中包含调用算子集 $C$，$\gamma_\mathrm{C} \in \CMS$ 是
+一个上下文 $\gamma \in \CE$ 中的调用算子集。
+修改 \ESm{0} 的状态转移函数为 $\delta_\mathrm{C}$ 以加入调用算子的功能
+\[ \left\{ \begin{array}{c}
+\delta((\gamma,\ z),\ \leftarrow, z') = \mathrm{InvokeMethod}_\gamma
+(\mathrm{FindCalling}(\gamma_\mathrm{C},\ \type(z),\ \type(z')),\ z',\ 
+z) \\
+\delta((\gamma,\ z),\ \rightarrow, z') = \mathrm{InvokeMethod}_\gamma
+(\mathrm{FindCalling}(\gamma_\mathrm{C},\ \type(z'),\ \type(z)),\ z,\ 
+z')
+\end{array} \right. \]
+
+\ESm{C}机器是状态机 $(\mathbf{Input},\ \mathbf{Status}_\mathrm{C},\ 
+s_0,\ \delta_\mathrm{C},\ \mathbf{Fin})$。
+\end{defin}
+
+\subsection{修饰符与 \ESm{\kappa C}}
+
+语义上，所有函数依据其期望的调用方式分成两类，函数位于状态值而以
+\ES 机器的 $\rightarrow$ 操作输入参数；
+参数位于状态值而以 \ES 机器的 $\leftarrow$ 操作输入函数。
+前者称作前置调用而后者称作后置调用。
+
+例如加法函数 $(+)$，前置调用方式下的输入次序是
+$+\ 1\ 2$，先起始值为 $(+) : \mathrm{int} \rightarrow \mathrm{int} 
+\rightarrow \mathrm{int}$，而后 $\rightarrow$ 操作输入 $1$ 得到 $+\ 1
+: \mathrm{int} \rightarrow \mathrm{int}$，再而 
+$\rightarrow$ 操作输入 $2$ 得到 $+\ 1\ 2 : \mathrm{int}$；
+后置调用时的输入次序是 $1 + 2$，
+起始值为 $1 : \mathrm{int}$，然后 $\leftarrow$
+操作输入 $+$ 得到 $+\ 1 : \mathrm{int} \rightarrow \mathrm{int}$，
+再而 $\rightarrow$ 操作输入 $2$ 得到 $+\ 1\ 2 : \mathrm{int}$。
+
+前置调用与后置调用在功能上是等价的，任何的编辑功能都可以只使用前置调用
+或后置调用完成。区别在于行为逻辑上，\ES 中的一切输入操作都应是对状态的
+编辑，状态值应是编辑对象而输入的应是编辑操作。于是一个函数，根据其语义，
+其调用方式应是确定的。
+前置调用是作为被编辑方，而后置调用是作为编辑操作。语义为后置调用的
+函数被叫做{\bf 修饰符}（modifier），语义上是在修饰被编辑的对象；而语义为
+前置调用的，普通地继续被叫做值。
+大多数值都是前置调用的，而少数的修饰符需要显示地声明。
+
+\begin{defin}[修饰符] 修饰符是语义上被期望被 \ES 机器以 $\leftarrow$ 
+操作被调用的值。
+\end{defin}
+
+调用方式决定了 \ES 机器的操作种类，若所有值的调用方式都被确定，或者说
+因为值默认是前置调用的，那么若所有的修饰符都已经被声明，值与修饰符
+按输入次序构成的序列就足以还原完整的 \ES 机器的输入操作序列。
+若函数 $\kappa : \LE^2 \rightarrow \mathbf{Choice}$ 决定了所有量化值
+的调用方式，就存在一个容易的映射 $\kappa^*$ 将值序列映射到操作序列
+\[ \kappa^*\ \sequenc{z_i}{i} = \sequenc{(\kappa\ z_i,\ z_i)}{i}\]
+
+将函数 $\kappa$ 纳入上下文中，可以得到只有一种操作的 \ES 状态机版本。
+
+\begin{defin}[\ESm{\kappa C}状态机]
+\ESm{\kappa C}状态机是对 \ESm{C}状态机的修改。
+对上下文 $\gamma \in \CE$，$\gamma_\kappa$ 表示上下文中的 $\kappa$ 函数
+。新的输入集为 $\mathbf{Input}_\kappa = \LE^2$，新的状态转移函数为
+$\delta_\kappa$
+\[ \delta_\kappa((\gamma,\ z),\ z') = \begin{cases}
+\mathrm{InvokeMethod}_\gamma(\mathrm{FindCalling}(\gamma_\mathrm{C},\ 
+\type(z),\ \type(z')),\ z',\ z)&\when\ \gamma_\kappa(z') = \leftarrow \\
+\mathrm{InvokeMethod}_\gamma(\mathrm{FindCalling}(\gamma_\mathrm{C},\ 
+\type(z'),\ \type(z)),\ z,\ z')&\when\ \gamma_\kappa(z') = \rightarrow
+\end{cases} \]
+\ESm{\kappa C}机器是状态机 $(\mathbf{Input}_\kappa,\ 
+\mathbf{Status}_\mathrm{\kappa},\ s_0,\ \delta_\kappa,\ \mathbf{Fin})$。
+\end{defin}
+
+\subsection{\ESm{S} 状态机}
+
+\ESm{S} 状态机提供一种标识到值的有限映射构成的编辑时变量的寄存容器，
+叫做编辑变量空间，以允许用户使用标识来引用这些值而操作状态机。
+简单来说，这些标识可以是用户输入的字符串，此时 \ESm{S} 可以实现为
+命令行上的一个程序，循环地等待用户输入作为标识的字符串，从编辑变量空间
+提取标识对应的值，而进行编辑操作。
+\ESm{S} 实际构成了 \ES 机器的一种前端，可能是最简易的前端。
+
+在这一章形式描述的 \ESm{S} 状态机只拥有全局变量空间，
+以保持形式理论的完整性而允许理论地分析讨论。
+在第 ??? 章的程序实现中，有限作用范围的临时变量是
+支持的，只不过这种支持需要引用等技术手段而使一些值超出了纯粹字符串代数
+的范围。那些实现可以作为本章论述的理论的扩展。
+
+\begin{defin}[标识、编辑变量空间]
+索引集（index set）$I$ 表示所有的标识，这些标识用于命名编辑壳层变量。
+一个编辑变量空间是一个 $I$ 到 $\LE^2$ 的有限映射 $I \mapsto \LE^2$，
+在实现上可以用哈希表表示。
+所有的编辑变量空间构成集合 $\vspac$。
+对一个变量空间 $\Psi \in \vspac$，项 $\Psi(name),\ name \in I$ 
+是变量空间中名为$name$的值。
+\end{defin}
+
+\begin{defin}[修饰空间]
+与 \ESm{\kappa C} 不同，\ESm{S} 的修饰符是绑定在类型上的。
+修饰符判定函数 $\kappa_\mathrm{S} : I \times \PiAE \mapsto \LE^2$，
+$ (i,\sigma) \in \Dom \kappa_\mathrm{S} $
+意味着标识 $i \in I$ 对应绑定在类型 $\sigma \in \PiAE$ 上的一个修饰符
+$ \kappa_\mathrm{S}(i,\sigma) $，
+$ (i,\sigma) \notin \Dom \kappa_\mathrm{S} $ 表明类型 $\sigma$ 上并没有
+名为 $i$ 的修饰符。
+\end{defin}
+
+\begin{defin}[\ESm{S}状态机]
+\ESm{S}状态机是对 \ESm{\kappa C}状态机的修改。
+对上下文 $\gamma \in \CE$，$\gamma_\Psi$ 表示上下文中的全局编辑变量空间
+。新的输入集为 $\mathbf{Input}_\mathrm{S} = I$，输入标识的解析函数为 
+$\mathrm{parse} : \mathbf{Status} \times I \rightarrow \LE^2$
+\[ \mathrm{parse}((\gamma,\ z),\ i) = \begin{cases}
+\gamma_\kappa(i,\ \type(z))&\when\ (i,\ \type(z)) \in \Dom \gamma_\kappa
+\\ \gamma_\Psi(i)&\when\ (i,\ \type(z)) \notin \Dom \gamma_\kappa\ \land
+\ i \in \gamma_\Psi
+\\ \texttt{'}i\texttt{'} &\text{其他情况时}
+\end{cases} \]
+值得注意的是，当标识 $i$ 既不对应状态值的类型的修饰符又未在编辑变量
+空间绑定到某个值时，将直接被作为字符串字面量。
+新的状态转移函数为
+$\delta_\mathrm{S}$
+\[ \delta_\mathrm{S}(s,\ i) = \delta_\kappa(s,\ \mathrm{parse}(s,\ i))\]
+\ESm{S}机器是状态机 $(\mathbf{Input}_\mathrm{S},\ 
+\mathbf{Status}_\mathrm{S},\ s_0,\ \delta_\mathrm{S},\ \mathbf{Fin})$。
+\end{defin}
+
+\ESm{S} 上的输入构成了对 \ES 机器的操作的一种文本，此文本可用于
+讨论分析 \ES 机器的操作。例如 \[1 + (2 + 3) \texttt{--} x; x + x\]
+对应的 \ESm{0} 输入是
+\[ \begin{array}{ccccccc}
+(\rightarrow,\ 1),&(\leftarrow,\ +),&(\leftarrow,\ \texttt{(}),&
+(\rightarrow,\ 2),&(\leftarrow,\ +),&(\rightarrow,\ 3),&
+(\leftarrow,\ \texttt{)}),\\(\leftarrow,\ \texttt{--}),&
+(\rightarrow,\ \texttt{--}),&(\leftarrow,\ \texttt{;}),&
+(\rightarrow,\ x),&(\leftarrow,\ +),&(\rightarrow,\ x)
+\end{array}\]
+
+至此 \ES 机器就定义完成，目前为止一切都看起来是枯燥的理论而缺乏活力，
+但接下来，逐渐引出的各种预定义值与对应的壳层功能将揭示在这样精简的
+状态机上可以有多么丰富的活力。
+
+\section{编辑环境与壳层功能}
+
+\input{chapters/EditorShell/calculi/input_stack.tex}

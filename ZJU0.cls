@@ -230,6 +230,7 @@
 \newtheorem{theo}{定理~}[chapter]
 \newtheorem{prove}{证明~}[chapter]
 \newtheorem{example}{样例~}[chapter]
+\newtheorem{calculi}{算子~}[chapter]
 \newtheorem{lemma}{引理~}[chapter]
 \renewenvironment{proof}[1][]{{\noindent {\lishu 证明\ #1}}}{\hfill$\square$}
 

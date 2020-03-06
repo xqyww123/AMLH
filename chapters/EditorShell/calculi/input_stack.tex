@@ -1,0 +1,65 @@
+
+这一节介绍预定义的值，这些值构建起编辑环境并提供编辑定理以进行程序开发的
+功能。
+
+
+根据一个值具有的期望被调用的方式，期望被前置调用的被直接叫做值，
+而期望被后置调用的被叫做修饰符。
+当每个值的调用方式被确定，按输入顺序依次写下这些值，就构成了对
+\ES 机器的操作的文本，这种文本易于我们讨论与分析 \ES 机器上的操作。
+
+例如文本 $1 + 2$，在确定 $+$ 是后置调用地作为修饰符后，这段文本就清晰
+地指出对 \ES 机器的操作序列
+\[ (\rightarrow,\ 1),\ (\leftarrow,\ +),\ (\rightarrow,\ 2) \]
+初始态 \ES 机器状态中的值为 $\I$，第一个操作 $(\rightarrow,\ 1)$ 令
+$\I$ 以参数 $1$ 调用，得到结果 $1$，第二个操作 $(\leftarrow,\ +)$ 令
+$+$ 以参数 $1$ 调用，得到 $+\ 1$，第三个操作 $(\rightarrow,\ 2)$，
+得到 $+\ 1\ 2$。调用就此结束，若 $+$ 与整数加法的编辑壳层功能关联，
+那么此时的调用会触发此功能，而结果将成为 $3$。
+
+
+\begin{table}
+	\centering
+	\caption{\ES 的基础算子} \label{tab:ES.basic} \begin{estable}
+\xvaluen{$\I$}{\forall \alpha.\ \alpha \rightarrow \alpha}
+{$\I x = x$}
+\xvaluen{$\K$}{\forall \alpha\ \beta.\ \alpha \rightarrow \beta
+\rightarrow \alpha} {$\K x\ y = x$}
+    \end{estable}
+\end{table}
+\begin{table}
+	\centering
+	\caption{操作栈算子} \label{tab:ES.stack} \begin{estable}
+\modifiern{\texttt{;}}{\forall \alpha\ \beta.\ \alpha \rightarrow \beta
+\rightarrow \alpha} {$\K$ 的别名}
+\modifier{\texttt{--}}{\forall \alpha.\ \alpha \rightarrow 
+\mathrm{string} \rightarrow \alpha}{$\texttt{--}\ x\ name$ 将值 $x$ 
+以名称 $name$ 加入到变量上下文中。}
+\xconstr{\textbf{InputStack}}{\forall \alpha\ \beta.\ 
+\alpha \rightarrow \combtyp{input\_stack}{(\beta\rightarrow\beta,\ 
+\alpha)}}{输入栈结构的构造函数}
+\modifiern{\texttt{(}}{\forall \alpha\ \beta.\ 
+\alpha \rightarrow \combtyp{input\_stack}{(\beta\rightarrow\beta,\ 
+\alpha)}}{ \textbf{InputStack} 的别名}
+\modifier{\texttt{)}}{\forall \alpha\ \beta.\ \combtyp{input\_stack}
+{(\alpha,\ \alpha\rightarrow\beta)}}{ 弹出输入栈，将栈顶值弹出并
+调用于新的栈顶值}
+    \end{estable}
+\end{table}
+
+简单地列出一些基础的算子于表 \ref{tab:ES.basic} 中，
+接下来将首先介绍输入栈相关的算子。这些算子列于表 \ref{tab:ES.stack}
+，提供的功能包括基础的编辑变量的存入；编辑栈的压入与弹出等。
+
+一个示例脚本是
+\[ 1 + (2 + 3) \eset x;\ x + x \]
+在输入完 $1\ +$ 后，\ES 状态为 $+\ 1 : \mathrm{int} \rightarrow \mathrm
+{int}$，接下来 $($ 作为一个修饰符，
+调用结果为 
+\[\mathbf{InputStack}\ (+\ 1) : \forall \alpha.\ \alpha
+\rightarrow \combtyp{input\_stack}{(\alpha, \mathrm{int})}\]
+然后 $2$ 令状态变为
+\[\mathbf{InputStack}\ (+\ 1)\ 2 : \combtyp{input\_stack}{(\mathrm{int},
+\mathrm{int})}\]
+
+

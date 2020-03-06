@@ -1,6 +1,6 @@
 \subsection{值}
 
-现在定义值（Value）。
+现在定义值（Value），值包括量化值与非量化值。
 
 \begin{defin}[值的单词集] 
 无穷单词集 $\hLv$ 为表示值变量的字母表 $\hLv \subseteq
@@ -12,12 +12,12 @@ a \squote},\ \underline{\squote ab \squote},\
 \cdots \in \hLc \]
 \end{defin}
 
-\begin{defin}[值常量、值变量、值] \label{D.Value}
-所有的值常量构成集合 $L_c$ ，所有值变量构成集合 $L_v$ 
+\begin{defin}[非量化值常量、非量化值变量、非量化值] \label{D.Value}
+所有的非量化值常量构成集合 $L_c$ ，所有非量化值变量构成集合 $L_v$ 
 $L_c^2$
 \begin{align*} 
 L_c &= \bnf{\hLc : \PiE}&L_v &= \bnf{\hLv : \PiE}&\end{align*}
-所有的值构成的集合 $\LE$ 是所有满足如下规则的最小集合
+所有的非量化值构成的集合 $\LE$ 是所有满足如下规则的最小集合
 \[ \begin{array}{rcl}
 x \in L_c & \Rightarrow & x \in \LE\\
 x \in L_v & \Rightarrow & x \in \LE \\
@@ -61,7 +61,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \LB \underline{\Lambda \tau\ x} &=\LB x&&\text{当}\quad
 \underline{\Lambda \tau\ x}\in \LE^2&
 \end{align*}
-递归定义值的值重量（value only weight）
+递归定义非量化值的值重量（value only weight）
     $\vw : \LE \rightarrow \mathbb{N}$
 \[ \begin{array}{lclcl}
 \vw \underline{(\ u:\tau\ )} & = & 1 & \when & \underline{(\ u:\tau\ )}
@@ -73,7 +73,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \end{array} \]
 注意不要混淆值重量与类型重量，它们同为符号 w，但定义域不同且不相交，可
 根据定义域区分。
-递归定义值的类型重量（type only weight）$\vwt : \LE \rightarrow \mathbb{N}$
+递归定义非量化值的类型重量（type only weight）$\vwt : \LE \rightarrow \mathbb{N}$
 \[ \begin{array}{lclcl}
 \vwt \underline{(\ u:\tau\ )} & = & \TS \tau & \when & \underline{(\ u:\tau\ )}
     \in \LE\quad\text{注意}\ \TS \tau\ \text{是类型重量}\\
@@ -82,7 +82,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \vwt \underline{(\ \Lambda\ v\ x\ )} & = & 1 + \vwt(x) & \when & 
     \underline{(\ \Lambda\ v\ x\ )} \in \LE\\
 \end{array} \]
-最后是值的总重量 $\vW : \LE \rightarrow \mathbb{N}$
+最后是非量化值的总重量 $\vW : \LE \rightarrow \mathbb{N}$
 \[ \vW x = \vw x + \vwt x \]
 以及相应的量化值的值重量、类型重量、总重量
 \begin{align*} 
@@ -90,13 +90,14 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
     \Vwt z &= \abs{\LV z} + \vwt(\LB z) \\
     \VW z &= \Vw z + \Vwt z
 \end{align*}
-同样可以通过定义域区分这些量化值的重量与值的重量，额外的，因为任何值
-也都是一种量化值 $\LE \subseteq \LE^2$，任何值被视作量化值时的量化值
-的各种重量跟作为普通值时值的各种重量是相同的，故不会引起冲突。
+同样可以通过定义域区分这些量化值的重量与值的重量，额外的，因为任何
+非量化值也都是一种量化值 $\LE \subseteq \LE^2$，
+任何非量化值被视作量化值时的各种重量跟作为非量化值时的各种重量是相同的，
+故不会引起冲突。
 \end{defin}
 
 \begin{defin}[$\LE$ 与 $\LE^2$ 的类型] \label{D.type}
-递归函数 $\type : \LE \rightarrow \PiE$ 计算值的类型
+递归函数 $\type : \LE \rightarrow \PiE$ 计算非量化值的类型
 \[ \begin{array}{lcl}
 \type \underline{(\ x\ :\ \tau\ )}  =  \tau &\when&
 \underline{(\ x\ :\ \tau\ )} \in L_c \cup L_v\\
@@ -115,14 +116,14 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \QV \type^2(x) &= \LV(x) & \end{align*}
 \end{defin}
 
-这一定义也给出了计算值的类型的递归算法 \ref{alg:type} type，与
+这一定义也给出了计算非量化值的类型的递归算法 \ref{alg:type} type，与
 计算量化值了类型的算法 \ref{alg:type2} $\type^2$。
 
 \begin{algorithm}
-\caption{值的类型 type} \label{alg:type} \algcase
+\caption{非量化值的类型 type} \label{alg:type} \algcase
 \begin{multicols}{2}
 \begin{algorithmic}[1]
-\Require 值 $x \in \LE$
+\Require 非量化值 $x \in \LE$
 \Ensure $\type x$
     \Case {x} \When {$\underline{(\ v:\tau\ )}$} \State 输出 $\tau$
     \When {$\underline{(\ f\ a\ )}$} \State $\type(f) \rightarrow
@@ -138,7 +139,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \caption{量化值的类型 $\type^2$} \label{alg:type2} \algcase
 \begin{multicols}{2}
 \begin{algorithmic}[1]
-\Require 值 $z \in \LE^2$
+\Require 量化值 $z \in \LE^2$
 \Ensure $\type^2 z$
 \Case {$z$} \When $\underline{(\ \Lambda\ v\ x\ )}$
 \State $\type^2 x \rightarrow \tau$
@@ -151,7 +152,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \end{multicols}
 \end{algorithm}
 
-值集 $\LE$ 上也具有 β 规约，与定义 \ref{D.breduce} 是一样的。
+非量化值集 $\LE$ 上也具有 β 规约，与定义 \ref{D.breduce} 是一样的。
 
 \begin{lemma} \label{L.Le.expand}
 \[ \begin{array}{lcc}
@@ -214,40 +215,41 @@ x \in \LE \]
 \[x \in \LE \vdash \type \B(x) = \type x\]
 \end{theo}
 
-\begin{defin}[值的调用与可调用性] \label{D.V.call}
-若值 $f$ 与值 $a$ 满足条件 $f \vcallable a$则被叫做 $f$ 可被 $a$ 调用。
+\begin{defin}[非量化值的调用与可调用性] \label{D.V.call}
+若非量化值 $f$ 与非量化值 $a$ 满足条件 $f \vcallable a$则被叫做
+    $f$ 可被 $a$ 调用。
 \[ f \vcallable a = \exists \sigma,\ \tau \in \PiE.\ 
 (\type f = \sigma \rightarrow \tau)\ \land\ (\type a = \sigma) \]
 显然有
 \[ f \vcallable a \Rightarrow \underline{(\ f\ a\ )} \in \LE \]
-进而有值的调用函数 $(\vcall) : \LE \times \LE \rightarrow \LE$
+进而有非量化值的调用函数 $(\vcall) : \LE \times \LE \rightarrow \LE$
 \[ f \vcallable a \Rightarrow (f \vcall a = \B\underline{(\ f\ a\ )}) \]
 同样此处的符号 $(\vcall)$ 不应被混淆因为定义域不同。
 \end{defin}
 
 \begin{algorithm}
-\caption{值的可调用测试 suit} \label{alg:suit}
+\caption{非量化值的可调用测试 suit} \label{alg:suit}
 \begin{algorithmic}[1]
-\Require 值 $f,\ x \in \LE$
-\Ensure Bool 值 $f \vcallable x$
+\Require 非量化值 $f,\ x \in \LE$
+\Ensure Bool 非量化值 $f \vcallable x$
     \State 输出 $(\type f\ \text{是函数类型}\quad\land\quad \Dom(\type f) =  \type x)$
     \TimeComplexity $O(1)$
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}
-\caption{值的调用 vCall} \label{alg:vCall}
+\caption{非量化值的调用 vCall} \label{alg:vCall}
 \begin{algorithmic}[1]
-\Require 值 $f,\ x \in \LE\quad$满足 $f \vcallable x$
+\Require 非量化值 $f,\ x \in \LE\quad$满足 $f \vcallable x$
 \Ensure $f \vcall x$
 \State 对 $\underline{(\ f\ x\ )}$ 进行 β 规约，然后输出。
     \TimeComplexity $O(\vw(f) + \vw(x))$
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}\algcase
-\caption{值的特化 Inst} \label{alg:Inst}
+\caption{非量化值的特化 Inst} \label{alg:Inst}
 \begin{multicols}{2}
 \begin{algorithmic}[1]
-\Require 特化范围 $V \in \powerset(\Uv)$，类型特化函数 $f : \Uv \rightarrow \PiE$，值 $x \in \LE$
+\Require 特化范围 $V \in \powerset(\Uv)$，类型特化函数 $f : \Uv \rightarrow \PiE$，非量化值 $x \in \LE$
 \Ensure $\Inst_V\ f\ x$
     \Case {$x$}
     \When {$\underline{(\ v:\tau\ )}$}
@@ -266,7 +268,7 @@ x \in \LE \]
 \end{algorithmic} \end{multicols}
 \end{algorithm}
 \begin{algorithm}
-\caption{值量化 MakeQV} \label{alg:MakeQV}
+\caption{非量化值量化 MakeQV} \label{alg:MakeQV}
 \begin{algorithmic}[1]
 \Require 类型变量集 $V \in \powerset(\Uv)$，量化目标 $x \in \LE$
 \Ensure $z \in \LE^2\quad$ 满足 $\LV z = V\quad\land\quad\LB z = x$
@@ -276,12 +278,13 @@ x \in \LE \]
 \end{algorithmic} 
 \end{algorithm}
 
-至此定义完了普通值的调用运算，可以由此执行大量的函数调用。接下来将定义
+至此定义完了非量化值的调用运算，可以由此执行大量的函数调用。接下来将定义
 量化值的调用运算。首先从量化值的特化开始。
 
-\begin{defin}[值的特化] \label{D.Inst}
-递归定义值的特化函数 $\Inst : (\Uv \rightarrow \PiE) \rightarrow \LE
-\rightarrow \LE$，但其值域 $\LE$ 是需要证明，这将在引理 \ref{D.Inst.LE}
+\begin{defin}[非量化值的特化] \label{D.Inst}
+递归定义非量化值的特化函数 
+$\Inst : (\Uv \rightarrow \PiE) \rightarrow \LE \rightarrow \LE$，
+但其值域 $\LE$ 是需要证明，这将在引理 \ref{D.Inst.LE}
 中完成，追求严谨的读者可以先认定其值域为 $\String$
 \[ \begin{array}{llcr}
 \Inst f\ \underline{(\ x : \tau\ )} = \underline{(\ x : \tau' \ )}
@@ -322,8 +325,8 @@ g' = \Inst_V f\ g,\quad a' = \Inst_V f\ a& \when & \underline{(\ g\ a\ )}
 \end{lemma}
 
 
-值的特化的递归定义 \ref{D.Inst} 同时也给出了值特化的算法，形式地写作
-算法 \ref{alg:Inst} Inst。
+非量化值的特化的递归定义 \ref{D.Inst} 同时也给出了非量化值特化的算法，
+形式地写作算法 \ref{alg:Inst} Inst。
 
 
 
@@ -343,9 +346,9 @@ $\LE^2 \times \LE^2$ 上的等价关系 $\sim_\alpha$
 的调用而后证明存在一个量化值其特化集等于此调用集，于是此量化值
 就能代表特化集调用的结果。
 
-\begin{defin}[值的集的调用]
-值的集的调用是函数 $(\vcalls) : \powerset(\LE) \times \powerset(\LE)
-    \rightarrow \powerset(\LE)$
+\begin{defin}[非量化值的集的调用]
+非量化值的集的调用是函数 $(\vcalls) : \powerset(\LE) \times 
+    \powerset(\LE)\rightarrow \powerset(\LE)$
     \[ Z_1 \vcalls Z_2 = \{ z_1 \vcall z_2 \mbar z_1 \in Z_1\ \land\ 
     z_2 \in Z_2\ \land\ z_1 \vcallable z_2 \} \]
 同样此 $(\vcalls)$ 不应跟任何别的运算诸如类型的调用 $(\cdot)$ 混淆，
@@ -393,7 +396,7 @@ $\LE^2 \times \LE^2$ 上的等价关系 $\sim_\alpha$
 由算法 \ref{alg:VCall} VCall 以及定理 \ref{T.VCall} 可以定义量化值的
 调用。
 
-\begin{defin}[量化值的调用]
+\begin{defin}[量化值的调用] \label{D.V.Call}
 量化值的可调用性测定函数 $\vcallable : \LE^2 \times \LE^2 \rightarrow
     \Bool$
 \[ z_1 \vcallable z_2 = (\VI z_1 \vcalls \VI z_2 \neq \emptyset) \]
@@ -408,10 +411,10 @@ $\LE^2 \times \LE^2$ 上的等价关系 $\sim_\alpha$
 \end{defin}
 
 量化调用的灵感在于，可以将量化值对应到一个集合，集合由此量化值所有
-可以特化出的值组成，即特化集合，
+可以特化出的非量化值组成，即特化集合，
 $z_1 \vcallable z_2$ 的情况下 $z_1 \vcall z_2$ 是也一个量化值而此
-量化值对应的特化集合即是将$z_1,\ z_2$对应的特化集的所有值一一尝试调用
-得到的结果构成的集合。
+量化值对应的特化集合即是将$z_1,\ z_2$对应的特化集的所有非量化值
+一一尝试调用得到的结果构成的集合。
 
 一个值 $z$ 是全称量化的，意味它可以特化到很多非量化类型，
 其本身代表了一种泛性，例如 $\I$ 函数就是全称量化的，它的类型是
