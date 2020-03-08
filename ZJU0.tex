@@ -21,12 +21,19 @@
 
 %\usepackage[english]{babel}
 \usepackage{newunicodechar}
-\newfontfamily\miscsymfont{DejaVu Sans}
+\newfontfamily\miscsymfont{STIX}
+\newfontfamily\miscsymfontd{DejaVu Sans}
 \newunicodechar{→}{{\miscsymfont\symbol{"2192}}}
 \newunicodechar{。}{{\watermark.\ }}
 %\newunicodechar{。}{{.\ }}
 \newunicodechar{，}{{,\ }}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
+\newunicodechar{❚}{{\miscsymfontd\symbol{"275A}}}
+\newunicodechar{¶}{{\miscsymfontd\symbol{"00B6}}}
+\newunicodechar{⟭}{{\miscsymfont\symbol{"27ED}}}
+\newunicodechar{«}{\text{\miscsymfontd\symbol{"00AB}}}
+\newcommand{\istack}[2]{#1\text{❚}#2}
+\newcommand{\pilcrow}{\text{¶}}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
@@ -83,7 +90,8 @@
 \newcommand{\vcallable}{\mathbin{\textbf{suit}}}
 \newcommand{\vcallablen}{suit}
 \newcommand{\Bool}{\mathbf{Bool}}
-\newcommand{\CMT}[3]{\combtyp{CallingMethod}{(#1,\ #2,\ #3)}}
+\newcommand{\CM}{\mathop{\mathbf{CM}}}
+\newcommand{\CMT}[3]{\combtyp{CM}{(#1,\ #2,\ #3)}}
 \newcommand{\CMS}{\mathrm{CM}}
 \DeclareMathOperator{\type}{type}
 \DeclareMathOperator{\B}{B}
@@ -146,6 +154,12 @@
 \hhline{|=|=|=|}}{\end{tabular}}
 \newcommand{\xconstrn}[3]{
 \textbf{构造\newline 函数}&#1&$#2$ \quad\quad #3\\ \hline
+}
+\newcommand{\callingmethodn}[3]{
+\textbf{调用\newline 算子}&#1&$#2$\quad\quad #3\\ \hline
+}
+\newcommand{\callingmethod}[3]{
+\textbf{调用\newline 算子}&#1&$#2$\newline #3\\ \hline
 }
 \newcommand{\xvaluen}[3]{
 \textbf{值}&#1&$#2$\quad\quad #3\\ \hline

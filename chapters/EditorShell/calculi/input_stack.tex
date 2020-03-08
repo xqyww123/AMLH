@@ -1,21 +1,11 @@
 
 这一节介绍预定义的值，这些值构建起编辑环境并提供编辑定理以进行程序开发的
-功能。
+功能。这些讨论是在 \ESm{S} 上进行的。
 
-
-根据一个值具有的期望被调用的方式，期望被前置调用的被直接叫做值，
-而期望被后置调用的被叫做修饰符。
-当每个值的调用方式被确定，按输入顺序依次写下这些值，就构成了对
-\ES 机器的操作的文本，这种文本易于我们讨论与分析 \ES 机器上的操作。
-
-例如文本 $1 + 2$，在确定 $+$ 是后置调用地作为修饰符后，这段文本就清晰
-地指出对 \ES 机器的操作序列
-\[ (\rightarrow,\ 1),\ (\leftarrow,\ +),\ (\rightarrow,\ 2) \]
-初始态 \ES 机器状态中的值为 $\I$，第一个操作 $(\rightarrow,\ 1)$ 令
-$\I$ 以参数 $1$ 调用，得到结果 $1$，第二个操作 $(\leftarrow,\ +)$ 令
-$+$ 以参数 $1$ 调用，得到 $+\ 1$，第三个操作 $(\rightarrow,\ 2)$，
-得到 $+\ 1\ 2$。调用就此结束，若 $+$ 与整数加法的编辑壳层功能关联，
-那么此时的调用会触发此功能，而结果将成为 $3$。
+简单地列出一些基础的算子于表 \ref{tab:ES.basic} 中。唯独需要说明的是
+算子 $\I$，作为一个值被前置调用，而以任何参数调用它都返回参数本身，
+于是结果是当状态值为 $\I$ 时，任何的输入只导致状态值变为此输入。
+这是为何初始状态值为 $\I$，而 $\I$ 又被叫做空的原因。
 
 
 \begin{table}
@@ -26,40 +16,239 @@ $+$ 以参数 $1$ 调用，得到 $+\ 1$，第三个操作 $(\rightarrow,\ 2)$�
 \xvaluen{$\K$}{\forall \alpha\ \beta.\ \alpha \rightarrow \beta
 \rightarrow \alpha} {$\K x\ y = x$}
     \end{estable}
-\end{table}
-\begin{table}
 	\centering
 	\caption{操作栈算子} \label{tab:ES.stack} \begin{estable}
 \modifiern{\texttt{;}}{\forall \alpha\ \beta.\ \alpha \rightarrow \beta
-\rightarrow \alpha} {$\K$ 的别名}
+        \rightarrow \beta} {$\texttt{;} = \K \I$}
 \modifier{\texttt{--}}{\forall \alpha.\ \alpha \rightarrow 
 \mathrm{string} \rightarrow \alpha}{$\texttt{--}\ x\ name$ 将值 $x$ 
-以名称 $name$ 加入到变量上下文中。}
+以名称 $name$ 加入到变量上下文中，并返回值 $x$。}
 \xconstr{\textbf{InputStack}}{\forall \alpha\ \beta.\ 
-\alpha \rightarrow \combtyp{input\_stack}{(\beta\rightarrow\beta,\ 
-\alpha)}}{输入栈结构的构造函数}
-\modifiern{\texttt{(}}{\forall \alpha\ \beta.\ 
-\alpha \rightarrow \combtyp{input\_stack}{(\beta\rightarrow\beta,\ 
-\alpha)}}{ \textbf{InputStack} 的别名}
-\modifier{\texttt{)}}{\forall \alpha\ \beta.\ \combtyp{input\_stack}
-{(\alpha,\ \alpha\rightarrow\beta)}}{ 弹出输入栈，将栈顶值弹出并
-调用于新的栈顶值}
-    \end{estable}
+        \alpha \rightarrow (\istack{(\beta\rightarrow\beta)}{
+    \alpha})}{输入栈结构的构造函数，$\quad \textbf{InputStack}\ 
+        x\ y$ 写作 $\istack{y}{x}$}
+\modifier{\texttt{(}}{\forall \alpha\ \beta.\ 
+        \alpha \rightarrow (\istack{(\beta\rightarrow\beta)}{
+    \alpha})}{ \textbf{InputStack} 的别名，$\quad x\ \texttt{(}\ y
+        = \istack{y}{x}$}
+        \modifier{\texttt{)}}{\forall \alpha\ \beta.\ (\istack{
+\alpha}{(\alpha\rightarrow\beta)})\rightarrow \beta}{
+    弹出输入栈，将栈顶值弹出并
+调用于新的栈顶值，$\quad (\istack{a}{f})\ \texttt{)} = f\ a$}
+\modifier{\texttt{)}}{\forall \alpha\ \beta\ \gamma.\ 
+(\istack{\alpha}{\istack{(\alpha\rightarrow\beta)}{\gamma}})\rightarrow 
+    \istack{\beta}{\gamma}}{
+弹出输入栈，将栈顶值弹出并调用于新的栈顶值，\newline
+    $(\istack{a}{\istack{f}{b}})\ \texttt{)} = \istack{f(a)}{b}$}
+\modifier{\text{⟭}}{\forall \alpha\ \beta.\ (\istack{\alpha}{\beta})
+\rightarrow \beta}{弹出输入栈，将栈顶值抛弃，
+$\quad(\istack{a}{b})\ \text{⟭} = b$}
+\callingmethod{$\text{IS}_{\rightarrow}$}{\forall \alpha\ \beta\ \gamma\ \delta.\ 
+        \CMT{\alpha}{\beta}{\gamma} \rightarrow \CMT{(\istack
+{\alpha}{\delta})}{\beta}{(\istack{\gamma}{\delta})}}
+        {$\mathrm{IS}_{\rightarrow}\ \CM(f) = \CM(\lambda\ (\istack{f}{b}),\ a.\ 
+        \istack{f(a)}{b})$}
+\callingmethod{$\text{IS}_{\leftarrow}$}{\forall \alpha\ \beta\ \gamma\ \delta.\ 
+        \CMT{\alpha}{\beta}{\gamma} \rightarrow \CMT{\alpha}
+{\CMT{\beta}{\delta}}{(\istack{\gamma}{\delta})}}
+        {$\mathrm{IS}_{\leftarrow}\ \CM(f) = \CM(\lambda\ f,\ (\istack{a}{b}).\ 
+        \istack{f(a)}{b})$}
+\modifiern{\texttt{;}}{\forall \alpha\ \beta\ \gamma.\ 
+        \istack{\alpha}{\gamma}\rightarrow (\istack{(
+        \beta \rightarrow \beta)}{\gamma})}
+        {输入栈版本的 \texttt{;}}
+\modifiern{\texttt{--}}{\forall \alpha\ \gamma.\ (\istack{\alpha}
+    {\gamma})\rightarrow \mathrm{string} \rightarrow (\istack{\alpha}
+        {\gamma})}{输入栈版本的 \texttt{--}}
+\end{estable}
 \end{table}
 
-简单地列出一些基础的算子于表 \ref{tab:ES.basic} 中，
 接下来将首先介绍输入栈相关的算子。这些算子列于表 \ref{tab:ES.stack}
 ，提供的功能包括基础的编辑变量的存入；编辑栈的压入与弹出等。
 
+分号 \texttt{;} 是 $\K$ 的别名，此分号与传统编程语言中的分号功能相同，
+以从一行源代码切换到令一行源代码，在 \ES 中，分号算子 \text{;} 意味着
+抛弃一个状态值而切换到空状态 $\I$，以接受新的输入。例如
+\[ 1; 2; 3 \]
+将状态值变为 $1$ 又抛弃并将状态值变为 $2$ 而又抛弃并最终状态值变为 $3$。
+
+修饰符 \texttt{--} 用于绑定编辑变量，在实际的实现中会考虑局部变量，而
+此处为理论描述的简洁仅考虑全局变量。
+\[ 1\ \texttt{--}\ x; x \]
+在输入 $1\ \texttt{--}$ 后，状态值的类型为 $\mathrm{string} \rightarrow
+\mathrm{int}$，而之后输入的 $x$ 因为既不是 $\mathrm{string} \rightarrow
+\mathrm{int}$ 上的修饰符又不是某个编辑变量的标识，于是被解析为字符串
+字面量，即 \texttt{'x'}，输入结果是将 $1$ 以标识 \texttt{x} 绑定入
+全局变量空间中而状态值变回 $1$。接下来 \texttt{;} 算子切换状态值至 $\I$
+然后输入标识 \texttt{x}，此时 \texttt{x} 已经在全局变量空间中绑定了
+值 $1$，于是效果是输入 $1$ 在 $\I$ 的作用下将状态值变为 $1$。
+
+\textbf{InputStack} 作为一种构造函数将任意的 $x,\ y$ 构造成具有类型
+$\istack{y}{x}$ 的值 $\mathbf{InputStack}\ x\ y$ 写作
+$\istack{y}{x}$，表示输入中一系列括号构成的栈。
+修饰符 \texttt{(} 表示压入一层输入栈，将当前的状态值压入栈内保存起来而
+将栈顶替换成空以允许新的输入。
+修饰符 \texttt{)} 表示出栈，将栈顶元素弹出作为参数调用于栈内保存的元素。
+修饰符 ⟭ 更直接地丢弃栈顶元素。
+两个调用算子 $\mathrm{IS}_{\rightarrow},\ \mathrm{IS}_{\leftarrow}$ 允许调用栈顶值就像调用
+没有输入栈时的情况一样，即允许当状态值为 $\istack{f}{b}$ 时，
+输入 $(\leftarrow,\ a)$ 的结果是理想的 $\istack{f(a)}{b}$，
+或者输入 $(\rightarrow,\ g)$ 时也是理想的 $\istack{g(f)}{b}$。
+
 一个示例脚本是
-\[ 1 + (2 + 3) \eset x;\ x + x \]
-在输入完 $1\ +$ 后，\ES 状态为 $+\ 1 : \mathrm{int} \rightarrow \mathrm
+\[ 1 + (2 + (3) \eset x;\ x + x) \]
+在输入完 $1\ +$ 后，状态值为 $+\ 1 : \mathrm{int} \rightarrow \mathrm
 {int}$，接下来 $($ 作为一个修饰符，
 调用结果为 
 \[\mathbf{InputStack}\ (+\ 1) : \forall \alpha.\ \alpha
-\rightarrow \combtyp{input\_stack}{(\alpha, \mathrm{int})}\]
+\rightarrow (\istack{\alpha}{\mathrm{int}})\]
 然后 $2$ 令状态变为
-\[\mathbf{InputStack}\ (+\ 1)\ 2 : \combtyp{input\_stack}{(\mathrm{int},
-\mathrm{int})}\]
+\[\istack{2}{(+\ 1)} : \istack{\mathrm{int}}
+{(\mathrm{int} \rightarrow \mathrm{int})}\]
+输入 $+$，通过 $\mathrm{IS}_{\leftarrow}$ 算子
+\[\istack{(+\ 2)}{(+\ 1)} : \istack{(\mathrm{int} \rightarrow
+\mathrm{int})}{(\mathrm{int} \rightarrow \mathrm{int})}\]
+再次 \texttt{(} 修饰符
+\[\istack{\I}{\istack{(+\ 2)}{(+\ 1)}} : \forall \alpha.\ \istack{
+    (\alpha \rightarrow \alpha)}{\istack{(\mathrm{int} \rightarrow
+\mathrm{int})}{(\mathrm{int} \rightarrow \mathrm{int})}}\]
+输入 $3$
+\[\istack{3}{\istack{(+\ 2)}{(+\ 1)}} : \istack{\mathrm{int}}{
+    \istack{(\mathrm{int} \rightarrow
+\mathrm{int})}{(\mathrm{int} \rightarrow \mathrm{int})}}\]
+\texttt{)} 修饰符弹出并调用 $+\ 2$
+\[\istack{5}{(+\ 1)} : \istack{\mathrm{int}}{(\mathrm{int} 
+\rightarrow \mathrm{int})}\]
+输入栈版本的 $\eset$
+\[\istack{(\eset\ 5)}{(+\ 1)} : \istack{\mathrm{string} \rightarrow 
+\mathrm{int}}{(\mathrm{int} \rightarrow \mathrm{int})}\]
+\texttt{x} 以字符串字面量输入，将 5 绑定到 \texttt{x}
+\[\istack{5}{(+\ 1)} : \istack{\mathrm{int}}{(\mathrm{int} 
+\rightarrow \mathrm{int})}\]
+\texttt{;} 切换栈顶值到 $\I$
+\[\istack{\I}{(+\ 1)} : \forall \alpha.\ \istack{(\alpha \rightarrow 
+\alpha)}{(\mathrm{int} \rightarrow \mathrm{int})}\]
+ $x + x$ 的结果是
+\[\istack{10}{(+\ 1)} : \istack{\mathrm{int}}{(\mathrm{int} 
+\rightarrow \mathrm{int})}\]
+最后 \texttt{)} 将输入栈弹出
+\[ 11 : \mathrm{int} \]
 
+以上，这个示例完整地解释了输入栈算子的应用，揭示了 \ES 机器如何在
+非常简洁的设定下达到强大而灵活的编辑能力，而完全不包含任何的关键字。
+分号 \texttt{;} 括号 \texttt{()} 这些都不是关键字或者别的什么，而是
+普普通通的函数，一种值，跟 $1,2,3$ 一样的值，体现了一种高度的优雅
+与自恰。
+
+接下来介绍段落算子，编辑壳层函数的定义方法。
+
+\begin{table}
+	\centering
+	\caption{段落算子} \label{tab:ES.paragraph} \begin{estable}
+        \xconstr{\textbf{Paragraph}}{\forall \alpha\ \beta\ \gamma.\ 
+        (\alpha \rightarrow \beta) \rightarrow \gamma \rightarrow
+        \combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)}}{
+        段落类型的构造函数}
+\modifier{\pilcrow}{\forall \alpha\ \beta\ \gamma.\ 
+       \gamma \rightarrow (\alpha \rightarrow \beta) \rightarrow 
+        \combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)}}
+        {$x\ \pilcrow\ f = \textbf{Paragraph}(f,\ x)$}
+\modifier{\texttt{(}}{\forall \alpha\ \beta\ \gamma.\ 
+\combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)} \rightarrow 
+        (\istack{\gamma}{(\alpha \rightarrow \beta)})
+        }{进入一个段落并加载段落中所有的临时变量。}
+\modifier{\texttt{(}}{\forall \alpha\ \beta\ \gamma\ \delta.\ 
+(\istack{(\combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)})}{\delta})
+    \rightarrow (\istack{\gamma}{\istack{
+        (\alpha \rightarrow \beta)}{\delta}})
+        }{进入一个段落并加载段落中所有的临时变量。}
+\modifier{«}{\forall \alpha\ \beta\ \gamma\ \delta.\ 
+    \combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)} \rightarrow 
+    \mathrm{string} \rightarrow \delta \rightarrow 
+    \combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)}}
+    {$p\ «\ name\ x$ 为段落 $p$ 添加名为 $name$ 的临时变量}
+    \end{estable}
+	\caption{函数构建} \label{tab:ES.makef} \begin{estable}
+\xvalue{\textbf{MakeFunc}}{\forall \alpha\ \beta.\ 
+        \alpha \rightarrow \beta \rightarrow \alpha \rightarrow \beta}
+{\textbf{MakeFunc} 是 \ES 内用于构建编辑壳层函数的编辑壳层功能，
+$\textbf{MakeFunc}\ x\ b$，构建一个编辑壳层函数 $\lambda x.\ b$，
+$x$ 必须是不包含任何内容的原子。}
+        \xvalue{λE}{\forall \alpha\ \beta.\ \combtyp{type}{\alpha}
+\rightarrow \combtyp{paragraph}{(\alpha,\ (\alpha \rightarrow \beta),\ 
+\beta)}}{$\text{λE}\ \alpha$ 构造一个用于构建具有类型
+        $\alpha \rightarrow \beta$ 的函数的段落}
+\modifier{$\Leftarrow$}{\forall \alpha\ \beta\ \gamma\ \delta.\ 
+\combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)} \rightarrow
+\mathrm{string} \rightarrow \combtyp{type}{\delta} \rightarrow
+\combtyp{paragraph}{(\alpha,\ (\delta \rightarrow \beta),\ \gamma)}}
+        {对于回调将返回$\beta$类型的段落 $p$，$p \Leftarrow
+        name\ \delta$ 返回一个新段落，其拥有一个名为 $name$ 的新变量，
+        并返回一个 $\delta \rightarrow \delta$ 的函数。
+        可以用于构建多个参数的高阶函数。}
+    \end{estable}
+\end{table}
+
+段落是具有类型 $\combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)}$ 的值，
+封装了 $\alpha \rightarrow \beta$ 类型的回调函数，$\gamma$ 类型的值与
+一系列临时变量。段落是一个临时变量空间。
+$\combtyp{paragraph}{(\alpha,\ \beta,\ \gamma)}$ 类型的段落意为，
+给出 $\gamma$ 类型的一个值，即将此值放在输入栈顶上，并激活段落中的各个
+临时变量，
+而栈下放着 $\alpha \rightarrow \beta$ 类型的回调函数，让用户进行一系列
+的操作，最后产生 $\alpha$ 类型的结果，而用 \texttt{)} 修饰符弹出栈顶
+的 $\alpha$ 而调用于栈下层的回调 $\alpha \rightarrow \beta$。
+例如
+\[ 2\ \pilcrow\ (1 +)\ (+ 3) \]
+$2\ \pilcrow\ (1 +)$ 构造了一个 $\combtyp{paragraph}{(\mathrm{int},\ 
+\mathrm{int},\ \mathrm{int})}$ 类型的段落
+\[ \mathbf{Paragraph}\ (+\ 1)\ 2\quad:\quad\combtyp{paragraph}{(\mathrm{int},\ 
+\mathrm{int},\ \mathrm{int})}\]
+而后 \texttt{(} 修饰符打开此段落，激活段落中的临时变量，状态值变成
+\[ \istack{2}{(+\ 1)}\quad:\quad\istack{\mathrm{int}}{(\mathrm{int} \rightarrow
+\mathrm{int})} \]
+然后 $+\ 3$ 令状态值变为
+\[ \istack{5}{(+\ 1)}\quad:\quad\istack{\mathrm{int}}{(\mathrm{int} \rightarrow
+\mathrm{int})} \]
+最后修饰符 \texttt{)} 弹出栈顶，得到
+\[ 6\quad:\quad\mathrm{int} \]
+
+值 λE 可以用于构建函数。$\combtyp{type}{\alpha}$ 是类型的类型，例如
+$\mathrm{int}$ 在 \ES 中可以作为一个值而其类型为 $\combtyp{type}{\mathrm{int}}$
+而 $\combtyp{type}{\mathrm{int}}$ 亦是一个值其类型为
+$\combtyp{type}{(\combtyp{type}{\mathrm{int}})}$。
+λE 作为一个值具有类型 
+\[\forall \alpha\ \beta.\ \combtyp{type}{\alpha}
+\rightarrow \combtyp{paragraph}{(\alpha,\ (\alpha \rightarrow \beta),\ 
+\beta)}\]
+其接受某个类型 $\alpha$，并返回一个段落。这段落给出一个具有该类型 $\alpha$ 的原子值 $x$，此值不包含任何内容无法参与任何编辑壳层功能，$x$
+参与用户的任意计算后，用户任意编辑后得到某个 $\beta$ 类型的结果 $y$，
+$y$ 中包含 $x$ 因为 $x$ 无法参与编辑壳层功能而不会被规约掉，
+最后弹出给段落的回调而此回调构造编辑壳层函数 $\lambda x.\ y$
+
+例如这段 \ES 输入
+\[ \text{λE}\ \mathrm{int}\ (\ +\ 1) \]
+$\text{λE}\ \mathrm{int}$ 后的状态值为
+\[ \mathbf{Paragraph}\ (\mathbf{MakeFunc}\ x)\ x\quad:\quad
+\forall \alpha.\ \combtyp{paragraph}{(\alpha,\ (\mathrm{int} 
+\rightarrow \alpha),\ \mathrm{int})}\]
+修饰符 \texttt{(} 打开段落
+\[ \istack{x}{\mathbf{MakeFunc}\ x}\quad :\quad \forall \alpha.\ 
+\istack{\mathrm{int}}{(\alpha \rightarrow 
+\mathrm{int} \rightarrow \alpha)}\]
+$+ 1$ 后
+\[ \istack{x + 1}{\mathbf{MakeFunc}\ x}\quad :\quad \forall \alpha.\ 
+\istack{\mathrm{int}}{(\alpha \rightarrow 
+\mathrm{int} \rightarrow \alpha)}\]
+修饰符 \texttt{)} 弹出
+\[ \mathbf{MakeFunc}\ x\ (x + 1)\quad : \quad \mathrm{int} \rightarrow
+\mathrm{int} \]
+$\mathbf{MakeFunc}$ 是一个编辑壳层功能，执行后得到
+\[ (\lambda x.\ x + 1)\quad : \quad \mathrm{int} \rightarrow
+\mathrm{int}  \]
+即是期望构建的函数。
+
+至此，对 \ES 编辑环境的论述告一段落，已经能看到 \ES 有效的编辑能力。
+但仍然有大量的功能与算子未被介绍，这些算子简单地列在表？？？中将在
+未来的的用户手册中逐一论述。
 

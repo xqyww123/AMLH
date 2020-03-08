@@ -124,8 +124,7 @@ $\gamma_0 = (\Psi_0,\ C_0)$，初始状态 $s_0$
 具有类型 $\CMT{\delta}{\sigma}{\zeta}$ 的值。
 \[\mathrm{InvokeMethod}_\gamma(c,\ f,\ x)\]
 在上下文 $\gamma$ 下以调用方法 $c$ 参数 $x$ 调用 f。
-\end{defin}
-例如
+调用算子的类型例如
 \begin{gather*}
   \CMT{\mathrm{thm}}{\mathrm{thm}}{\mathrm{thm}} \tag{1} \\
   \CMT{\alpha_1}{\beta_1}{\gamma_1} \rightarrow \CMT{\beta_1}{\beta_2}
@@ -138,8 +137,16 @@ $\gamma_0 = (\Psi_0,\ C_0)$，初始状态 $s_0$
 而返回 $\gamma_2$ 的调用方法，则能得到一个以二元组 $(\alpha_1,\ 
 \alpha_2)$ 调用 $(\beta_1,\ \beta_2)$ 返回 $(\gamma_1,\ \gamma_2)$
 类型的调用方法。
+可以使用构造函数 $\mathbf{CM}$ 创建调用算子
+\[ \mathbf{CM} : \forall \alpha\ \beta\ \gamma.\ 
+(\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow
+\CMT{\alpha}{\beta}{\gamma} \]
+一个显然的调用算子是
+\[ \mathbf{CM}(\lambda f\ a.\ f\ a) \]
+即是朴素的调用方式。
+最后，所有的调用算子构成集合 $\CMS$。
+\end{defin}
 
-所有的调用算子构成集合 $\CMS$。
 
 调用算子的集合 $C$ 构建了一套调用方法。给定被调用方 $f : \sigma$ 
 与调用参数 $a : \tau$，$C$ 构建的调用方法从 $C$ 中搜寻返回类型为
