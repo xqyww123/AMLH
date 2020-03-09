@@ -246,14 +246,19 @@
       保护学术秘密！！！
     \begin{center}
 
-      \vspace{16mm}
 
       \bfseries\fangsong\zihao{0}$\Eamlh$
 
       \vspace{10mm}
-      \bfseries\fangsong\zihao{2} 一种高阶逻辑上的抽象机器
+      \bfseries\fangsong\zihao{2} 
+      一种类型系统的扩广
+      与演绎定理以构造程序
 
-        及其上的软件工程
+     \vspace{8mm}
+
+      An extension of type system
+
+      and program construction via deducting theorem
 
       \vfill
       \bfseries\fangsong\zihao{3}徐启源
@@ -264,7 +269,7 @@
       \vspace{3mm}
 
       \today
-      \vspace{30mm}
+      \vspace{20mm}
     \end{center}
   }
 }
