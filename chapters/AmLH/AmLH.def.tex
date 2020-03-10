@@ -22,30 +22,6 @@ $\amlh$ 上的表达进行证明；而这种扩广又允许类似$\aml$地构造
 构造不同版本的 $\amlh$ 实现。本文将研究两种$\amlh$的实现，高抽象层级粗粒度的
 $\amlhC$ 与地抽象层级细粒度的 $\amlhF$
 
-\begin{defin}[现象类型] 类型 phenomenon 表示 $\aml$ 上的计算客体，根据不同的$\aml$实现可以
-    以不同方式具体定义，不同的具体定义不影响本节理论。
-
-唯独特别的，phenomenon 类型中需要包含一个特别的零元素$\mathrm{p}_0$，表示
-计算客体中不需要被任何实在的现象表示而自然地于背景中存在的，
-例如0个二进制位或者C语言的void类型。
-\end{defin}
-
-\subsection{理解与超越对应}
-
-\begin{defin}[到$\alpha$的理解] \label{Def.itp} 类型 $\itp{\alpha}$ 是现象到
-    具有类型 $\alpha$ 的本质的理解，包含可以构建现象与本质间联系的映射。
-    \begin{equation} \begin{split}
-        \itp{\alpha} \Coloneqq \mathbf{Interpretation}\ &(\alpha \rightarrow \phenomenon)
-        \ (\phenomenon \rightarrow \alpha)\\
-        &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})
-    \end{split} \end{equation}
-    \begin{align*}
-        \mathbf{ITP\_LIGHT}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = l \\
-        \mathbf{ITP\_TRANSCEND}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = tr \\
-        \mathbf{ITP\_SET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s \\
-        \mathbf{ITP\_PSET}\ (\mathbf{Interpretation}\ l\ tr\ s\ s_p) & = s_p
-    \end{align*}
-\end{defin}
 
 $\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本质的理解。
 例如现象到布尔值间的超越映射就要届由到 bool 类型的理解来完成。

@@ -45,6 +45,7 @@
 \newcommand{\concat}{\mathrel{\raisebox{.12\baselineskip}{\ensuremath{\frown}}}}
 \newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
 \newcommand{\lamcr}[0]{\text{νοέω}}
+\newcommand{\noesishol}[0]{${\text{νοέω}}\over{\text{HOL}}$}
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
@@ -61,7 +62,7 @@
 \newcommand{\phety}[0]{\ensuremath{\mathrm{ph}}}
 \newcommand{\natn}[0]{\ensuremath{\mathrm{number}}}
 \newcommand{\bnf}[1]{\ensuremath{\langle\ #1\ \rangle}}
-\newcommand{\itp}[1]{\ensuremath{#1\ \mathrm{interpretation}}}
+\newcommand{\itp}[1]{\ensuremath{#1\ \mathrm{noesis}}}
 \newcommand{\phenomenon}{\ensuremath{\mathrm{phenomenon}}}
 \newcommand{\widesqa}[2][1.5]{
   \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
@@ -148,6 +149,7 @@
 
 \newcommand{\eset}{\mathrel{\texttt{--}}}
 \newcommand{\combtyp}[2]{#2\ \mathrm{#1}}
+\newcommand{\terminology}[2]{\textbf{#1}&#2}
 \newenvironment{estable}{
 \begin{tabular}{ | p{1.3cm} | p{2cm} | p{12cm} | } \hline
 \textbf{种类} & \textbf{标识} & \textbf{类型与介绍} \\

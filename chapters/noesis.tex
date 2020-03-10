@@ -1,0 +1,110 @@
+%\section{Noesis 系统}
+\section{朴素 Noesis 系统}
+
+\begin{defin}[朴素 Noesis 系统]
+朴素 Noesis 系统是一个形式系统，基于无类型 λ 演算。
+
+无穷的字符串集合 $\hat{\mathcal{P}},\ \hat{\mathcal{E}} \subseteq 
+\Words$ 分别表示现象、本体的字母集。
+其上的 λ 表达式 $\mathcal{P},\ \mathcal{E}$ 分别为现象集、本体集。
+\begin{align*}
+\mathcal{P} &= \bnf{\hat{\mathcal{P}}\mbar (\mathcal{P}\ \mathcal{P})
+\mbar (\lambda\ \hat{\mathcal{P}}\ \mathcal{P})} &
+\mathcal{E} &= \bnf{\hat{\mathcal{E}}\mbar (\mathcal{E}\ \mathcal{E})
+\mbar (\lambda\ \hat{\mathcal{E}}\ \mathcal{E})}&
+\end{align*}
+纯粹的 Noesis 系统不支持对理解的演算，理解是原子的，理解集 
+$\mathcal{I} \subseteq \Words$ 是单词集。
+
+\noindent Noesis 对应集 $N_1$
+\[ N_1 = \bnf{\mathcal{P} \widesim{\mathcal{I}} \mathcal{E}} \]
+Noesis 同构集 $N^*$
+\[ N^* = \bnf{\mathcal{P} \proctr{\mathcal{I}|\cdots|\mathcal{I}}{}
+\mathcal{E}} \]
+Noesis 表达式是集合 $N = N_1 \cup N^*$。
+上下文集合 $\Gamma_\mathrm{N} = \powerset(N_1)$。
+Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法 
+\[ \Gamma_\mathrm{N} \vdash N \]
+确定，其上的规则 $\vdash$ 如下
+
+\vspace{5mm}
+
+\hspace{-8mm}%
+\begin{minipage}[b]{0.25\linewidth} \begin{prooftree} \centering
+    \AxiomC{\hfill}
+    \RightLabel{(公理)}
+    \UnaryInfC{$p \widesim{i} e \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(一阶同构引入)}
+    \UnaryInfC{$\Gamma \vdash p \proctr{i}{} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \proctr{i}{} e$}
+    \RightLabel{(一阶同构削除)}
+    \UnaryInfC{$\Gamma \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}%}
+
+\vspace{5mm}
+
+\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash p \widesim{i} e$}
+    \AxiomC{$\Gamma_2 \vdash f \proctr{i|j|\cdots|k}{} \phi$}
+    \RightLabel{(应用)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash
+    f\ p \proctr{j|\cdots|k}{} \phi\ e$}
+\end{prooftree}\end{minipage}
+\begin{minipage}[b]{0.5\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma,\ p \widesim{i} e \vdash 
+    f \proctr{j|\cdots|k}{} \phi$}
+    \RightLabel{(抽象)}
+    \UnaryInfC{$\Gamma \vdash \lambda p.\ f \proctr{i|j|\cdots|k}{}
+    \lambda e.\ \phi$}
+\end{prooftree}\end{minipage}
+
+\vspace{5mm}
+
+\noindent 
+形式系统朴素 Noesis 就是形式语言 $L_\mathrm{N}$ 和规则 $\vdash$ 
+构成的形式系统。
+\end{defin}
+
+\section{HOL 逻辑上的 Noesis 系统 \noesishol 及其抽象机 \amlh}
+
+形式系统 \noesishol 构建在 HOL 逻辑的基础上，使用 HOL 形式语言作为
+\noesishol 的形式语言，而构建兼容 HOL 逻辑的 Noesis 形式系统的规则。
+或者说，形式系统 \noesishol 是朴素 Noesis 形式系统在 HOL 逻辑上的实现
+与适当扩广。主要的扩广在于，因为在 HOL 逻辑上定义了理解类型与 Noesis
+对应，于是可以允许理解的运算。
+例如可以在 HOL 逻辑上定义产生理解的函数，诸如理解的并、序列的理解等。
+
+接下来将逐步在 HOL 逻辑上定义现象与理解。而 \noesishol 的本质就是
+任意 HOL 逻辑上的数学对象，甚至包括定义在 HOL 逻辑上的现象与理解本身。
+
+\begin{defin}[现象类型] HOL 逻辑上的类型 phenomenon 表示 \noesishol
+的现象，根据不同的具体实现可以不同方式具体定义，
+不同的具体定义不影响本节理论。
+
+唯独特别的，phenomenon 类型中需要包含一个特别的零元素$\mathrm{p}_0$，
+表示计算客体中不需要被任何实在的现象表示而自然地于虚无中存在的，
+例如0个二进制位或者C语言的void类型。
+\end{defin}
+
+\subsection{理解与 Noesis 对应}
+
+\begin{defin}[到$\alpha$的理解] \label{Def.itp} 
+类型 $\itp{\alpha}$ 是现象到类型为 $\alpha$ 的本质的理解，
+包含可以构建现象与本质间联系的映射。
+    \begin{equation} \begin{split}
+        \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
+        \ (\phenomenon \rightarrow \alpha)\\
+        &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})
+    \end{split} \end{equation}
+    \begin{align*}
+        \mathbf{NOE\_LIGHT}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = l \\
+        \mathbf{NOE\_TRANSCEND}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = tr \\
+        \mathbf{NOE\_SET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s \\
+        \mathbf{NOE\_PSET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s_p
+    \end{align*}
+\end{defin}
