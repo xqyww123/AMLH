@@ -119,14 +119,3 @@ Function)。这些作为函数的操作包括，将值装入一个编辑环境�
 \input{chapters/EditorShell/value.tex}
 \input{chapters/EditorShell/machine.tex}
 
-
-\ES 
-
-类似λ2演算，令字符串集合 $U_v$ 表示\ES 的类型系统上所有的类型变量，
-字符串集合$U_0$表示所有预定义的类型，集合$ \UE = U_v \cup U_0 $
-\[ \PiE = \bnf{\UE \mbar \UE \rightarrow \UE} \]
-表示所有的非全称量化类型或简单地叫做普通类型，
-\[ \PiAE = \bnf{\PiE \mbar \forall U_v\ \PiAE } \]
-表示全称量化类型或简单地叫做量化类型。
-
-
