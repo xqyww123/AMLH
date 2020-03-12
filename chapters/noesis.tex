@@ -70,41 +70,331 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
 构成的形式系统。
 \end{defin}
 
-\section{HOL 逻辑上的 Noesis 系统 \noesishol 及其抽象机 \amlh}
+\section{HOL 逻辑上的 Noesis 系统 \noesishol}
 
 形式系统 \noesishol 构建在 HOL 逻辑的基础上，使用 HOL 形式语言作为
 \noesishol 的形式语言，而构建兼容 HOL 逻辑的 Noesis 形式系统的规则。
 或者说，形式系统 \noesishol 是朴素 Noesis 形式系统在 HOL 逻辑上的实现
-与适当扩广。主要的扩广在于，因为在 HOL 逻辑上定义了理解类型与 Noesis
-对应，于是可以允许理解的运算。
-例如可以在 HOL 逻辑上定义产生理解的函数，诸如理解的并、序列的理解等。
+与适当扩广。这种实现通过在 HOL 逻辑上定义表示理解的类型与表示 Noesis
+对应及 Noesis 同构的谓词完成。于是可以允许理解的运算，作为对朴素
+Noesis 系统的主要扩广，例如那些产生理解的 HOL 函数，
+诸如理解的并、序列的理解等。
 
-接下来将逐步在 HOL 逻辑上定义现象与理解。而 \noesishol 的本质就是
+接下来将逐步在 HOL 逻辑上定义现象与理解，而本体是
 任意 HOL 逻辑上的数学对象，甚至包括定义在 HOL 逻辑上的现象与理解本身。
 
-\begin{defin}[现象类型] HOL 逻辑上的类型 phenomenon 表示 \noesishol
-的现象，根据不同的具体实现可以不同方式具体定义，
-不同的具体定义不影响本节理论。
+\begin{defin}[现象类型] \label{Def.phenomenon}
+HOL 逻辑上的类型 phenomenon 表示 \noesishol 的现象，
+根据不同的具体实现可以不同方式具体定义，不同的具体定义不影响本章理论。
 
 唯独特别的，phenomenon 类型中需要包含一个特别的零元素$\mathrm{p}_0$，
 表示计算客体中不需要被任何实在的现象表示而自然地于虚无中存在的，
 例如0个二进制位或者C语言的void类型。
 \end{defin}
 
-\subsection{理解与 Noesis 对应}
-
 \begin{defin}[到$\alpha$的理解] \label{Def.itp} 
-类型 $\itp{\alpha}$ 是现象到类型为 $\alpha$ 的本质的理解，
-包含可以构建现象与本质间联系的映射。
-    \begin{equation} \begin{split}
+类型 $\itp{\alpha}$ 是现象到类型为 $\alpha$ 的本体的理解，
+包含可以构建现象与本体间联系的映射。
+    \[ \begin{split}
         \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
         \ (\phenomenon \rightarrow \alpha)\\
         &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})
-    \end{split} \end{equation}
+    \end{split} \]
     \begin{align*}
-        \mathbf{NOE\_LIGHT}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = l \\
-        \mathbf{NOE\_TRANSCEND}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = tr \\
-        \mathbf{NOE\_SET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s \\
-        \mathbf{NOE\_PSET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s_p
+        \mathbf{NOE\_LIGHT}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = l&
+        \mathbf{NOE\_TRANSCEND}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = tr&\\
+        \mathbf{NOE\_SET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s&
+        \mathbf{NOE\_PSET}\ (\mathbf{Noesis}\ l\ tr\ s\ s_p) & = s_p&
     \end{align*}
 \end{defin}
+
+$\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本体的理解。
+例如现象到布尔值间的超越映射就要届由到 bool 类型的理解来完成。
+$\mathbf{Noesis}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定本体到
+现象的映射；$tr$ 是超越函数，确定现象到本体的映射；$s$ 是本体集合，
+有 $s \subseteq \mathrm{dom}\ l \land s \subseteq \mathrm{rng}\ tr$；
+$s_p$ 是现象集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq \mathrm{rng}\ l$
+，一个理解即是上述的四元组。
+
+
+\begin{notation}[理解的相关属性的简写记号]
+\begin{align*}
+    \mathbf{Li}_i\ & \coloneqq \mathbf{NOE\_LIGHT}\ i
+    & \mathbf{Tr}_i\ & \coloneqq \mathbf{NOE\_TRANSCEND}\ i \\
+    \mathbf{Se}_i\ & \coloneqq \mathbf{NOE\_SET}\ i
+    & \mathbf{Sp}_i\ & \coloneqq \mathbf{NOE\_PSET}\ i
+\end{align*}
+\end{notation}
+
+\begin{defin}[到$\alpha$的有效理解] \label{Def.Vi}
+\[ \begin{split}
+    \mathbf{VALID\_NOE}\ i \coloneqq\ &
+    (\forall e.\ e \in \mathbf{Se}_i \Rightarrow \mathbf{Li}_i\ e \in
+    \mathbf{Sp}_i \land (\mathbf{Tr}_i(\mathbf{Li}_i\ e) = e)) \\
+    & \land\ (\forall p.\ p \in \mathbf{Sp}_i \Rightarrow \mathbf{Tr}_i\ p \in 
+    \mathbf{Se}_i)
+\end{split} \]
+\end{defin}
+
+\begin{notation}[有效理解的简写]
+    \[ \mathbf{V}_i \coloneqq \mathbf{VALID\_NOE}\ i \]
+\end{notation}
+
+即 $\mathbf{V}_i$ 意味着 $\mathbf{Li}_i$ 是 $\mathbf{Se}_i$ 到 $\mathbf{Sp}_i$ 的单射，
+$\mathbf{Tr}_i$ 是 $\mathbf{Sp}_i$ 到 $\mathbf{Se}_i$ 的满射，
+$\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
+
+\begin{example}[到bool的有效理解的样例]
+\[ \begin{split}
+    \mathbb{B}_\mathrm{I} \coloneqq\ & \mathbf{Noesis}\ (\lambda e.\ \mathbf{if}\ e\ 
+    \mathbf{then}\ 1\ \mathbf{else}\ 0) \\
+& (\lambda p.\ \mathbf{if}\ p=0\ \mathbf{then}\ \mathrm{F}\ \mathbf{else}\ \mathrm{T})\quad
+   \{\mathrm{T},\ \mathrm{F}\}\quad \mathbb{N}
+\end{split} \]
+\end{example}
+
+\begin{defin}[ Noesis 对应关系] \label{Def.TR}
+定义三元关系 $ p \widesim{i} e$ 表示现象与本体在某种理解下的的对应关系。
+\[ p \widesim{i} e \coloneqq \mathbf{V}_i \land p \in \mathbf{Sp}_i \land
+    (\mathbf{Tr}_i\ p = e)\]
+\end{defin}
+
+某个成立的 Noesis 对应关系可以用 HOL 逻辑证明，或者以形式系统的角度去说，
+可以用HOL逻辑的一系列规则得到某个成立的Noesis 对应。
+
+\begin{prooftree}
+    \AxiomC{$\cdots$} 
+    \RightLabel{对于某个成立的 $p \widesim{i} e$\quad\quad( Noesis 对应的证明律)} \doubleLine
+    \UnaryInfC{$\vdash p \widesim{i} e$}
+\end{prooftree}
+
+由此构建了程序的语义感知（Semantic Reasoning）的基础，即在理解方式$i$下可以将
+计算客体$p$解释成$e$，而$e$即$p$在理解方式$i$下的语义。
+
+一个现象对于一个理解只有确定的一个本体，但一个现象可以同时具有多种理解，
+而现象上的一次计算可以同时带有多个含义。例如现象1可以在布尔理解下对应真，
+也可以在自然数理解下对应自然数1，也可以是某种有序集的理解下的第一个元素。
+
+%\begin{theo}[Noesis 对应的一些性质]
+%\begin{align*}
+%  \forall p\ i\ e.\ p \widesim{i} e \Rightarrow
+%    e \in \mathbf{Se}_i
+%\end{align*}
+%\end{theo}
+%\begin{proof} 由定义 \ref{Def.Vi} 直接得到。
+%\end{proof}
+
+\begin{defin}[理解的合并] \label{Def.I*}
+一个到 $\alpha$ 的理解$i_a$与到 $\beta$ 的理解$i_b$可以合并成
+    到二元组$(\alpha,\beta)$的理解 $i_a \cdot i_b$
+\[
+    \forall l_a\ l_b\ a\ b.\ (l_a\ a = l_b\ b) \Rightarrow
+    (\dot{\mathbf{l}}\ l_a\ l_b\ a\ b = l_a\ a )
+\]
+\begin{equation} \begin{split}
+    (\mathbf{Noesis}\ & l_a\ tr_a\ s_a\ sp_a)\ \cdot\ 
+    (\mathbf{Noesis}\ l_b\ tr_b\ s_b\ sp_b) \coloneqq \\
+    & \mathbf{Noesis}\ (\dot{\mathbf{l}}\ l_a\ l_b)\ 
+        (\lambda p.\ (tr_a\ p,\ tr_b\ p))\ \\
+    & \quad\quad\quad (s_a \times s_b \cap (\lambda (a,\ b).\ l_a\ a = l_b\ b))\ 
+    (sp_a \cap sp_b)
+\end{split} \end{equation}
+\end{defin}
+
+这样合并的意义在于，多个基于不同理解的Noesis 对应，可以将这些不同的理解合并而表示为一个Noesis 对应。
+
+\begin{theo}[理解合并的有效性] \label{T.V.IMerge}
+\begin{equation}
+    \mathbf{V}_a \land \mathbf{V}_b \Rightarrow \mathbf{V}_{a\cdot b}
+\end{equation}
+\end{theo}
+\begin{proof}
+\begin{align*}
+    \mathbf{V}_{a\cdot b} =\ & (\forall e_a\ e_b.\ e_a \in \mathbf{Se}_a \ \ \land \ \ 
+    e_b \in \mathbf{Se}_b \ \ \land \ \ 
+    (\mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b) \ \ \Rightarrow \\
+    & \quad\quad\quad \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \ \ \land
+    \ \ (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \ \ \land \ \ 
+    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_a \ \ \land \ \ p \in \mathbf{Sp}_b
+    \Rightarrow \mathbf{Tr}_a\ p \in \mathbf{Se}_a \ \ \land \ \ \mathbf{Tr}_b\ p \in 
+      \mathbf{Se}_b ) \\
+    \mathbf{V}_a =\ & (\forall e_a.\ e_a \in \mathbf{Se}_a \Rightarrow
+      \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \ \ \land \ \ 
+      (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a)) \\
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_a \Rightarrow \mathbf{Tr}_a\ p \in 
+      \mathbf{Se}_a) \\
+\mathbf{V}_b =\ & (\forall e_b.\ e_b \in \mathbf{Se}_b \Rightarrow
+      \mathbf{Li}_b\ e_b \in \mathbf{Sp}_b \ \ \land \ \ 
+      (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b)) \\
+    & \land\ \ (\forall p.\ p \in \mathbf{Sp}_b \Rightarrow \mathbf{Tr}_b\ p \in
+      \mathbf{Se}_b) \\
+\mathbf{V}_a,\ & \mathbf{V}_b,\ e_a \in \mathbf{Se}_a,\ e_b \in \mathbf{Se}_b,\ 
+    \mathbf{Li}_a\ e_a = \mathbf{Li}_b\ e_b \ \vdash \ 
+    \mathbf{Li}_a\ e_a \in \mathbf{Sp}_a \cap \mathbf{Sp}_b \\
+    & \quad\quad\quad\quad \land (\mathbf{Tr}_a(\mathbf{Li}_a\ e_a) = e_a) \land
+    (\mathbf{Tr}_b(\mathbf{Li}_b\ e_b) = e_b) \\
+\mathbf{V}_a,\ & \mathbf{V}_b,\ p \in \mathbf{Sp}_a,\ p \in \mathbf{Sp}_b\ \vdash\ 
+    \mathbf{Tr}_a\ p \in \mathbf{Se}_a\ \ \land \ \ \mathbf{Tr}_b\ p \in \mathbf{Se}_b \\
+\mathbf{V}_a,\ &\mathbf{V}_b \vdash \mathbf{V}_{a \cdot b}
+\end{align*}
+\end{proof}
+
+\begin{theo}[理解合并对于 Noesis 对应的同构]
+\begin{equation}
+    \forall i_a\ i_b\ p\ e_a\ e_b.\ p \widesim{i_a} e_a \land p \widesim{i_b} e_b = 
+    p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) 
+\end{equation}
+\end{theo}
+
+\begin{proof}
+\[ p \widesim[2]{ia \cdot ib} (e_a,\ e_b) =\ \mathbf{V}_{ia\cdot ib} \land p \in 
+    (\mathbf{Sp}_{ia} \cap \mathbf{Sp}_{ib}) \land 
+    (\mathbf{Tr}_{ia}\ p = e_a) \land (\mathbf{Tr}_{ib}\ p = e_b) \]
+结合定义\ref{Def.TR}以及理解合并的有效性定理\ref{T.V.IMerge}
+\[p \widesim[2]{ia \cdot ib} (e_a,\ e_b) = p \widesim{i_a} e_a \land p \widesim{i_b} e_b \]
+\end{proof}
+
+由合并的理解的 Noesis 对应关系就可以提取出其中各个理解的 Noesis 对应。
+
+\begin{gather*}
+    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_1} e_1 \\
+    p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_2} e_2
+\end{gather*}
+
+\begin{minipage}[b]{0.45\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+    \RightLabel{(合并分解律1)}
+\UnaryInfC{$\Gamma \vdash p \widesim{i_1} e_1$}
+\end{prooftree}
+\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth}
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+    \RightLabel{(合并分解律2)}
+\UnaryInfC{$\Gamma \vdash p \widesim{i_2} e_2$}
+\end{prooftree}
+\end{minipage}
+
+\begin{prooftree}
+\AxiomC{$\Gamma_1 \vdash p \widesim{i_1} e_1$}
+\AxiomC{$\Gamma_2 \vdash p \widesim{i_2} e_2$}
+    \RightLabel{(合并律)}
+\BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i_1 \cdot i_2} (e_1,\ e_2)$}
+\end{prooftree}
+
+\begin{theo}[理解合并在 Noesis 对应上的交换律同构与结合律同构]
+\begin{gather*}
+    \forall e_a\ e_b\ i_a\ i_b\ p.\ p \widesim[2]{i_a \cdot i_b} (e_a,\ e_b) =
+        p \widesim[2]{i_b \cdot i_a} (e_b,\ e_a) \\
+    \forall e_a\ e_b\ e_c\ i_a\ i_b\ i_c\ p.\ p \widesim[4]{(i_a \cdot i_b) \cdot i_c}
+    ((e_a,\ e_b),\ e_c) = p \widesim[4]{i_a \cdot (i_b \cdot i_c)} (e_a,(e_b,\ e_c))
+\end{gather*}
+\end{theo}
+
+\begin{proof} 显然，略
+\end{proof}
+
+
+\begin{defin}[过程的 Noesis 对应同构] \label{def.proctr}
+定义4元符号 $f_p \proctr{i}{cond} f_e$ 表示有条件的值的 Noesis 对应。
+定义5元符号 $f_p \proctr{i|j}{cond} f_e$ 表示1个参数的且以
+$cond$为条件的过程的 Noesis 对应，$n+3$ 元符号
+$f_p \proctr{i_1 | \cdots | i_n}{cond} f_e$ 表示 $n$ 个参数的过程的且条件为
+$cond$的 Noesis 对应。
+
+\begin{equation} \begin{split}
+    p \proctr{i}{cond} e \coloneqq &\ (cond \Rightarrow p \widesim{i} e) \\
+    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & \proctr{i|j}{cond}
+    (f_e:\alpha \rightarrow \beta) \coloneqq \\
+    (\forall a_p\ a_e.\quad & a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
+    f_p\ a_p \widesim{j} f_e\ a_e) \\
+    (f_p:\mathrm{phenomenon}\rightarrow \cdots \rightarrow \mathrm{phenomenon})\ & 
+    \proctr{i | \cdots | l}{cond}
+    (f_e:\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow \delta) \coloneqq \\
+    (\forall a_p\ a_e \cdots c_p\ c_e.\quad a_p \widesim{i} a_e \Rightarrow &
+    \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow cond\ a_e\ \cdots\ c_e 
+    \Rightarrow  \\
+    & f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e)
+\end{split} \end{equation}
+
+    $cond$ 表示过程正确执行的条件。
+
+    对于$\proctr{i | \cdots | k | l}{cond}$ 若理解
+    $i, \cdots, k$ 的类型分别为 $\itp{\alpha},\ \cdots,\ \itp{\gamma}$，
+    那么 $cond$ 的类型为 $\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow 
+    \mathrm{bool}$，即 $cond$ 是在本体层面上描述执行条件。
+
+    过程的 Noesis 对应同构构成了一种契约，
+    在输入参数可以被约定的理解$i,\cdots,k$解释，
+    且解释后的意义也即本体$a_e,\cdots,c_e$满足给定的条件，
+    那么此过程可以正确执行并返回以约定的理解$l$的解释下对应本体$f\ a_e\ \cdots\ c_e$ 的输出
+
+\end{defin}
+
+上述定义具有如下的递归形式。
+
+\begin{equation} \label{f.proctr_rec} \begin{split}
+    f_p \proctr{i|j|\cdots|l}{cond} f_e = (\forall a_p\ a_e.\quad
+      a_p \widesim{i} a_e \Rightarrow f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e} f_e\ a_e)
+\end{split} \end{equation}
+
+\begin{theo}[\noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律]
+在 Noesis 对应的定义 \ref{Def.TR} 与 Noesis 同构的定义 \ref{def.proctr} 
+下，Noesis 系统的调用律、抽象律、一阶同构引入律、一阶同构削除律，以
+HOL 上的定理的形式出现。
+
+\hspace{-16mm}
+\begin{minipage}[b]{0.55\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e$}
+    \AxiomC{$\Gamma_2 \vdash a_p \widesim{i} a_e$}
+    \RightLabel{(调用)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e}
+      f_e\ a_e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1,\ a_p \widesim{i} a_e \vdash b_p \proctr{j|\cdots|l}{cond} b_e$}
+    \RightLabel{(抽象)}
+    \UnaryInfC{$\Gamma_1 \vdash (\lambda a_p.\ b_p)
+      \proctr{i|j|\cdots|l}{\lambda a_e.\ cond\ a_e} (\lambda a_e.\ b_e)$}
+\end{prooftree}\end{minipage}
+
+\hspace{-10mm}
+\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma, cond \vdash p \widesim{i} e$}
+    \RightLabel{(一阶同构引入)}
+    \UnaryInfC{$\Gamma \vdash p \proctr{i}{cond} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash p \proctr{i}{cond} e$}
+    \AxiomC{$\Gamma_2 \vdash cond$}
+    \RightLabel{(一阶同构削除)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}
+\end{theo}
+
+\begin{proof} 由定义 \ref{def.proctr}，递归公式 \ref{f.proctr_rec}，应用
+    \ref{Sec.HOL} 节中介绍的HOL逻辑上的 MATCH\_MP 律、DISCH 律。
+\end{proof}
+
+作为一种定理，可以自然地被证明，或者被演绎得出。
+
+%又也许理解可以尝试地作为这样一种类型，但问题在于，任何一个现象都可以被应用于大量的理解
+%——只要现象在理解的现象集内就行，若尝试将理解作为类型，就意味着每一个现象都可以属于大量的类型，
+%这显然是荒谬的。
+
+%本文对所有将 Noesis 对应描述成某种类型系统的尝试都失败了。根本在于，类型是一种对值的分类，
+%以良好地提取维护值的部分性质；
+%但本文的思路， Noesis 对应根本不尝试对值分类，而是尝试显示地确定理解方式而找到值对应的以某种
+%数理对象表示的意义，进而提取出值在该理解下的全部性质。
+%这与与指称语义（Denotational semantics）非常相似。
+
+%指称语义尝试建立起程序与数学函数的对应关系，跟 Noesis 对应非常相似。
+%但$\amlh$的优势在于程序的抽象，基于$\lamst$使得程序本身亦是抽象的结构。
+%这导致一些重要的区别，指称语义在递归定义的函数与数据结构上遇到的困难带领指称语义
+%走向了域理论，而对于$\amlh$，不使用域理论而
+%是在？？？节将看到递归与归纳（Induction）间的内在联系。
+%指称语义与 Noesis 对应尝试实现类似的目标，但解决思路与方式完全不同。
+
+\input{./chapters/noesis/machine.tex}

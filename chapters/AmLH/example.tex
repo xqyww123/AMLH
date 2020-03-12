@@ -10,7 +10,7 @@
 \begin{proof} 基础的数学定理，略。
 \end{proof}
 \begin{lemma}[有效理解的投影是单射] \label{L.i.inj}
-\[ \mathbf{V}_i \Rightarrow \mathbf{INJ}\ \mathbf{L}_i\ \mathbf{Se}_i\ \mathbf{Sp}_i \]
+\[ \mathbf{V}_i \Rightarrow \mathbf{INJ}\ \mathbf{Li}_i\ \mathbf{Se}_i\ \mathbf{Sp}_i \]
 \end{lemma}
 \begin{proof} 
 
@@ -195,7 +195,7 @@ $\mathrm{Do2N}$ 具有类似 $\lambda f\ x.\ f (x+x)$ 的功能，$\mathrm{Do2N}
     f_p \proctr{i|l}{cond} f_e,\ cond\ x_e \vdash \mathbf{V}_l \ \land\ 
     f_e\ x_e \in \mathbf{Se}_l \tag{1} \]
 其中$f_p^0$ 表示$f_p$的伪现象，实际占用0个二进制位而实际不存在于编译结果中。
-由过程的超越对应的充分性定理 \ref{T.ptr.enough}
+由 Noesis 对应同构的充分性定理 \ref{T.ptr.enough}
 \[ f_p \proctr{i|l}{cond} f_e \vdash \mathbf{V}_i \land x_e \in \mathbf{Se}_i \land
     cond\ x_e \Rightarrow \mathbf{V}_l\ \land\ f_e\ x_e \in \mathbf{Se}_l \tag{2} \]
 此外由定义 \ref{Def.TR}
@@ -277,8 +277,8 @@ $f_e$ 具有类型 $(\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}) \mapsto
     \[ f_p \widesim[3]{\mathbf{SI}(l_f)} f,\ x_p \widesim{i} x_e,\ 
     f \proctr{i|l}{cond} f_e\ f,\ cond\ x_e \vdash \mathbf{V}_l \ \land\ 
     f_e\ f\ x_e \in \mathbf{Se}_l \tag{1}\]
-证明是与定义 \ref{Def.Call} 中几乎一样的，同样由过程的超越对应的充分性定理 
-    \ref{T.ptr.enough}
+证明是与定义 \ref{Def.Call} 中几乎一样的，同样由Noesis 对应同构
+的充分性定理 \ref{T.ptr.enough}
 \[ f \proctr{i|l}{cond} f_e\ f \vdash \mathbf{V}_i \land x_e \in \mathbf{Se}_i \land
     cond\ x_e \Rightarrow \mathbf{V}_l\ \land\ f_e\ f\ x_e \in \mathbf{Se}_l \tag{2} \]
 同样由定义 \ref{Def.TR}

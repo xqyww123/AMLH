@@ -1,0 +1,279 @@
+\chapter{用于智能合约的 \Eamlh 的实现}
+
+\section{用于智能合约的抽象机器 \amlhS 在 HOL 上的实现}
+
+首先论述 HOL 交互式定理证明器上用于智能合约的抽象机器 \amlhS 的实现，
+这一实现通过 HOL 定理证明器上4867行的 SML 语言完成。
+状态方面采用计算与状态分离的方案，将所有状态转移以指令的方式记录而在
+智能合约所有计算完成后的最后写入区块链，这样更安全。
+
+\begin{defin}[现象的定义] 类型 phenomenon 表示现象
+\[ \begin{split}
+\mathrm{phenomenon} \Coloneqq & \PhV\ \mathrm{num}\ 
+\mathrm{num} \mbar \PhS\ \mathrm{phenomenon}\ 
+\mathrm{phenomenon} \\
+\mbar & \PhP \mathrm{phenomenon}
+\end{split} \]
+$\PhV x\ b$ 表示 $b$ 个二进制表示的数字 $x$。$\PhS p_1\ p_2$ 表示两个值
+在内存上的直接拼接构成的现象。$\PhP p$ 表示对现象 $p$ 的指针。
+\[ \begin{array}{lcllcl}
+\PB\ (\PhV x\ b) &\coloneqq& b&
+\PX\ (\PhV x\ b) &\coloneqq& x\\
+\PB\ (\PhS p_1\ p_2) &\coloneqq& \PB p_1 + \PB p_2\quad\quad&
+\PX\ (\PhS p_1\ p_2) &\coloneqq& \PX(p_1) + \PX(p_2) \cdot 2^{\PB(p_1)}\\
+\PB\ (\PhP p) &\coloneqq& \mathrm{PointerSize} &&&
+\end{array} \]
+$\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合约执行环境
+的位数，一般为32。
+现象的分割工具，函数 $\PL,\ \PU$
+    \begin{align*} \PL n\ p &= \PhV\ (\PX p \Mod 2^n)\ n&
+        \PU n\ p &= \PhV\ (\PX p \Div 2^n)\ (\PB p \dotminus n)&
+    \end{align*}
+合法的现象
+\begin{gather*} \begin{align*}
+\VP\ (\PhV\ x\ b) &\coloneqq (x < 2^b)&
+\VP\ (\PhP\ p) &\coloneqq \VP p&
+\end{align*}\\
+\VP\ (\PhS\ p_1\ p_2) \coloneqq \VP p_1 \ \land\ \VP p_2
+\end{gather*}
+现象集的 0 元素是 $\mathbf{PhV}\ 0\ 0$，
+占用0个比特位的值，且其是合法的。
+\end{defin}
+
+\begin{defin}[\amlhS 上的理解]
+\amlhS 上理解的定义基本基于定义 \ref{Def.itp} ，只是固定了理解的现象集
+的位数目。
+    \[ \begin{split}
+        \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
+        \ (\phenomenon \rightarrow \alpha)\\
+    &(\alpha\ \mathrm{set})\ (\phenomenon\ \mathrm{set})\ \mathrm{num}
+    \end{split} \]
+\begin{gather*}
+\begin{align*}
+\mathbf{NOE\_LIGHT}\ (\mathbf{Noesis}\ l\ tr\ s_e\ s_p\ s) & = l&
+\mathbf{NOE\_TRANSCEND}\ (\mathbf{Noesis}\ l\ tr\ s_e\ s_p\ s) & = tr&\\
+\mathbf{NOE\_SET}\ (\mathbf{Noesis}\ l\ tr\ s_e\ s_p\ s) & = s_e&
+\mathbf{NOE\_SIZE}\ (\mathbf{Noesis}\ l\ tr\ s_e\ s_p\ s) &= s&
+\end{align*}\\
+\mathbf{NOE\_PSET}\ (\mathbf{Noesis}\ l\ tr\ s_e\ s_p\ s)
+ = s_p \cap \{ p \mbar \PB p = s \}
+ \end{gather*}
+同样有记号
+\begin{gather*}
+\begin{align*}
+    \mathbf{Li}_i\ & \coloneqq \mathbf{NOE\_LIGHT}\ i&
+    \mathbf{Tr}_i\ & \coloneqq \mathbf{NOE\_TRANSCEND}\ i &
+\end{align*}\\ \begin{align*}
+    \mathbf{Sp}_i\ & \coloneqq \mathbf{NOE\_PSET}\ i&
+    \mathbf{Si}_i\ & \coloneqq \mathbf{NOE\_SIZE}\ i&
+    \mathbf{Se}_i\ & \coloneqq \mathbf{NOE\_SET}\ i&
+\end{align*} \end{gather*}
+$\mathbf{Si}_i$ 表示理解 $i$ 的现象集的比特数。
+\end{defin}
+
+\begin{defin}[\amlhS 的 Noesis 对应] 在定义 \ref{Def.TR} 的基础上
+加入现象合法性。
+\[ p \widesim{i} e \coloneqq \mathbf{V}_i\ \land\ \VP\ p\ \land\ 
+p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
+\end{defin}
+
+其余理论均与第 \ref{Ch.AmLH} 章相同。
+
+\begin{defin}[链的抽象表达]
+\amlhS 将链上数据抽象为各个由标识区分的键值表，使用有限映射表示，
+类型 chain 为此别名 
+\[ \mathrm{chain} \Coloneqq (\mathrm{string},\ \mathrm{phenomenon})
+\mapsto \mathrm{phenomenon} \]
+类型 write\_chain 表示对链的写入操作命令，也是一个别名
+\[ \mathrm{write\_chain} \Coloneqq ((\mathrm{string},\ 
+\mathrm{phenomenon}),\ \mathrm{phenomenon}) \]
+元组 $((name,\ key),\ value)$ 表示以值 $value$ 写入到表 $name$ 的
+键 $key$ 的写入操作。
+有限映射的更新操作 $\fupdate$ 就表示对链数据的写入。
+\end{defin}
+
+链数据写入命令的内存结构为
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|} \hline
+\text{表标识}&\text{键指针}&
+\text{键大小}&\text{值指针}&\text{值大小}\\
+\text{8bits}&\text{PointerSize} bits&
+\text{32bits}&\text{PointerByte} bits&\text{32bits} \\ \hline
+\end{tabular}
+\end{center}
+表标识占用1字节，理论上表标识可以是任意字符串，但在最终的编译实现中，
+一段合约所有使用的表标识会被唯一地分配$0\sim255$的编号，使用此编号表示
+表标识，故一个合约支持访问的表数量不超过256个。
+
+\begin{defin}[智能合约调用响应]
+类型 response 表示所期望的智能合约调用的返回类型。
+\[ \combtyp{response}{\alpha} \Coloneqq \Rsp \alpha\ (\combtyp{list}{
+    \mathrm{write\_chain}}) \]
+$\Rsp\ x\ l$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的智能合约调用
+响应。$l$ 列表中的每一项元素都是 write\_chain 类型描述的链数据的写入命令
+。一个智能合约的作为外部接口的函数必须返回 response 类型，编译时会在
+每个外部接口函数的实现的最后逐一遍历写入命令序列 $l$，逐一将命令执行并
+写入进链中。智能合约调用响应在实现上的内存结构是
+\begin{center}
+\begin{tabular}{|c|c|} \hline
+\text{指向写入命令序列 $l$ 的指针}&\text{计算结果 $x$}\\
+\text{PointerSize bits}&\text{$\mathbf{Si}_i$ bits}\\ \hline
+\end{tabular}
+\end{center}
+\end{defin}
+
+\amlhS 所有定义的理解列于表 \ref{tab.IC.noesis} 与表 
+ \ref{tab.IC.noesis2} 中。所有的基元指令及其定义与 Noesis 同构列于
+表 \ref{tab.IC.primop} 与表 \ref{tab.IC.primop2} 中。
+
+\begin{table}
+\begin{threeparttable}
+\centering \caption{\amlhS 中实现的理解} \label{tab.IC.noesis}
+\begin{tabular}{ |c|c|c|c|p{4.5cm}|p{2cm}| } \hline
+\textbf{理解} & \textbf{本体集} & \textbf{现象集} & 
+$\mathbf{Si}$ \textbf{值} & $\mathbf{Li}$ \textbf{映射} & 
+$\mathbf{Tr}$ \textbf{映射} \\ \hline
+$\NatSegI\ n$ & $\{x\mbar x < n\}$ & $\mathbb{U}_\mathrm{pv}$ & $n$
+& $\lambda e.\ \PhV e\ \lceil \log_2\ n \rceil$ & $\PX$ 
+\\ \hline
+$\BoolI$ & $\univ{bool}$ & $\mathbb{U}_\mathrm{pv}$ & $1$ &
+$\lambda e.\ \PhV\ ($\newline$\xif\ e\ \xthen\ 1\ \xelse\ 0)\ 1$&
+$\lambda v.$ \newline $\PX v > 0$  \\ \hline 
+$\AddressI$ & $\{ n \mbar n < \mathrm{AdrSize} \}$ &
+$\mathbb{U}_\mathrm{pv}$ & AdrBits & $\lambda e.\ \PhV
+e\ \mathrm{AdrBits}$ & $\PX$ \\ \hline
+$\OneI\ s$ & $\{ s \}$ & $\mathbb{U}_\mathrm{pv}$ & 0 & 
+$\K(\PhV 0\ 0)$ & $\K s$ \\ \hline
+$\ListI\ i$ & $\mathrm{EVERY}\ \mathbf{Se}_i$ & 虚构 & Ps & 虚构 
+& 虚构 \\ \hline
+$\CWI$ & $(\mathbb{U}_\mathrm{str} \times \mathbb{U}_\mathrm{ph}) \times
+\mathbb{U}_\mathrm{ph}$ & 虚构 & $8 + 2 \mathrm{Ps}$ & 虚构 
+& 虚构 \\ \hline
+$\RsI\ i$ & $\{\Rsp\ x\ l \mbar x \in \mathbf{Se}_i\}$ & 虚构 & 
+$\mathrm{Ps} + \mathbf{Si}_i$ & 虚构 
+& 虚构 \\ \hline
+$i \times j$ & $\mathbf{Se}_i \times \mathbf{Se}_j$ & 
+见注1 & $\Si_i + \Si_j$ & $\lambda(x,y).\ \PhS\ \Li_i(x)\ 
+\Li_j(x)$ & 见注2 \\ \hline
+\end{tabular}
+\begin{tablenotes} \small 
+\item $\mathbb{U}_\mathrm{pv}$ 是 $\{ \PhV x\ b \}$ 的简写，
+表示现象类型的所有元素中由 $\PhV$ 构造的。
+$\mathbb{U}_\mathrm{ph}$ 是 $\univ{phenomenon}$ 的简写，
+表示现象类型中所有的元素。
+$\mathbb{U}_\mathrm{str}$ 是 $\univ{string}$ 的简写。
+$\mathrm{Ps}$ 是 PointerSize 的简写。
+ EVERY 是 HOL 系统库中的函数，$\mathrm{EVERY}\ s$ 
+表示所有元素都属于 $s$ 集的所有列表构成的集合。
+\item[注1] 理解 $i \times j$ 的现象集是 $\{\PhS p_1\ p_2
+\mbar p_1\in \Sp_i\land p_2 \in \Sp_j\}$，表格空间有限故列于此。
+\item[注2] 理解 $i \times j$ 的\textbf{Tr}映射是 
+    $\lambda p.\ (\Tr_i(\PL\ \Si_i\ p),\ \Tr_j(\PU\ \Si_i\ p))$，
+    表格空间有限故列于此。
+\end{tablenotes}
+\end{threeparttable}
+\newline \newline
+\begin{threeparttable}
+\centering \caption{\amlhS 中实现的理解（绪）} \label{tab.IC.noesis2}
+\begin{tabular}{ |c|p{14.8cm}| } \hline
+\textbf{理解} & \textbf{描述} \\ \hline
+$\NatSegI\ n$ & 不超过 $n$ 的自然数 \\ \hline
+$\BoolI$ & bool 值 \\ \hline $\AddressI$ & 
+智能合约场景下的账户标识，在以太坊中是 \texttt{address} 类型，
+EOS.IO 中是 \texttt{name} 类型，常量 AdrSize 表示标识的大小，AdrBits
+表示标识的比特数 \\ \hline
+$\OneI\ s$ & 单元素集合 $\{s\}$ 的理解，用于表示
+状态输入$\{ s \}$ \\ \hline
+$\ListI\ i$ & 对元素使用 $i$ 理解的列表理解，虚构定义而来，
+在内存中的表示是一个指针，故有 PointerSize 的大小 \\ \hline
+$\CWI$ & 是链数据的写入命令的理解，虚构定义而来 \\ \hline
+$\RsI\ i$ & 表示以 $i$ 理解为返回内容的智能合约调用响应 \\ \hline
+\end{tabular}\end{threeparttable}\end{table}
+
+\begin{table}\begin{threeparttable}
+\centering \caption{\amlhS 中基元函数的 Noesis 同构}
+\label{tab.IC.primop} \begin{tabular}{ |c|p{5cm}|p{8.1cm}| } \hline
+\textbf{基元函数} & \textbf{ Noesis 同构 } & \textbf{描述} \\ \hline
+$\mathbf{IAdd}\ n$ & $\mathbf{IAdd}\ n \proctr{\NatSegI n|\NatSegI n|
+\NatSegI n}{\lambda x\ y.\ x + y < 2^n} (+) $ &
+$n$ 位整数加法的自然数加法对应 \\ \hline
+$\mathbf{ISub}\ n$ & $\mathbf{ISub}\ n \proctr{\NatSegI n|\NatSegI n|
+\NatSegI n}{\lambda x\ y.\ x \geq y} (-)$ & $n$ 位整数减法的自然数减法
+对应 \\ \hline
+$\mathbf{IMul}\ n$ & $\mathbf{IMul}\ n \proctr{\NatSegI n|\NatSegI n|
+\NatSegI n}{\lambda x\ y.\ x * y < 2^n} (\times)$ & $n$ 位整数乘法
+的自然数乘法对应 \\ \hline
+$\mathbf{ILt}\ n$ & $\mathbf{ILt}\ n \proctr{\NatSegI n|\NatSegI n|
+\BoolI}{\lambda x\ y.\ \T} (<)$ & $n$ 位整数小于判断的自然数小于对应 
+\\ \hline
+$\mathbf{ILe}\ n$ & $\mathbf{ILe}\ n \proctr{\NatSegI n|\NatSegI n|
+\BoolI}{\lambda x\ y.\ \T} (\leq)$ & $n$ 位整数小于等于的自然数小于等于对应 \\ \hline
+$\mathbf{IEq}\ n$ & $\mathbf{IEq}\ n \proctr{\NatSegI n|\NatSegI n|
+\BoolI}{\lambda x\ y.\ \T} (=)$ & $n$ 位整数等于判断的自然数等于对应 \\ \hline
+$\mathbf{IEq}\ \mathrm{AdrBits}$ & $\mathbf{IEq}\ \mathrm{AdrBits}
+\proctr{\AddressI|\AddressI|\BoolI}{\lambda x\ y.\ \T} (=)$ & 
+$n$ 位整数等于判断的账户标识对应 \\ \hline
+$\mathbf{INot}$ & $\mathbf{INot} \proctr{\BoolI|\BoolI}
+{\lambda x.\ \T} (\lnot)$ & bool 值取反 \\ \hline
+$\mathbf{Append}\ i$ & $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
+i}{\lambda l\ x.\ \T} (::)$ & 增加元素到列表的末尾，$(::)$
+是 HOL 系统库中列表的增加函数，$1::[2]$ 表示 $[1,2]$ \\ \hline
+$\mathbf{Write}\ c\ i\ j$ & $\mathbf{Write}\ c\ i\ j 
+\proctr{i|j|\CWI}{\lambda k\ v.\ \T}$\newline$
+(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ &
+写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
+$\mathbf{Read}\ c\ x\ i\ j$ & $\mathbf{Read}\ c\ x\ i\ j 
+\proctr{\OneI\ x|i|j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
+(\lambda k.\ x\ (c,k))$ &
+对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
+$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
+(\lambda k.\ x\ (c,k))$ &
+对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
+\end{tabular} \end{threeparttable} 
+\newline \newline
+\begin{threeparttable}%
+\centering \caption{\amlhS 中基元函数的定义} \label{tab.IC.primop2}
+\begin{tabular}{ |c|p{13.6cm}| } \hline
+\textbf{基元函数} & \textbf{定义} \\ \hline
+$\mathbf{IAdd}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IAdd}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 + \PX p_2 \mod 2^n)\ n$ \\ \hline
+$\mathbf{ISub}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ISub}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 - \PX p_2 \mod 2^n)\ n$ \\ \hline
+$\mathbf{IMul}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IMul}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 * \PX p_2 \mod 2^n)\ n$ \\ \hline
+$\mathbf{ILt}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ILt}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 < \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+$\mathbf{ILe}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ILe}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 \leq \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+$\mathbf{IEq}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IEq}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 = \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+$\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
+\mathbf{INot}\ p = \PhV\ (\xif \PX p = 0 \xthen 1 \xelse 0)\ 1$\\ \hline
+$\mathbf{Append}\ i$ & 虚构定义自同构
+$\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
+i}{\lambda l\ x.\ \T} (::)$ \\ \hline
+$\mathbf{Write}\ c\ i\ j$ & 虚构定义自同构 $\mathbf{Write}\ c\ i\ j 
+\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
+(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ \\ \hline
+$\mathbf{Read}\ c\ x\ i\ j$ & 虚构定义自同构 $\mathbf{Read}\ c\ x\ i\ j 
+\proctr{\OneI\ x|i|j}{\lambda k.\ (c,k) \in \Dom x}
+(\lambda k.\ x\ (c,k))$ \\ \hline
+$\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
+\end{tabular}\end{threeparttable}\end{table}
+
+
+\begin{defin}[智能合约的外部接口]
+所有 \amlhS 的智能合约所暴露的可供外部调用的接口应是一种现象函数，
+且其具有至少一种 Noesis 同构，此同构满足第一个参数的理解必为 
+$\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即
+函数 $f$ 应满足如下形式的 Noesis 同构
+\[ f \proctr{\OneI\ x|\cdots|\RsI\ k}{cond} \phi \]
+\end{defin}
+
+

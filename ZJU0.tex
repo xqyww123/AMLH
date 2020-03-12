@@ -5,6 +5,7 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{ctex-xecjk-winfonts.def}
+\usepackage[flushleft]{threeparttable}
 \usepackage{xifthen}
 \usepackage{hhline}
 \usepackage{textcomp} 
@@ -49,6 +50,7 @@
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
+\newcommand{\amlhS}[0]{$\mathrm{A}_{\HOL}^{\lamcr}\mathrm{-C}$}
 \newcommand{\ES}{\ \raisebox{-.05\baselineskip}
 {$\mathrm{E}$}$|$\ }
 \newcommand{\ESm}[1]{$\mathrm{E}^{#1}|$}
@@ -146,7 +148,39 @@
 \DeclareMathOperator{\NoSolution}{NoSolution}
 \DeclareMathOperator{\Solvable}{Solvable}
 \DeclareMathOperator{\SBP}{SolvingBiPart}
+\newcommand{\PB}{\mathop{\mathbf{PB}}}
+\newcommand{\PX}{\mathop{\mathbf{PX}}}
+\newcommand{\PV}{\mathop{\mathbf{PV}}}
+\newcommand{\PL}{\mathop{\mathbf{PL}}}
+\newcommand{\PU}{\mathop{\mathbf{PU}}}
+\newcommand{\Div}{\mathbin{\mathrm{div}}}
+\newcommand{\Mod}{\ \ \mathbin{\mathrm{mod}}\ \ }
+\makeatletter
+\newcommand{\dotminus}{\mathbin{\text{\@dotminus}}}
+\newcommand{\@dotminus}{%
+  \ooalign{\hidewidth\raise1ex\hbox{.}\hidewidth\cr$\m@th-$\cr}%
+}
+\makeatother
+\newcommand{\PhV}{\mathop{\mathbf{PhV}}}
+\newcommand{\PhS}{\mathop{\mathbf{PhS}}}
+\newcommand{\PhP}{\mathop{\mathbf{PhP}}}
+\newcommand{\PH}{\mathop{\mathbf{PH}}}
+\newcommand{\VV}{\mathop{\mathbf{VV}}}
+\newcommand{\VP}{\mathop{\mathbf{VP}}}
+\newcommand{\Rsp}{\mathop{\mathbf{Rsp}}}
+\newcommand{\Sp}{\mathop{\mathbf{Sp}}}
+\newcommand{\Si}{\mathop{\mathbf{Si}}}
+\newcommand{\Li}{\mathop{\mathbf{Li}}}
+\newcommand{\Tr}{\mathop{\mathbf{Tr}}}
 
+\newcommand{\univ}[1]{\mathbb{U}(\text{:#1})}
+\newcommand{\RsI}{\mathbf{Rs}_{\mathbf{I}}}
+\newcommand{\NatSegI}{\mathbb{N}_{\mathbf{S}}}
+\newcommand{\BoolI}{\mathbb{B}_{\mathbf{I}}}
+\newcommand{\AddressI}{\mathbb{A}_{\mathbf{I}}}
+\newcommand{\OneI}{\mathbf{I1}}
+\newcommand{\ListI}{\mathbf{LI}}
+\newcommand{\CWI}{\mathbf{CW}_{\mathbf{I}}}
 \newcommand{\eset}{\mathrel{\texttt{--}}}
 \newcommand{\combtyp}[2]{#2\ \mathrm{#1}}
 \newcommand{\terminology}[2]{\textbf{#1}&#2}
@@ -340,6 +374,7 @@
 	\input{./chapters/RequiredTheory.tex}
 	\input{./chapters/AmLH.tex}
 	\input{./chapters/EditorShell.tex}
+	\input{./chapters/Implementation.tex}
 	
 	\ZJUbackmatter
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
