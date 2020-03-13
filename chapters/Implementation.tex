@@ -20,18 +20,18 @@ $\PhV x\ b$ 表示 $b$ 个二进制表示的数字 $x$。$\PhS p_1\ p_2$ 表示�
 \PB\ (\PhV x\ b) &\coloneqq& b&
 \PX\ (\PhV x\ b) &\coloneqq& x\\
 \PB\ (\PhS p_1\ p_2) &\coloneqq& \PB p_1 + \PB p_2\quad\quad&
-\PX\ (\PhS p_1\ p_2) &\coloneqq& \PX(p_1) + \PX(p_2) \cdot 2^{\PB(p_1)}\\
+\PX\ (\PhS p_1\ p_2) &\coloneqq& \PX(p_1) + \PX(p_2) \cdot 256^{\PB(p_1)}\\
 \PB\ (\PhP p) &\coloneqq& \mathrm{PointerSize} &&&
 \end{array} \]
 $\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合约执行环境
 的位数，一般为32。
 现象的分割工具，函数 $\PL,\ \PU$
-    \begin{align*} \PL n\ p &= \PhV\ (\PX p \Mod 2^n)\ n&
-        \PU n\ p &= \PhV\ (\PX p \Div 2^n)\ (\PB p \dotminus n)&
+    \begin{align*} \PL n\ p &= \PhV\ (\PX p \Mod 256^n)\ n&
+        \PU n\ p &= \PhV\ (\PX p \Div 256^n)\ (\PB p \dotminus n)&
     \end{align*}
 合法的现象
 \begin{gather*} \begin{align*}
-\VP\ (\PhV\ x\ b) &\coloneqq (x < 2^b)&
+\VP\ (\PhV\ x\ b) &\coloneqq (x < 256^b)&
 \VP\ (\PhP\ p) &\coloneqq \VP p&
 \end{align*}\\
 \VP\ (\PhS\ p_1\ p_2) \coloneqq \VP p_1 \ \land\ \VP p_2
@@ -97,8 +97,8 @@ p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 \begin{tabular}{|c|c|c|c|c|} \hline
 \text{表标识}&\text{键指针}&
 \text{键大小}&\text{值指针}&\text{值大小}\\
-\text{8bits}&\text{PointerSize} bits&
-\text{32bits}&\text{PointerByte} bits&\text{32bits} \\ \hline
+\text{1byte}&\text{PointerSize} bytes&
+\text{4bytes}&\text{PointerSize} bytes&\text{4byte} \\ \hline
 \end{tabular}
 \end{center}
 表标识占用1字节，理论上表标识可以是任意字符串，但在最终的编译实现中，
@@ -117,7 +117,7 @@ $\Rsp\ x\ l$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的�
 \begin{center}
 \begin{tabular}{|c|c|} \hline
 \text{指向写入命令序列 $l$ 的指针}&\text{计算结果 $x$}\\
-\text{PointerSize bits}&\text{$\mathbf{Si}_i$ bits}\\ \hline
+\text{PointerSize bytes}&\text{$\mathbf{Si}_i$ bytes}\\ \hline
 \end{tabular}
 \end{center}
 \end{defin}
@@ -126,28 +126,29 @@ $\Rsp\ x\ l$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的�
  \ref{tab.IC.noesis2} 中。所有的基元指令及其定义与 Noesis 同构列于
 表 \ref{tab.IC.primop} 与表 \ref{tab.IC.primop2} 中。
 
-\begin{table}
+\begin{table}[hp]
 \begin{threeparttable}
 \centering \caption{\amlhS 中实现的理解} \label{tab.IC.noesis}
 \begin{tabular}{ |c|c|c|c|p{4.5cm}|p{2cm}| } \hline
 \textbf{理解} & \textbf{本体集} & \textbf{现象集} & 
 $\mathbf{Si}$ \textbf{值} & $\mathbf{Li}$ \textbf{映射} & 
 $\mathbf{Tr}$ \textbf{映射} \\ \hline
-$\NatSegI\ n$ & $\{x\mbar x < n\}$ & $\mathbb{U}_\mathrm{pv}$ & $n$
-& $\lambda e.\ \PhV e\ \lceil \log_2\ n \rceil$ & $\PX$ 
+$\NatSegI\ n$ & $\{x\mbar x < n\}$ & $\mathbb{U}_\mathrm{pv}$ &
+$\lceil \log_{256}\ n \rceil$ & 
+$\lambda e.\ \PhV e\ \lceil \log_{256}\ n \rceil$ & $\PX$ 
 \\ \hline
 $\BoolI$ & $\univ{bool}$ & $\mathbb{U}_\mathrm{pv}$ & $1$ &
 $\lambda e.\ \PhV\ ($\newline$\xif\ e\ \xthen\ 1\ \xelse\ 0)\ 1$&
 $\lambda v.$ \newline $\PX v > 0$  \\ \hline 
 $\AddressI$ & $\{ n \mbar n < \mathrm{AdrSize} \}$ &
-$\mathbb{U}_\mathrm{pv}$ & AdrBits & $\lambda e.\ \PhV
-e\ \mathrm{AdrBits}$ & $\PX$ \\ \hline
+$\mathbb{U}_\mathrm{pv}$ & AdrSize & $\lambda e.\ \PhV
+e\ \mathrm{AdrSize}$ & $\PX$ \\ \hline
 $\OneI\ s$ & $\{ s \}$ & $\mathbb{U}_\mathrm{pv}$ & 0 & 
 $\K(\PhV 0\ 0)$ & $\K s$ \\ \hline
 $\ListI\ i$ & $\mathrm{EVERY}\ \mathbf{Se}_i$ & 虚构 & Ps & 虚构 
 & 虚构 \\ \hline
 $\CWI$ & $(\mathbb{U}_\mathrm{str} \times \mathbb{U}_\mathrm{ph}) \times
-\mathbb{U}_\mathrm{ph}$ & 虚构 & $8 + 2 \mathrm{Ps}$ & 虚构 
+\mathbb{U}_\mathrm{ph}$ & 虚构 & $1 + 2 \mathrm{Ps}$ & 虚构 
 & 虚构 \\ \hline
 $\RsI\ i$ & $\{\Rsp\ x\ l \mbar x \in \mathbf{Se}_i\}$ & 虚构 & 
 $\mathrm{Ps} + \mathbf{Si}_i$ & 虚构 
@@ -180,39 +181,88 @@ $\mathrm{Ps}$ 是 PointerSize 的简写。
 $\NatSegI\ n$ & 不超过 $n$ 的自然数 \\ \hline
 $\BoolI$ & bool 值 \\ \hline $\AddressI$ & 
 智能合约场景下的账户标识，在以太坊中是 \texttt{address} 类型，
-EOS.IO 中是 \texttt{name} 类型，常量 AdrSize 表示标识的大小，AdrBits
-表示标识的比特数 \\ \hline
+EOS.IO 中是 \texttt{name} 类型，常量 AdrSize 表示标识的大小，
+    以字节为单位\\ \hline
 $\OneI\ s$ & 单元素集合 $\{s\}$ 的理解，用于表示
 状态输入$\{ s \}$ \\ \hline
 $\ListI\ i$ & 对元素使用 $i$ 理解的列表理解，虚构定义而来，
 在内存中的表示是一个指针，故有 PointerSize 的大小 \\ \hline
 $\CWI$ & 是链数据的写入命令的理解，虚构定义而来 \\ \hline
 $\RsI\ i$ & 表示以 $i$ 理解为返回内容的智能合约调用响应 \\ \hline
-\end{tabular}\end{threeparttable}\end{table}
-
-\begin{table}\begin{threeparttable}
+$i\times j$ & 表示理解 $i,\ j$ 的笛卡儿积 \\ \hline
+\end{tabular}\end{threeparttable}\end{table}%
+\begin{table}[b]
+\begin{threeparttable}%
+\centering \caption{\amlhS 中基元函数的定义} \label{tab.IC.primop2}
+\begin{tabularx}{\linewidth}{ |c|X| }\hline
+\textbf{基元函数} & \textbf{定义} \\ \hline
+$\mathbf{IAdd}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IAdd}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 + \PX p_2 \mod 256^n)\ n$ \\ \hline
+$\mathbf{ISub}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ISub}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 - \PX p_2 \mod 256^n)\ n$ \\ \hline
+$\mathbf{IMul}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IMul}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\PX p_1 * \PX p_2 \mod 256^n)\ n$ \\ \hline
+$\mathbf{ILt}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ILt}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 < \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+$\mathbf{ILe}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{ILe}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 \leq \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+$\mathbf{IEq}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+\mathbf{IEq}\ n\ p_1\ p_2 \coloneqq
+\PhV\ (\xif \PX p_1 = \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
+    $\mathbf{IConv}_{m,n}$ & $\PB p = m \Rightarrow
+\mathbf{IConv}_{m,n}\ p \coloneqq \PhV\ (\PX p \Mod 256^n)\ n$ \\\hline
+$\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
+\mathbf{INot}\ p = \PhV\ (\xif \PX p = 0 \xthen 1 \xelse 0)\ 1$\\ \hline
+$\mathbf{Append}\ i$ & 虚构定义自同构
+$\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
+i}{\lambda l\ x.\ \T} (::)$ \\ \hline
+$\mathbf{Write}\ c\ i\ j$ & 虚构定义自同构 $\mathbf{Write}\ c\ i\ j 
+\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
+(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ \\ \hline
+$\mathbf{Read}\ c\ x\ i\ j$ & 虚构定义自同构 $\mathbf{Read}\ c\ x\ i\ j 
+\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}
+(\lambda x\ k.\ x\ (c,k))$ \\ \hline
+$\mathbf{Has}\ c\ x\ i$ & 虚构定义自同构 $\mathbf{Has}\ c\ x\ i 
+  \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}
+  (\lambda x\ k.\ (c,k) \in \Dom x)$ \\\hline
+$\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
+    $\mathbf{Seg}_{m,n}$ & $\mathbf{Seg}_{m,n}\ p \coloneqq \PhV\ 
+    (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
+$\mathbf{If}$ & $\PB p_c = 1\Rightarrow \mathbf{If}\ p_c\ p_a\ p_b 
+  \coloneqq \xif \PX p_c = 1 \xthen p_a \xelse p_b$ \\ \hline
+\end{tabularx}\end{threeparttable}\end{table}
+\begin{table}[hp]\begin{threeparttable}
 \centering \caption{\amlhS 中基元函数的 Noesis 同构}
-\label{tab.IC.primop} \begin{tabular}{ |c|p{5cm}|p{8.1cm}| } \hline
+\label{tab.IC.primop} \begin{tabular}{ |c|p{5.4cm}|p{7.7cm}| } \hline
 \textbf{基元函数} & \textbf{ Noesis 同构 } & \textbf{描述} \\ \hline
-$\mathbf{IAdd}\ n$ & $\mathbf{IAdd}\ n \proctr{\NatSegI n|\NatSegI n|
-\NatSegI n}{\lambda x\ y.\ x + y < 2^n} (+) $ &
-$n$ 位整数加法的自然数加法对应 \\ \hline
-$\mathbf{ISub}\ n$ & $\mathbf{ISub}\ n \proctr{\NatSegI n|\NatSegI n|
-\NatSegI n}{\lambda x\ y.\ x \geq y} (-)$ & $n$ 位整数减法的自然数减法
+$\mathbf{IAdd}\ \B_n$ &
+$\mathbf{IAdd}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\NatSegI\ n}{\lambda x\ y.\ x + y < 256^n} (+) $ &
+$\B_n$ 字节整数加法的自然数加法对应 \\ \hline
+$\mathbf{ISub}\ \B_n$ & $\mathbf{ISub}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\NatSegI\ n}{\lambda x\ y.\ x \geq y} (-)$ & $\B_n$ 字节整数减法的自然数减法
 对应 \\ \hline
-$\mathbf{IMul}\ n$ & $\mathbf{IMul}\ n \proctr{\NatSegI n|\NatSegI n|
-\NatSegI n}{\lambda x\ y.\ x * y < 2^n} (\times)$ & $n$ 位整数乘法
+  $\mathbf{IMul}\ \B_n$ & $\mathbf{IMul}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\NatSegI\ n}{\lambda x\ y.\ x * y < 256^n} (\times)$ & $\B_n$ 字节整数乘法
 的自然数乘法对应 \\ \hline
-$\mathbf{ILt}\ n$ & $\mathbf{ILt}\ n \proctr{\NatSegI n|\NatSegI n|
-\BoolI}{\lambda x\ y.\ \T} (<)$ & $n$ 位整数小于判断的自然数小于对应 
+  $\mathbf{ILt}\ \B_n$ & $\mathbf{ILt}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\BoolI}{\lambda x\ y.\ \T} (<)$ & $\B_n$ 字节整数小于判断的自然数小于对应 
 \\ \hline
-$\mathbf{ILe}\ n$ & $\mathbf{ILe}\ n \proctr{\NatSegI n|\NatSegI n|
-\BoolI}{\lambda x\ y.\ \T} (\leq)$ & $n$ 位整数小于等于的自然数小于等于对应 \\ \hline
-$\mathbf{IEq}\ n$ & $\mathbf{IEq}\ n \proctr{\NatSegI n|\NatSegI n|
-\BoolI}{\lambda x\ y.\ \T} (=)$ & $n$ 位整数等于判断的自然数等于对应 \\ \hline
-$\mathbf{IEq}\ \mathrm{AdrBits}$ & $\mathbf{IEq}\ \mathrm{AdrBits}
+$\mathbf{ILe}\ \B_n$ & $\mathbf{ILe}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\BoolI}{\lambda x\ y.\ \T} (\leq)$ & $\B_n$ 字节整数小于等于的自然数小于等于对应 \\ \hline
+$\mathbf{IEq}\ \B_n$ & $\mathbf{IEq}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+\BoolI}{\lambda x\ y.\ \T} (=)$ & $\B_n$ 字节整数等于判断的自然数等于对应 \\ \hline
+$\mathbf{IEq}\ \mathrm{AdrSize}$ & $\mathbf{IEq}\ \mathrm{AdrSize}
 \proctr{\AddressI|\AddressI|\BoolI}{\lambda x\ y.\ \T} (=)$ & 
-$n$ 位整数等于判断的账户标识对应 \\ \hline
+$\B_n$ 字节整数等于判断的账户标识对应 \\ \hline
+$\mathbf{IConv}\ \Si_i\ \Si_j$ & $\mathbf{IConv}\ \Si_i\ \Si_j \proctr
+    {\NatSegI\ \Si_i|\NatSegI\ \Si_j}{\lambda x.\ x < 256^{\Si_j}}\I$
+    & 表示自然数的现象的等值范围变换 \\ \hline
 $\mathbf{INot}$ & $\mathbf{INot} \proctr{\BoolI|\BoolI}
 {\lambda x.\ \T} (\lnot)$ & bool 值取反 \\ \hline
 $\mathbf{Append}\ i$ & $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
@@ -223,50 +273,53 @@ $\mathbf{Write}\ c\ i\ j$ & $\mathbf{Write}\ c\ i\ j
 (\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ &
 写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
 $\mathbf{Read}\ c\ x\ i\ j$ & $\mathbf{Read}\ c\ x\ i\ j 
-\proctr{\OneI\ x|i|j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
+\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}$\newline$
 (\lambda k.\ x\ (c,k))$ &
 对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
+$\mathbf{Has}\ c\ x\ i$ & $\mathbf{Has}\ c\ x\ i 
+  \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}$\newline$
+(\lambda x\ k.\ (c,k) \in \Dom x)$ &
+对给定的链数据 $x$，表标识 $c$，查询链数据$x$的表$c$是否拥有键 $k$ 
+  \\ \hline
 $\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
 (\lambda k.\ x\ (c,k))$ &
 对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
-\end{tabular} \end{threeparttable} 
-\newline \newline
-\begin{threeparttable}%
-\centering \caption{\amlhS 中基元函数的定义} \label{tab.IC.primop2}
-\begin{tabular}{ |c|p{13.6cm}| } \hline
-\textbf{基元函数} & \textbf{定义} \\ \hline
-$\mathbf{IAdd}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{IAdd}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\PX p_1 + \PX p_2 \mod 2^n)\ n$ \\ \hline
-$\mathbf{ISub}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{ISub}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\PX p_1 - \PX p_2 \mod 2^n)\ n$ \\ \hline
-$\mathbf{IMul}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{IMul}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\PX p_1 * \PX p_2 \mod 2^n)\ n$ \\ \hline
-$\mathbf{ILt}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{ILt}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\xif \PX p_1 < \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-$\mathbf{ILe}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{ILe}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\xif \PX p_1 \leq \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-$\mathbf{IEq}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
-\mathbf{IEq}\ n\ p_1\ p_2 \coloneqq
-\PhV\ (\xif \PX p_1 = \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-$\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
-\mathbf{INot}\ p = \PhV\ (\xif \PX p = 0 \xthen 1 \xelse 0)\ 1$\\ \hline
-$\mathbf{Append}\ i$ & 虚构定义自同构
-$\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
-i}{\lambda l\ x.\ \T} (::)$ \\ \hline
-$\mathbf{Write}\ c\ i\ j$ & 虚构定义自同构 $\mathbf{Write}\ c\ i\ j 
-\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
-(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ \\ \hline
-$\mathbf{Read}\ c\ x\ i\ j$ & 虚构定义自同构 $\mathbf{Read}\ c\ x\ i\ j 
-\proctr{\OneI\ x|i|j}{\lambda k.\ (c,k) \in \Dom x}
-(\lambda k.\ x\ (c,k))$ \\ \hline
-$\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
-\end{tabular}\end{threeparttable}\end{table}
+    $\mathbf{Seg}_{0,\Si_i}$ & $\mathbf{Seg}_{0,\Si_i} 
+    \proctr{i\times j|i}{\K \T} \mathrm{fst}$ &
+取出元组的第一个元素，fst 为 HOL 系统库的函数。 \\ \hline
+    $\mathbf{Seg}_{\Si_i,\Si_j}$ & $\mathbf{Seg}_{\Si_i,\Si_j} 
+    \proctr{i\times j|j}{\K \T} \mathrm{snd}$ &
+取出元组的第二个元素，snd 为 HOL 系统库的函数。 \\ \hline
+  \textbf{If} & 不具有 Noesis 同构，但具有类似性质，见定理
+  \ref{T.If.prop}& 分支 \\ \hline
+\end{tabular}
+  \begin{tablenotes} \small
+  \item 因空间不够，记号 $\B_n \coloneqq \lceil \log_{256} n \rceil$
+\end{tablenotes}
+\end{threeparttable} 
+\end{table}
 
+\begin{theo}[分支 $\mathbf{If}$ 的性质] \label{T.If.prop}
+值得一提的是分支 $\mathbf{If}$，其定义已在表 \ref{tab.IC.primop2} 中列出
+，其不具有 Noesis 同构形式的性质，而是
+\[ \begin{split}
+\forall p_c\ P\ p_a\ i\ \epsilon_a\ p_b\ &\epsilon_b.\ 
+  p_c \widesim{\BoolI} P \Rightarrow (P \Rightarrow p_a \widesim{i}
+  \epsilon_a) \Rightarrow (\lnot P \Rightarrow p_b \widesim{i}
+  \epsilon_b) \Rightarrow \\
+  & \mathbf{If}\ p_c\ p_a\ p_b \widesim{i} \xif P \xthen \epsilon_a
+  \xelse \epsilon_b
+\end{split} \]
+  \begin{proof} 若 $\PX p_c = 1$ 则由 $\mathbf{If}$ 定义，有
+   $ \mathbf{If}\ p_c\ p_a\ p_b = p_a $，
+  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \T$ 于是
+    有 $p_a \widesim{i} \epsilon_a$ 于是命题得证。
+若 $\PX p_c \neq 1$ 则由 $\mathbf{If}$ 定义，有
+   $ \mathbf{If}\ p_c\ p_a\ p_b = p_b $，
+  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \F$ 于是
+    有 $p_b \widesim{i} \epsilon_b$ 于是命题得证。
+  \end{proof}
+\end{theo}
 
 \begin{defin}[智能合约的外部接口]
 所有 \amlhS 的智能合约所暴露的可供外部调用的接口应是一种现象函数，
@@ -276,4 +329,82 @@ $\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即
 \[ f \proctr{\OneI\ x|\cdots|\RsI\ k}{cond} \phi \]
 \end{defin}
 
+表 \ref{tab.IC.primop2} 定义的基元指令可以直接应用但过于基层，
+诸如$\mathbf{IAdd}\ n$ 操作要求给定运算的位宽，显然并不适宜要求用户
+每次都显示地给出位宽。\amlhS 提供基于这些基元函数构建的高层函数库。
 
+$\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\ 
+\mathbf{LeN_S},\ \mathbf{LtN_S},\ \mathbf{EqN_S}$ 
+提供自动范围扩张的自然数运算。
+\begin{align*}
+  \mathbf{AddN_S}\ n\ m\ p\ q \coloneqq\ & \mathbf{IAdd}\ \max(\B_n,\B_m)\ 
+  (\xif \B_n \geq \B_m \xthen p \xelse \mathbf{IConv}\ \B_n\ \B_m\ p)\\
+  &(\xif \B_m \geq \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\mathbf{SubN_S}\ n\ m\ p\ q \coloneqq\ & \mathbf{ISub}\ n\ p\ 
+  (\xif \B_m = \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\mathbf{MulN_S}\ n\ m\ p\ q \coloneqq\ & \mathbf{IMul}\ \max(\B_n,\B_m)\ 
+  (\xif \B_n \geq \B_m \xthen p \xelse \mathbf{IConv}\ \B_n\ \B_m\ p)\\
+  &(\xif \B_m \geq \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\mathbf{LeN_S}\ n\ m\ p\ q \coloneqq\ &\mathbf{ILe}\ \max(\B_n,\B_m)\ 
+  (\xif \B_n \geq \B_m \xthen p \xelse \mathbf{IConv}\ \B_n\ \B_m\ p)\\
+  &(\xif \B_m \geq \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\mathbf{LtN_S}\ n\ m\ p\ q \coloneqq\ &\mathbf{ILt}\ \max(\B_n,\B_m)\ 
+  (\xif \B_n \geq \B_m \xthen p \xelse \mathbf{IConv}\ \B_n\ \B_m\ p)\\
+  &(\xif \B_m \geq \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\mathbf{EqN_S}\ n\ m\ p\ q \coloneqq\ &\mathbf{IEq}\ \max(\B_n,\B_m)\ 
+  (\xif \B_n \geq \B_m \xthen p \xelse \mathbf{IConv}\ \B_n\ \B_m\ p)\\
+  &(\xif \B_m \geq \B_n \xthen p \xelse \mathbf{IConv}\ \B_m\ \B_n\ q)\\
+\end{align*}
+\[ \begin{array}{lcr} \forall n\ m.\ 
+  \mathbf{AddN_S}\ n\ m &\proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ \max(n,m)}{\lambda x\ y.\ x + y < \max
+  (n,m)}& (+) \\\forall n\ m.\ 
+  \mathbf{SubN_S}\ n\ m &\proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ n}{\lambda x\ y.\ x > y}& (-) \\ \forall n\ m.\ 
+  \mathbf{MulN_S}\ n\ m &\proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ \max(n,m)}{\lambda x\ y.\ x \times y < \max
+  (n,m)}& (\times)\\ \forall n\ m.\ 
+  \mathbf{LeN_S}\ n\ m &\proctr{\NatSegI\ n|
+\NatSegI\ m|\NatSegI\ \max(n,m)}{\K\ (\K \T)}& (\leq)\\ \forall n\ m.\ 
+  \mathbf{LtN_S}\ n\ m &\proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ \max(n,m)}{\K\ (\K \T)}& (<)\\ \forall n\ m.\ 
+  \mathbf{EqN_S}\ n\ m &\proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ \max(n,m)}{\K\ (\K \T)}& (=)
+\end{array} \] \newline
+容易证明 $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\ 
+\mathbf{LeN_S},\ \mathbf{LtN_S},\ \mathbf{EqN_S}$ 具有
+上述 Noesis 同构，允许进行如下的定理推导以程序构造。
+\begin{center}
+\begin{prooftree}
+  \AxiomC{$\forall n\ m.\ \mathbf{AddN_S}\ n\ m \proctr{\NatSegI\ n|
+  \NatSegI\ m|\NatSegI\ \max(n,m)}{\lambda x\ y.\ x + y < \max
+  (n,m)} (+)$} 
+  \AxiomC{$x \widesim{\NatSegI\ 42} \omega$}
+  \RightLabel{(Noesis 调用)} \BinaryInfC{$\forall m.\ 
+  \mathbf{AddN_S}\ 42\ m\ x \proctr{\NatSegI\ m|\NatSegI\ \max(42,m)}
+  {\lambda y.\ \omega + y < \max(42,m)} (+\ \omega)$}
+\end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$\omega + \upsilon < 666$}
+\AxiomC{$\forall m.\ 
+\mathbf{AddN_S}\ 42\ m\ x \proctr{\NatSegI\ m|\NatSegI\ \max(42,m)}
+  {\lambda y.\ \omega + y < \max(42,m)} (+\ \omega)$}
+  \AxiomC{$y \widesim{\NatSegI\ 666} \upsilon$}
+  \RightLabel{(Noesis 调用)}
+  \BinaryInfC{$\mathbf{AddN_S}\ 42\ 666\ x\ y \proctr{\NatSegI\ 666}
+  {\omega + \upsilon < 666} (\omega + \upsilon)$}
+    \RightLabel{(Noesis 条件削除)}
+    \BinaryInfC{$\mathbf{AddN_S}\ 42\ 666\ x\ y \widesim{\NatSegI\ 666} 
+    \omega + \upsilon$}
+  \end{prooftree}
+\end{center}
+而在编译时，将 $\mathbf{AddN_S}\ 42\ 666\ x\ y$ 根据定义展开
+\[ \begin{split}
+\mathbf{AddN_S}\ 42\ 666\ x\ y =\ & \mathbf{IAdd}\ \max(\B_{42},\B_{666})\ 
+  (\xif \B_{42} \geq \B_{666} \xthen x \xelse \mathbf{IConv}\ \B_{42}\ \B_{666}\ x)\\
+  &(\xif \B_{666} \geq \B_{42} \xthen x \xelse \mathbf{IConv}\ \B_{666}\ \B_{42}\ y)\\
+  =\ & \mathbf{IAdd}\ 2\ (\mathbf{IConv}\ 1\ 2\ x)\ y
+\end{split} \]
+就得到了编译结果 $\mathbf{IAdd}\ 2\ (\mathbf{IConv}\ 1\ 2\ x)\ y$。
+
+\input{chapters/implementation/exam_transfer.tex}

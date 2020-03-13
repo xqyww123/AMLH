@@ -1,0 +1,53 @@
+\section{示例：\amlhS 上的转账合约}
+
+定义理解，使用符号 \currency 表示本示例中的货币理解
+\[ \currency \coloneqq \NatSegI\ \mathrm{TOTAL\_SUPPLY} \]
+TOTAL\_SUPPLY 表示该货币的总供应量，于是理解 \currency 保证了其
+本体一定在总供应量内。
+
+\begin{flalign}
+&\text{公理}& \dot{c} \widesim[2]{\OneI\ \phi} \phi &\vdash 
+\dot{c} \widesim[2]{\OneI\ \phi} \phi & \label{f.a.c} \\
+&\text{公理}& A \widesim{\AddressI} a &\vdash 
+A \widesim{\AddressI} a & \label{f.a.a} \\
+&\text{公理}& B \widesim{\AddressI} b &\vdash 
+B \widesim{\AddressI} b & \label{f.a.b} \\
+&\text{公理}& M \widesim{\currency} m &\vdash M \widesim{\currency} m&
+\label{f.a.m} \end{flalign}
+$\dot{c}$ 是状态参数，$\phi : \mathrm{chain}$ 是链状态，
+$a : \mathrm{address}$ 是转账方，$b : \mathrm{address}$ 是被转账方，
+$m : \mathrm{num}$ 是转账金额，链数据中的账户表为 $\mathrm{c_\currency}$。
+在下文中，
+\begin{align*}
+\tilde{c} &\coloneqq \dot{c} \widesim[2]{\OneI\ \phi} \phi&
+\tilde{a} &\coloneqq A \widesim{\AddressI} a&
+\tilde{b} &\coloneqq B \widesim{\AddressI} b&
+\tilde{m} &\coloneqq M \widesim{\currency} m&
+\end{align*}
+现在可以演绎定理以构建程序
+\begin{flalign}
+&\text{基元}& & \vdash \mathbf{Has}\ c \proctr{\OneI\ x|i|\BoolI}
+{\K (\K \T)}(\lambda x\ k.\ (c,k) \in \Dom x)& \label{f.Has} \\
+&\text{\ref{f.Has}\ SPEC}\ \mathrm{c_\currency}& &
+\vdash \mathbf{Has}\ \ccurrency \proctr{\OneI\ x|i|\BoolI}
+{\K (\K \T)}(\lambda x\ k.\ (\ccurrency,k) \in \Dom x)&\label{f.Hasc} \\
+&\text{\ref{f.Hasc} 调用 \ref{f.a.c}}& \tilde{c} &
+\vdash \mathbf{Has}\ \ccurrency\ \dot{c} \proctr{i|\BoolI}
+{\K \T}(\lambda k.\ (\ccurrency,k) \in \Dom \dot{c})& \label{f.Hcx} \\
+&\text{\ref{f.Hcx} 调用 \ref{f.a.a}}& \tilde{c},\ \tilde{a} &
+\vdash \mathbf{Has}\ \ccurrency\ \dot{c}\ A \widesim{\BoolI}
+(\ccurrency,a) \in \Dom \dot{c}& \label{f.Hcxa1} \\
+&\text{基元}& &\vdash \mathbf{Read}\ c\ 
+\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}
+(\lambda x\ k.\ x\ (c,k))& \label{f.Read} \\
+&\text{\ref{f.Read}\ SPEC\ }\ccurrency& &\vdash \mathbf{Read}\ 
+\ccurrency\ \proctr{\OneI\ x|i|j}{\lambda x\ k.\ (\ccurrency,k) \in 
+\Dom x}(\lambda x\ k.\ x\ (\ccurrency,k))& \label{f.Rc1} \\
+&\text{\ref{f.Rc1} 调用 \ref{f.a.c}}& \tilde{c} & \vdash \mathbf{Read}\ 
+\ccurrency\ \dot{c} \proctr{i|j}{\lambda k.\ (\ccurrency,k) \in 
+\Dom \phi}(\lambda k.\ \phi\ (\ccurrency,k))& \label{f.Rcc}  \\
+&\text{简写记号}& P_1 &\coloneqq (\ccurrency,a) \in \Dom \phi&\\
+&\text{\ref{f.Rcc} 调用 \ref{f.a.a}}& \tilde{c},\ \tilde{a},\ P_1
+& \vdash \mathbf{Read}\ \ccurrency\ \dot{c}\ a \widesim{\currency}
+\phi\ (\ccurrency,a)& \label{f.Rcca} 
+\end{flalign}

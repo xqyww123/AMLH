@@ -5,6 +5,8 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{ctex-xecjk-winfonts.def}
+\usepackage{tabularx}
+\usepackage{longtable}
 \usepackage[flushleft]{threeparttable}
 \usepackage{xifthen}
 \usepackage{hhline}
@@ -33,8 +35,11 @@
 \newunicodechar{¶}{{\miscsymfontd\symbol{"00B6}}}
 \newunicodechar{⟭}{{\miscsymfont\symbol{"27ED}}}
 \newunicodechar{«}{\text{\miscsymfontd\symbol{"00AB}}}
+\newunicodechar{¤}{\text{\miscsymfont\symbol{"00A4}}}
 \newcommand{\istack}[2]{#1\text{❚}#2}
 \newcommand{\pilcrow}{\text{¶}}
+\newcommand{\currency}{ \text{¤} }
+\newcommand{\ccurrency}{\mathrm{c_\currency}}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
@@ -153,8 +158,8 @@
 \newcommand{\PV}{\mathop{\mathbf{PV}}}
 \newcommand{\PL}{\mathop{\mathbf{PL}}}
 \newcommand{\PU}{\mathop{\mathbf{PU}}}
-\newcommand{\Div}{\mathbin{\mathrm{div}}}
-\newcommand{\Mod}{\ \ \mathbin{\mathrm{mod}}\ \ }
+\newcommand{\Div}{\ \mathbin{\mathrm{div}}\ }
+\newcommand{\Mod}{\ \mathbin{\mathrm{mod}}\ }
 \makeatletter
 \newcommand{\dotminus}{\mathbin{\text{\@dotminus}}}
 \newcommand{\@dotminus}{%
