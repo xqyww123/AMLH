@@ -84,6 +84,21 @@ p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 类型 chain 为此别名 
 \[ \mathrm{chain} \Coloneqq (\mathrm{string},\ \mathrm{phenomenon})
 \mapsto \mathrm{phenomenon} \]
+链数据是作为字符串的表标识与作为现象的键的元组到作为现象的值的有限映射。
+类型 chain\_table 综合了表标识与键值理解
+  \[ \combtyp{chain\_table}{(\alpha,\ \beta)} \Coloneqq \mathbf{TC}\ 
+  \mathrm{string}\ (\itp{\alpha})\ (\itp\beta)\]
+$\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
+的所有键与值，并类似地有 $\Dom_{(\mathbf{TC}\ c\ i\ j)}\ \phi$，$
+  \Ima_{(\mathbf{TC}\ c\ i\ j)}\ \phi$
+  \[ \begin{array}{lcl}
+    \Dom_c\ \phi &=& \{x\mbar (c,x) \in \Dom \phi\} \\
+    \Ima_c\ \phi &=& \{\phi\ (c,x) \mbar (c,x) \in \Dom \phi \} \\
+    \Dom_{(\mathbf{TC}\ c\ i\ j)}\ \phi &=& \{\epsilon\mbar (c,\Li_i 
+    \epsilon) \in \Dom \phi\} \\
+    \Ima_{(\mathbf{TC}\ c\ i\ j)}\ \phi &=& \{\Tr_j(\phi\ (c,\Li_i 
+    \epsilon))\mbar (c,\Li_i \epsilon) \in \Dom \phi \}
+\end{array} \]
 类型 write\_chain 表示对链的写入操作命令，也是一个别名
 \[ \mathrm{write\_chain} \Coloneqq ((\mathrm{string},\ 
 \mathrm{phenomenon}),\ \mathrm{phenomenon}) \]
@@ -129,7 +144,7 @@ $\Rsp\ x\ l$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的�
 \begin{table}[hp]
 \begin{threeparttable}
 \centering \caption{\amlhS 中实现的理解} \label{tab.IC.noesis}
-\begin{tabular}{ |c|c|c|c|p{4.5cm}|p{2cm}| } \hline
+\begin{tabularx}{\linewidth}{ |c|c|c|c|X|p{2cm}| } \hline
 \textbf{理解} & \textbf{本体集} & \textbf{现象集} & 
 $\mathbf{Si}$ \textbf{值} & $\mathbf{Li}$ \textbf{映射} & 
 $\mathbf{Tr}$ \textbf{映射} \\ \hline
@@ -143,8 +158,8 @@ $\lambda v.$ \newline $\PX v > 0$  \\ \hline
 $\AddressI$ & $\{ n \mbar n < \mathrm{AdrSize} \}$ &
 $\mathbb{U}_\mathrm{pv}$ & AdrSize & $\lambda e.\ \PhV
 e\ \mathrm{AdrSize}$ & $\PX$ \\ \hline
-$\OneI\ s$ & $\{ s \}$ & $\mathbb{U}_\mathrm{pv}$ & 0 & 
-$\K(\PhV 0\ 0)$ & $\K s$ \\ \hline
+$\OneI\ x$ & $\{ x \}$ & $\mathbb{U}_\mathrm{pv}$ & 0 & 
+$\K(\PhV 0\ 0)$ & $\K x$ \\ \hline
 $\ListI\ i$ & $\mathrm{EVERY}\ \mathbf{Se}_i$ & 虚构 & Ps & 虚构 
 & 虚构 \\ \hline
 $\CWI$ & $(\mathbb{U}_\mathrm{str} \times \mathbb{U}_\mathrm{ph}) \times
@@ -156,7 +171,7 @@ $\mathrm{Ps} + \mathbf{Si}_i$ & 虚构
 $i \times j$ & $\mathbf{Se}_i \times \mathbf{Se}_j$ & 
 见注1 & $\Si_i + \Si_j$ & $\lambda(x,y).\ \PhS\ \Li_i(x)\ 
 \Li_j(x)$ & 见注2 \\ \hline
-\end{tabular}
+\end{tabularx}
 \begin{tablenotes} \small 
 \item $\mathbb{U}_\mathrm{pv}$ 是 $\{ \PhV x\ b \}$ 的简写，
 表示现象类型的所有元素中由 $\PhV$ 构造的。
@@ -183,8 +198,7 @@ $\BoolI$ & bool 值 \\ \hline $\AddressI$ &
 智能合约场景下的账户标识，在以太坊中是 \texttt{address} 类型，
 EOS.IO 中是 \texttt{name} 类型，常量 AdrSize 表示标识的大小，
     以字节为单位\\ \hline
-$\OneI\ s$ & 单元素集合 $\{s\}$ 的理解，用于表示
-状态输入$\{ s \}$ \\ \hline
+  $\OneI\ x$ & 单元素集合 $\{x\}$ 的理解，用于表示状态输入 \\ \hline
 $\ListI\ i$ & 对元素使用 $i$ 理解的列表理解，虚构定义而来，
 在内存中的表示是一个指针，故有 PointerSize 的大小 \\ \hline
 $\CWI$ & 是链数据的写入命令的理解，虚构定义而来 \\ \hline
@@ -221,15 +235,16 @@ $\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
 $\mathbf{Append}\ i$ & 虚构定义自同构
 $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
 i}{\lambda l\ x.\ \T} (::)$ \\ \hline
-$\mathbf{Write}\ c\ i\ j$ & 虚构定义自同构 $\mathbf{Write}\ c\ i\ j 
-\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
+  $\mathbf{Write}\ t$ & 虚构定义自同构 $\mathbf{Write}\ (\mathbf{TC}\ 
+  c\ i\ j)\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
 (\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ \\ \hline
-$\mathbf{Read}\ c\ x\ i\ j$ & 虚构定义自同构 $\mathbf{Read}\ c\ x\ i\ j 
-\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}
-(\lambda x\ k.\ x\ (c,k))$ \\ \hline
-$\mathbf{Has}\ c\ x\ i$ & 虚构定义自同构 $\mathbf{Has}\ c\ x\ i 
-  \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}
-  (\lambda x\ k.\ (c,k) \in \Dom x)$ \\\hline
+  $\mathbf{Read}\ t$ & 虚构定义自同构 $\mathbf{Read}\ (\mathbf{TC}\ 
+  c\ i\ j) \proctr{\OneI\ x|i|j}
+  {\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x}
+  (\lambda x\ k.\ \Tr_j(x (c,\ \Li_i k)))$ \\ \hline
+  $\mathbf{Has}\ t$ & 虚构定义自同构 $\mathbf{Has}\ (\mathbf{TC}\ c\ i 
+  \ j) \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}
+  (\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x)$ \\\hline
 $\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
     $\mathbf{Seg}_{m,n}$ & $\mathbf{Seg}_{m,n}\ p \coloneqq \PhV\ 
     (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
@@ -268,17 +283,17 @@ $\mathbf{INot}$ & $\mathbf{INot} \proctr{\BoolI|\BoolI}
 $\mathbf{Append}\ i$ & $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
 i}{\lambda l\ x.\ \T} (::)$ & 增加元素到列表的末尾，$(::)$
 是 HOL 系统库中列表的增加函数，$1::[2]$ 表示 $[1,2]$ \\ \hline
-$\mathbf{Write}\ c\ i\ j$ & $\mathbf{Write}\ c\ i\ j 
+  $\mathbf{Write}\ t$ & $\mathbf{Write}\ (\mathbf{TC}\ c\ i\ j)
 \proctr{i|j|\CWI}{\lambda k\ v.\ \T}$\newline$
 (\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ &
 写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
-$\mathbf{Read}\ c\ x\ i\ j$ & $\mathbf{Read}\ c\ x\ i\ j 
-\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}$\newline$
-(\lambda k.\ x\ (c,k))$ &
+  $\mathbf{Read}\ t$ & $\mathbf{Read}\ (\mathbf{TC}\ c\ i\ j)
+\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x}$
+  \newline$(\lambda k.\ \Tr_j(x\ (c,\ \Li_i k)))$ &
 对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
-$\mathbf{Has}\ c\ x\ i$ & $\mathbf{Has}\ c\ x\ i 
+$\mathbf{Has}\ t$ & $\mathbf{Has}\ (\mathbf{TC}\ c\ i\ j)
   \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}$\newline$
-(\lambda x\ k.\ (c,k) \in \Dom x)$ &
+(\lambda x\ k.\ (c,\ \Li_i\ k) \in \Dom x)$ &
 对给定的链数据 $x$，表标识 $c$，查询链数据$x$的表$c$是否拥有键 $k$ 
   \\ \hline
 $\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
@@ -360,7 +375,7 @@ $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\
   \NatSegI\ m|\NatSegI\ \max(n,m)}{\lambda x\ y.\ x + y < \max
   (n,m)}& (+) \\\forall n\ m.\ 
   \mathbf{SubN_S}\ n\ m &\proctr{\NatSegI\ n|
-  \NatSegI\ m|\NatSegI\ n}{\lambda x\ y.\ x > y}& (-) \\ \forall n\ m.\ 
+\NatSegI\ m|\NatSegI\ n}{\lambda x\ y.\ x \geq y}& (-)\\ \forall n\ m.\ 
   \mathbf{MulN_S}\ n\ m &\proctr{\NatSegI\ n|
   \NatSegI\ m|\NatSegI\ \max(n,m)}{\lambda x\ y.\ x \times y < \max
   (n,m)}& (\times)\\ \forall n\ m.\ 

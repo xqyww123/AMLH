@@ -1,53 +1,112 @@
 \section{示例：\amlhS 上的转账合约}
 
 定义理解，使用符号 \currency 表示本示例中的货币理解
-\[ \currency \coloneqq \NatSegI\ \mathrm{TOTAL\_SUPPLY} \]
-TOTAL\_SUPPLY 表示该货币的总供应量，于是理解 \currency 保证了其
+\begin{align*} 
+  \currency &\coloneqq \NatSegI\ \mathrm{TS}&
+  \B_\currency &\coloneqq \lceil \log_{256} \mathrm{TS}
+  \rceil&
+\end{align*}
+TS 表示该货币的总供应量，于是理解 \currency 保证了其
 本体一定在总供应量内。
 
+先由公理律得到参数定理
 \begin{flalign}
-&\text{公理}& \dot{c} \widesim[2]{\OneI\ \phi} \phi &\vdash 
+&\text{由公理得}& \dot{c} \widesim[2]{\OneI\ \phi} \phi &\vdash 
 \dot{c} \widesim[2]{\OneI\ \phi} \phi & \label{f.a.c} \\
-&\text{公理}& A \widesim{\AddressI} a &\vdash 
+&\text{由公理得}& A \widesim{\AddressI} a &\vdash 
 A \widesim{\AddressI} a & \label{f.a.a} \\
-&\text{公理}& B \widesim{\AddressI} b &\vdash 
+&\text{由公理得}& B \widesim{\AddressI} b &\vdash 
 B \widesim{\AddressI} b & \label{f.a.b} \\
-&\text{公理}& M \widesim{\currency} m &\vdash M \widesim{\currency} m&
+&\text{由公理得}& M \widesim{\currency} m &\vdash M \widesim{\currency} m&
 \label{f.a.m} \end{flalign}
 $\dot{c}$ 是状态参数，$\phi : \mathrm{chain}$ 是链状态，
 $a : \mathrm{address}$ 是转账方，$b : \mathrm{address}$ 是被转账方，
-$m : \mathrm{num}$ 是转账金额，链数据中的账户表为 $\mathrm{c_\currency}$。
-在下文中，
+$m:\mathrm{num}$ 是转账金额，链数据中的账户表标识为 
+$\mathrm{c_\currency}$，表为
+\[\tcurrency \coloneqq \mathbf{TC}\ \ccurrency\ \AddressI\ \currency \]
+调用条件为 $P_0$
+\[ P_0 \coloneqq (\Sigma\ \Ima_\tcurrency \phi = \mathrm{TS}) \]
+即表 $\tcurrency$ 的所有值的和始终等于总供应量，即货币不会丢失也不会增多
+。之后将证明转账合约执行后的链数据仍将保持此属性，以证明转账的合理性。
+在下文中，简写记号
 \begin{align*}
 \tilde{c} &\coloneqq \dot{c} \widesim[2]{\OneI\ \phi} \phi&
 \tilde{a} &\coloneqq A \widesim{\AddressI} a&
 \tilde{b} &\coloneqq B \widesim{\AddressI} b&
 \tilde{m} &\coloneqq M \widesim{\currency} m&
 \end{align*}
+帮助缩短公式长度。此程序会用到如下基元函数或者预定义函数
+\begin{flalign}
+&\text{基元}& &\vdash \mathbf{Has}\ (\mathbf{TC}\ c\ i\ j)
+  \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}
+(\lambda x\ k.\ (c,\ \Li_i\ k) \in \Dom x) & \label{f.Has} \\
+&\text{基元}& &\vdash \mathbf{Read}\ (\mathbf{TC}\ 
+  c\ i\ j) \proctr{\OneI\ x|i|j}
+  {\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x}
+  (\lambda x\ k.\ \Tr_j(x (c,\ \Li_i k)))& \label{f.Read} \\
+&\text{基元}&&\vdash \mathbf{ILt}\ \B_n \proctr{\NatSegI\ n|\NatSegI\ n|
+  \BoolI}{\lambda x\ y.\ \T} (<) &\label{f.lt}\\
+&\text{基元}&&\vdash\mathbf{IAdd}\ \B_n \proctr{\NatSegI\ n|
+\NatSegI\ n|\NatSegI\ n}{\lambda x\ y.\ x + y < 256^n} (+)
+  &\label{f.A} \\
+&\text{基元}&&\vdash\mathbf{ISub}\ \B_n \proctr{\NatSegI\ n|
+  \NatSegI\ n|\NatSegI\ n}{\lambda x\ y.\ x \geq y} (-) & \label{f.S}
+\end{flalign}
 现在可以演绎定理以构建程序
 \begin{flalign}
-&\text{基元}& & \vdash \mathbf{Has}\ c \proctr{\OneI\ x|i|\BoolI}
-{\K (\K \T)}(\lambda x\ k.\ (c,k) \in \Dom x)& \label{f.Has} \\
-&\text{\ref{f.Has}\ SPEC}\ \mathrm{c_\currency}& &
-\vdash \mathbf{Has}\ \ccurrency \proctr{\OneI\ x|i|\BoolI}
-{\K (\K \T)}(\lambda x\ k.\ (\ccurrency,k) \in \Dom x)&\label{f.Hasc} \\
+&\text{\ref{f.Has}\ SPEC\ $\tcurrency$}&
+&\vdash \mathbf{Has}\ \tcurrency\ \proctr{\OneI\ x|\currency|\BoolI}
+{\K (\K \T)}(\lambda x\ k.\ (\tcurrency,k) \in \Dom x)&\label{f.Hasc} \\
 &\text{\ref{f.Hasc} 调用 \ref{f.a.c}}& \tilde{c} &
-\vdash \mathbf{Has}\ \ccurrency\ \dot{c} \proctr{i|\BoolI}
-{\K \T}(\lambda k.\ (\ccurrency,k) \in \Dom \dot{c})& \label{f.Hcx} \\
+\vdash \mathbf{Has}\ \tcurrency\ \dot{c} \proctr{\currency|\BoolI}
+{\K \T}(\lambda k.\ (\tcurrency,k) \in \Dom \dot{c})& \label{f.Hcx} \\
 &\text{\ref{f.Hcx} 调用 \ref{f.a.a}}& \tilde{c},\ \tilde{a} &
-\vdash \mathbf{Has}\ \ccurrency\ \dot{c}\ A \widesim{\BoolI}
-(\ccurrency,a) \in \Dom \dot{c}& \label{f.Hcxa1} \\
-&\text{基元}& &\vdash \mathbf{Read}\ c\ 
-\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,k) \in \Dom x}
-(\lambda x\ k.\ x\ (c,k))& \label{f.Read} \\
-&\text{\ref{f.Read}\ SPEC\ }\ccurrency& &\vdash \mathbf{Read}\ 
-\ccurrency\ \proctr{\OneI\ x|i|j}{\lambda x\ k.\ (\ccurrency,k) \in 
-\Dom x}(\lambda x\ k.\ x\ (\ccurrency,k))& \label{f.Rc1} \\
+\vdash \mathbf{Has}\ \tcurrency\ \dot{c}\ A \widesim{\BoolI}
+(\tcurrency,a) \in \Dom \dot{c}& \label{f.Hcxa1} \\
+&\text{\ref{f.Read}\ SPEC $\tcurrency$}&
+&\vdash \mathbf{Read}\ \tcurrency \proctr{\OneI\ x|\currency|\currency}
+ {\lambda x\ k.\ (\tcurrency,k) \in \Dom x}
+  (\lambda x\ k.\ x\ (\tcurrency,k))& \label{f.Rc1} \\
 &\text{\ref{f.Rc1} 调用 \ref{f.a.c}}& \tilde{c} & \vdash \mathbf{Read}\ 
-\ccurrency\ \dot{c} \proctr{i|j}{\lambda k.\ (\ccurrency,k) \in 
-\Dom \phi}(\lambda k.\ \phi\ (\ccurrency,k))& \label{f.Rcc}  \\
-&\text{简写记号}& P_1 &\coloneqq (\ccurrency,a) \in \Dom \phi&\\
+\tcurrency\ \dot{c} \proctr{\currency|\currency}{\lambda k.\ 
+  (\tcurrency,k) \in \Dom \phi}(\lambda k.\ \phi\ (\tcurrency,k))&
+  \label{f.Rcc}  \\
+&\text{简写记号}& P_1 &\coloneqq (\tcurrency,a) \in \Dom \phi&\\
 &\text{\ref{f.Rcc} 调用 \ref{f.a.a}}& \tilde{c},\ \tilde{a},\ P_1
-& \vdash \mathbf{Read}\ \ccurrency\ \dot{c}\ a \widesim{\currency}
-\phi\ (\ccurrency,a)& \label{f.Rcca} 
+& \vdash \mathbf{Read}\ \tcurrency\ \dot{c}\ A \widesim{\currency}
+\phi\ (\tcurrency,a)& \label{f.Rcca} \\
+&\text{\ref{f.lt} 调用 \ref{f.Rcca}}& \tilde{c},\ \tilde{a},\ P_1
+  & \vdash \mathbf{ILt}\ \B_\currency\ (
+  \mathbf{Read}\ \tcurrency\ \dot{c}\ A)
+  \proctr{\currency|\BoolI}{\K \T} (\lambda x.\ \phi\ (\tcurrency,a)
+  < x) & \label{f.LRcca} \\
+&\text{\ref{f.LRcca} 调用 \ref{f.a.m}}& \tilde{c},\ \tilde{a},\ P_1
+  & \vdash \mathbf{ILt}\ \B_\currency\ (
+  \mathbf{Read}\ \tcurrency\ \dot{c}\ A)\ M
+  \widesim{\BoolI} (\phi\ (\tcurrency,a) < M) & \label{f.LRccam} \\
+  &\text{简写记号}& P_2 &\coloneqq \phi\ (\tcurrency,a) < M & \label
+  {f.P2} \\
+  &\text{\ref{f.S} 调用 \ref{f.Rcca}}& \tilde{c},\ \tilde{a},\ P_1
+&\vdash
+\mathbf{ISub}\ \B_\currency\ (\mathbf{Read}\ \tcurrency\ \dot{c}\ A) 
+  \proctr{\currency|\currency}{\lambda y.\ \phi\ (\tcurrency,a)
+  \geq y} (\lambda y.\ \phi\ (\tcurrency,a) - y)& \label{f.SRcca}\\
+&\text{\ref{f.SRcca} 调用 \ref{f.a.m}}&  \tilde{c},\ \tilde{a},\ P_1
+,\ \lnot P_2 &\vdash \mathbf{ISub}\ \B_\currency\ 
+  (\mathbf{Read}\ \tcurrency\ \dot{c}\ A)\ M
+  \widesim{\currency} \phi\ (\tcurrency,a) - m& \label{SRccam}\\
+  &\parbox{1.7cm}{\linespread{1}\selectfont 抽象范畴内的证明}&
+  P_0,\ \lnot P_2 &\vdash \phi\ (\tcurrency,\ b) + M < \mathrm{TS}&
+  \label{f.P.addOK} \\
+&\text{\ref{f.Rcc} 调用 \ref{f.a.b}}& \tilde{b} &\vdash \mathbf{Read}\ 
+\tcurrency\ \dot{c}\ b \proctr{\currency|\currency}{\lambda k.\ 
+(\tcurrency,k) \in \Dom \phi}(\lambda k.\ \phi\ (\tcurrency,k))& 
+  \label{f.Rccb}\\
+  %&\text{\ref{f.A} 调用 \ref{f}}&
+  &\text{\ref{f.S} 调用 \ref{f.Rcca}}& \begin{split}
+    \tilde{c},\ \tilde{a},\ P_1
+    &\vdash\mathbf{SubN_S}\ \mathrm{TS}\ m\ 
+    (\mathbf{Read}\ \tcurrency\ \dot{c}\ A) \proctr{\NatSegI\ m|
+  \currency}{\lambda y.\ \phi\ (\tcurrency,a) > y}\\ & \quad\quad\quad
+  (\lambda y.\ \phi\ (\tcurrency,a) - y) \end{split} &
 \end{flalign}

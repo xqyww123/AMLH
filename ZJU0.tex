@@ -39,7 +39,8 @@
 \newcommand{\istack}[2]{#1\text{❚}#2}
 \newcommand{\pilcrow}{\text{¶}}
 \newcommand{\currency}{ \text{¤} }
-\newcommand{\ccurrency}{\mathrm{c_\currency}}
+\newcommand{\ccurrency}{{\mathrm{c}_\currency}}
+\newcommand{\tcurrency}{{\mathrm{t}_\currency}}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
@@ -166,17 +167,17 @@
   \ooalign{\hidewidth\raise1ex\hbox{.}\hidewidth\cr$\m@th-$\cr}%
 }
 \makeatother
-\newcommand{\PhV}{\mathop{\mathbf{PhV}}}
-\newcommand{\PhS}{\mathop{\mathbf{PhS}}}
-\newcommand{\PhP}{\mathop{\mathbf{PhP}}}
-\newcommand{\PH}{\mathop{\mathbf{PH}}}
-\newcommand{\VV}{\mathop{\mathbf{VV}}}
-\newcommand{\VP}{\mathop{\mathbf{VP}}}
-\newcommand{\Rsp}{\mathop{\mathbf{Rsp}}}
-\newcommand{\Sp}{\mathop{\mathbf{Sp}}}
-\newcommand{\Si}{\mathop{\mathbf{Si}}}
-\newcommand{\Li}{\mathop{\mathbf{Li}}}
-\newcommand{\Tr}{\mathop{\mathbf{Tr}}}
+\newcommand{\PhV}{\mathord{\mathbf{PhV}}}
+\newcommand{\PhS}{\mathord{\mathbf{PhS}}}
+\newcommand{\PhP}{\mathord{\mathbf{PhP}}}
+\newcommand{\PH}{\mathord{\mathbf{PH}}}
+\newcommand{\VV}{\mathord{\mathbf{VV}}}
+\newcommand{\VP}{\mathord{\mathbf{VP}}}
+\newcommand{\Rsp}{\mathord{\mathbf{Rsp}}}
+\newcommand{\Sp}{\mathord{\mathbf{Sp}}}
+\newcommand{\Si}{\mathord{\mathbf{Si}}}
+\newcommand{\Li}{\mathord{\mathbf{Li}}}
+\newcommand{\Tr}{\mathord{\mathbf{Tr}}}
 
 \newcommand{\univ}[1]{\mathbb{U}(\text{:#1})}
 \newcommand{\RsI}{\mathbf{Rs}_{\mathbf{I}}}
@@ -184,6 +185,7 @@
 \newcommand{\BoolI}{\mathbb{B}_{\mathbf{I}}}
 \newcommand{\AddressI}{\mathbb{A}_{\mathbf{I}}}
 \newcommand{\OneI}{\mathbf{I1}}
+\newcommand{\ChainI}{\mathbf{Ch_I}}
 \newcommand{\ListI}{\mathbf{LI}}
 \newcommand{\CWI}{\mathbf{CW}_{\mathbf{I}}}
 \newcommand{\eset}{\mathrel{\texttt{--}}}
