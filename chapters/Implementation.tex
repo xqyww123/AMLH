@@ -105,6 +105,37 @@ $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
 元组 $((name,\ key),\ value)$ 表示以值 $value$ 写入到表 $name$ 的
 键 $key$ 的写入操作。
 有限映射的更新操作 $\fupdate$ 就表示对链数据的写入。
+一系列辅助函数 
+\begin{gather*} \begin{array}{lcl}
+\Has &:& \combtyp{table}{(\alpha,\ \beta)} \rightarrow \mathrm{chain}
+  \rightarrow \alpha \rightarrow \mathrm{bool}\\
+  \Read &:& \combtyp{table}{(\alpha,\ \beta)} \rightarrow
+  \mathrm{chain} \rightarrow \alpha \rightarrow \beta \\
+  \ReadZ &:& \combtyp{table}{(\alpha,\ \beta)} \rightarrow
+  \mathrm{chain} \rightarrow \alpha \rightarrow \beta \\
+  \Write &:& \combtyp{table}{(\alpha,\ \beta)} \rightarrow
+  \alpha \rightarrow \beta \rightarrow \mathrm{write\_chain}
+\end{array}\\
+\begin{array}{lcl}
+\Has\ (\TC c\ i\ j)\ x\ k &\coloneqq& (c,\ \Li_i k) \in \Dom x\\
+\Read\ (\TC c\ i\ j)\ \phi\ k &\coloneqq& \Tr_j(\phi\ (c,\ \Li_i\ k))\\
+  \ReadZ\ (\TC c\ i\ j)\ \phi\ k &\coloneqq& \left\{ \begin{split}
+&\xif \Has\ (\TC c\ i\ j)\ \phi\ k \xthen \Tr_j(\phi\ (c,\ \Li_i\ k))\\
+  &\quad\quad\quad\xelse \Tr_j(\PhV\ 0\ \Si_j) \end{split} \right. \\
+\Write\ (\TC c\ i\ j)\ k\ v &\coloneqq& ((c,\ \Li_i k),\ \Li_j v)
+\end{array} \end{gather*}
+有一些显然的定理
+\begin{gather*}
+    \Read\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' =
+    (\xif k = k' \xthen v \xelse \Read\ t\ \phi\ k') \\
+t_1 \neq t_2 \Rightarrow (\Read\ t_1\ (\phi \fupdate \Write\ 
+t_2\ k\ v)\ k' = \Read\ t_1\ \phi\ k') \\
+    \ReadZ\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' =
+    (\xif k = k' \xthen v \xelse \ReadZ\ t\ \phi\ k') \\
+t_1 \neq t_2 \Rightarrow (\ReadZ\ t_1\ (\phi \fupdate \Write\ 
+t_2\ k\ v)\ k' = \ReadZ\ t_1\ \phi\ k') \\
+  \ReadZ\ (\TC\ c\ i\ j)\ \emptyset\ k = \Tr_j\ (\PhV\ 0\ \Si_j)
+\end{gather*}
 \end{defin}
 
 链数据写入命令的内存结构为
@@ -122,9 +153,9 @@ $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
 
 \begin{defin}[智能合约调用响应]
 类型 response 表示所期望的智能合约调用的返回类型。
-\[ \combtyp{response}{\alpha} \Coloneqq \Rsp \alpha\ (\combtyp{list}{
-    \mathrm{write\_chain}}) \]
-$\Rsp\ x\ l$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的智能合约调用
+  \[ \combtyp{response}{\alpha} \Coloneqq ((\combtyp{list}{
+    \mathrm{write\_chain}}),\ \alpha) \]
+$(l,\ x)$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的智能合约调用
 响应。$l$ 列表中的每一项元素都是 write\_chain 类型描述的链数据的写入命令
 。一个智能合约的作为外部接口的函数必须返回 response 类型，编译时会在
 每个外部接口函数的实现的最后逐一遍历写入命令序列 $l$，逐一将命令执行并
@@ -165,9 +196,6 @@ $\ListI\ i$ & $\mathrm{EVERY}\ \mathbf{Se}_i$ & 虚构 & Ps & 虚构
 $\CWI$ & $(\mathbb{U}_\mathrm{str} \times \mathbb{U}_\mathrm{ph}) \times
 \mathbb{U}_\mathrm{ph}$ & 虚构 & $1 + 2 \mathrm{Ps}$ & 虚构 
 & 虚构 \\ \hline
-$\RsI\ i$ & $\{\Rsp\ x\ l \mbar x \in \mathbf{Se}_i\}$ & 虚构 & 
-$\mathrm{Ps} + \mathbf{Si}_i$ & 虚构 
-& 虚构 \\ \hline
 $i \times j$ & $\mathbf{Se}_i \times \mathbf{Se}_j$ & 
 见注1 & $\Si_i + \Si_j$ & $\lambda(x,y).\ \PhS\ \Li_i(x)\ 
 \Li_j(x)$ & 见注2 \\ \hline
@@ -202,10 +230,24 @@ EOS.IO 中是 \texttt{name} 类型，常量 AdrSize 表示标识的大小，
 $\ListI\ i$ & 对元素使用 $i$ 理解的列表理解，虚构定义而来，
 在内存中的表示是一个指针，故有 PointerSize 的大小 \\ \hline
 $\CWI$ & 是链数据的写入命令的理解，虚构定义而来 \\ \hline
-$\RsI\ i$ & 表示以 $i$ 理解为返回内容的智能合约调用响应 \\ \hline
 $i\times j$ & 表示理解 $i,\ j$ 的笛卡儿积 \\ \hline
 \end{tabular}\end{threeparttable}\end{table}%
-\begin{table}[b]
+\begin{table}[hp]%
+\begin{threeparttable}
+\centering \caption{\amlhS 中的常量} \label{tab.IC.const}
+\begin{tabularx}{\linewidth}{ |c|c|X| }\hline
+  \textbf{常量} & \textbf{Noesis 对应} & \textbf{定义与描述} \\ \hline
+$\Li_{\NatSegI n} x$ & $\Li_{\NatSegI n} x \widesim[2]{\NatSegI\ n}
+  x$ & $\Li_{\NatSegI n} x = \PhV\ x\ \B_n \quad\quad$ 自然数常量
+\\\hline\emptylist & $\emptylist \widesim{\ListI\ i} \mathrm{Nil}$ &
+  虚构定义而来，Nil 是 HOL 中定义的空序列。\\ \hline
+\texttt{T} & $\texttt{T} \widesim{\BoolI} \T$ & $\texttt{T} = \PhV 1\ 1$
+\\ \hline 
+\texttt{F} & $\texttt{F} \widesim{\BoolI} \F$ & $\texttt{F} = \PhV 0\ 1$
+\\ \hline
+\end{tabularx}
+\end{threeparttable}%
+  \newline \newline
 \begin{threeparttable}%
 \centering \caption{\amlhS 中基元函数的定义} \label{tab.IC.primop2}
 \begin{tabularx}{\linewidth}{ |c|X| }\hline
@@ -234,17 +276,16 @@ $\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
 \mathbf{INot}\ p = \PhV\ (\xif \PX p = 0 \xthen 1 \xelse 0)\ 1$\\ \hline
 $\mathbf{Append}\ i$ & 虚构定义自同构
 $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
-i}{\lambda l\ x.\ \T} (::)$ \\ \hline
-  $\mathbf{Write}\ t$ & 虚构定义自同构 $\mathbf{Write}\ (\mathbf{TC}\ 
-  c\ i\ j)\proctr{i|j|\CWI}{\lambda k\ v.\ \T}
-(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ \\ \hline
-  $\mathbf{Read}\ t$ & 虚构定义自同构 $\mathbf{Read}\ (\mathbf{TC}\ 
-  c\ i\ j) \proctr{\OneI\ x|i|j}
-  {\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x}
-  (\lambda x\ k.\ \Tr_j(x (c,\ \Li_i k)))$ \\ \hline
-  $\mathbf{Has}\ t$ & 虚构定义自同构 $\mathbf{Has}\ (\mathbf{TC}\ c\ i 
-  \ j) \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}
-  (\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x)$ \\\hline
+i}{\lambda x\ l.\ \T} (::)$ \\ \hline
+  $\mathbf{Write}\ t$ & 虚构定义自同构 $\mathbf{Write}\ t
+  \proctr{i|j|\CWI}{\lambda k\ v.\ \T} \Write t$ \\ \hline
+$\mathbf{Read}\ t$ & 虚构定义自同构 $\mathbf{Read}\ t
+  \proctr{\OneI\ x|i|j}{\Has\ t} \Read t$ \\ \hline
+$\mathbf{Has}\ t$ & 虚构定义自同构 $\mathbf{Has}\ t
+  \proctr{\OneI\ x|i|\BoolI}{\lambda x\ k.\ \T} \Has t$ \\\hline
+$\mathbf{Read0}\ t$ & 虚构定义自同构 
+$\mathbf{Read0}\ t \proctr{\OneI\ x|i|j}{\lambda x\ k.\ \T} \ReadZ\ t$
+  \\\hline
 $\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
     $\mathbf{Seg}_{m,n}$ & $\mathbf{Seg}_{m,n}\ p \coloneqq \PhV\ 
     (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
@@ -283,33 +324,38 @@ $\mathbf{INot}$ & $\mathbf{INot} \proctr{\BoolI|\BoolI}
 $\mathbf{Append}\ i$ & $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
 i}{\lambda l\ x.\ \T} (::)$ & 增加元素到列表的末尾，$(::)$
 是 HOL 系统库中列表的增加函数，$1::[2]$ 表示 $[1,2]$ \\ \hline
-  $\mathbf{Write}\ t$ & $\mathbf{Write}\ (\mathbf{TC}\ c\ i\ j)
-\proctr{i|j|\CWI}{\lambda k\ v.\ \T}$\newline$
-(\lambda k\ v.\ ((c,\ \mathbf{Li}_i\ k),\ \mathbf{Li}_j\ v))$ &
-写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
-  $\mathbf{Read}\ t$ & $\mathbf{Read}\ (\mathbf{TC}\ c\ i\ j)
-\proctr{\OneI\ x|i|j}{\lambda x\ k.\ (c,\ \Li_i k) \in \Dom x}$
-  \newline$(\lambda k.\ \Tr_j(x\ (c,\ \Li_i k)))$ &
-对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
-$\mathbf{Has}\ t$ & $\mathbf{Has}\ (\mathbf{TC}\ c\ i\ j)
-  \proctr{\OneI\ x|i|\BoolI}{\K (\K \T)}$\newline$
-(\lambda x\ k.\ (c,\ \Li_i\ k) \in \Dom x)$ &
-对给定的链数据 $x$，表标识 $c$，查询链数据$x$的表$c$是否拥有键 $k$ 
+$\mathbf{Has}\ t$ & $\mathbf{Has}\ t \proctr{\OneI\ x|i|\BoolI}
+{\K (\K \T)} \Has\ t$ &
+对给定的链数据 $x$，表标识 $c$，查询链数据$x$的表$c$是否拥有键 $k$
   \\ \hline
-$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda k.\ (c,k) \in \Dom x}$\newline$
-(\lambda k.\ x\ (c,k))$ &
+$\mathbf{Read}\ t$ & $\mathbf{Read}\ t\proctr{\OneI\ x|i|j}{\Has t}
+  \Read\ t$ &
 对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
+$\mathbf{Read0}\ t$ & $\mathbf{Read0}\ t \proctr{\OneI\ x|i|j}
+  {\K (\K \T)} \ReadZ\ t$ &
+对给定的链数据 $x$，表标识 $c$，若链数据$x$的表$c$中存在$k$键则读取，
+  否则返回 $j$ 理解下的0值\\ \hline
+$\mathbf{Write}\ t$ & $\mathbf{Write}\ t \proctr{i|j|\CWI}
+  {\lambda k\ v.\ \T} \Write\ t$ &
+写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
+$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda
+  x\ y.\ \T} (\lambda x\ y.\ (x,\ y))$ & 合并两个值而构造元组 \\ \hline
+$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{\ListI\ \CWI|i|\RsI\ i}
+  {\lambda l\ x.\ \T}$\newline$(\lambda l\ x.\ (l,\ x))$ &
+  当第一个元素为链写入指令序列时，由定义 
+  \ref{D.contract.interface} 此元组就构成了智能合约的响应 \\ \hline
     $\mathbf{Seg}_{0,\Si_i}$ & $\mathbf{Seg}_{0,\Si_i} 
     \proctr{i\times j|i}{\K \T} \mathrm{fst}$ &
-取出元组的第一个元素，fst 为 HOL 系统库的函数。 \\ \hline
+取出元组的第一个元素 \\ \hline
     $\mathbf{Seg}_{\Si_i,\Si_j}$ & $\mathbf{Seg}_{\Si_i,\Si_j} 
     \proctr{i\times j|j}{\K \T} \mathrm{snd}$ &
-取出元组的第二个元素，snd 为 HOL 系统库的函数。 \\ \hline
+取出元组的第二个元素 \\ \hline
   \textbf{If} & 不具有 Noesis 同构，但具有类似性质，见定理
   \ref{T.If.prop}& 分支 \\ \hline
 \end{tabular}
   \begin{tablenotes} \small
-  \item 因空间不够，记号 $\B_n \coloneqq \lceil \log_{256} n \rceil$
+  \item 因空间不够，记号 $\B_n \coloneqq \lceil \log_{256} n \rceil$。
+    fst 与 snd 在 HOL 中预定义。
 \end{tablenotes}
 \end{threeparttable} 
 \end{table}
@@ -336,7 +382,9 @@ $\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda k.\ (c,k) \in \D
   \end{proof}
 \end{theo}
 
-\begin{defin}[智能合约的外部接口]
+\begin{defin}[智能合约的外部接口] \label{D.contract.interface}
+定义理解 $\RsI\ i$ 表示以 $i$ 理解为返回内容的智能合约调用响应
+  \[ \RsI\ i \coloneqq i \times (\ListI\ \CWI) \]
 所有 \amlhS 的智能合约所暴露的可供外部调用的接口应是一种现象函数，
 且其具有至少一种 Noesis 同构，此同构满足第一个参数的理解必为 
 $\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即

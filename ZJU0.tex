@@ -119,7 +119,7 @@
 \DeclareMathOperator{\xif}{if\ }
 \DeclareMathOperator{\xthen}{\ then\ }
 \DeclareMathOperator{\xelse}{\ else\ }
-\DeclareMathOperator{\fupdate}{\ |+\ }
+\newcommand{\fupdate}{\mathbin\text{|+}}
 \DeclareMathOperator{\fdelete}{\ |-\ }
 \DeclareMathOperator{\h}{h}
 \DeclareMathOperator{\QI}{QI}
@@ -167,17 +167,24 @@
   \ooalign{\hidewidth\raise1ex\hbox{.}\hidewidth\cr$\m@th-$\cr}%
 }
 \makeatother
-\newcommand{\PhV}{\mathord{\mathbf{PhV}}}
-\newcommand{\PhS}{\mathord{\mathbf{PhS}}}
-\newcommand{\PhP}{\mathord{\mathbf{PhP}}}
-\newcommand{\PH}{\mathord{\mathbf{PH}}}
-\newcommand{\VV}{\mathord{\mathbf{VV}}}
-\newcommand{\VP}{\mathord{\mathbf{VP}}}
-\newcommand{\Rsp}{\mathord{\mathbf{Rsp}}}
-\newcommand{\Sp}{\mathord{\mathbf{Sp}}}
-\newcommand{\Si}{\mathord{\mathbf{Si}}}
-\newcommand{\Li}{\mathord{\mathbf{Li}}}
-\newcommand{\Tr}{\mathord{\mathbf{Tr}}}
+\DeclareMathOperator{\PhV}{\mathbf{PhV}}
+\DeclareMathOperator{\PhS}{\mathbf{PhS}}
+\DeclareMathOperator{\PhP}{\mathbf{PhP}}
+\DeclareMathOperator{\PH}{\mathbf{PH}}
+\DeclareMathOperator{\VV}{\mathbf{VV}}
+\DeclareMathOperator{\VP}{\mathbf{VP}}
+\DeclareMathOperator{\Rsp}{\mathbf{Rsp}}
+\DeclareMathOperator{\Sp}{\mathbf{Sp}}
+\DeclareMathOperator{\Si}{\mathbf{Si}}
+\DeclareMathOperator{\Li}{\mathbf{Li}}
+\DeclareMathOperator{\Tr}{\mathbf{Tr}}
+\DeclareMathOperator{\TC}{\mathbf{TC}}
+\DeclareMathOperator{\Read}{Read}
+\DeclareMathOperator{\ReadZ}{Read0}
+\DeclareMathOperator{\Write}{Write}
+\DeclareMathOperator{\Has}{Has}
+\newcommand{\emptylist}{\texttt{[]}}
+\newcommand{\Nil}{\emptylist}
 
 \newcommand{\univ}[1]{\mathbb{U}(\text{:#1})}
 \newcommand{\RsI}{\mathbf{Rs}_{\mathbf{I}}}
