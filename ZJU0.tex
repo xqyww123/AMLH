@@ -4,7 +4,6 @@
 % 论文默认为单面模式，需单面模式请将第一行换为如下所示：
 %\documentclass[twoside]{ZJUthesis}
 
-\input{ctex-xecjk-winfonts.def}
 \usepackage{tabularx}
 \usepackage{longtable}
 \usepackage[flushleft]{threeparttable}
@@ -18,18 +17,22 @@
 \usepackage{textgreek}
 %\usepackage{blindtext}
 \usepackage{scrextend}
-\addtokomafont{labelinglabel}{\sffamily}
+%\addtokomafont{labelinglabel}{\sffamily}
 \usepackage{multicol}
 \setlength{\columnsep}{1cm}
-
 %\usepackage[english]{babel}
 \usepackage{newunicodechar}
+\usepackage{amssymb}
+%\usepackage{unicode-math}
+%\setmathfont{XITS Math}
 \newfontfamily\miscsymfont{STIX}
 \newfontfamily\miscsymfontd{DejaVu Sans}
 \newunicodechar{→}{{\miscsymfont\symbol{"2192}}}
 \newunicodechar{。}{{\watermark.\ }}
 %\newunicodechar{。}{{.\ }}
 \newunicodechar{，}{{,\ }}
+\newunicodechar{（}{{(}}
+\newunicodechar{）}{{)}}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
 \newunicodechar{❚}{{\miscsymfontd\symbol{"275A}}}
 \newunicodechar{¶}{{\miscsymfontd\symbol{"00B6}}}
@@ -40,12 +43,16 @@
 \newcommand{\pilcrow}{\text{¶}}
 \newcommand{\currency}{ \text{¤} }
 \newcommand{\ccurrency}{{\mathrm{c}_\currency}}
-\newcommand{\tcurrency}{{\mathrm{t}_\currency}}
+\newcommand{\tcurrency}{{\mathrm{t}^\currency}}
+\newcommand{\Wi}[1]{\texttt{i#1}}
+\newcommand{\Wf}[1]{\texttt{f#1}}
+\newcommand{\Wpointer}{\texttt{pointer}}
+\newcommand{\Wtyp}[1]{\ensuremath{\mathcal{T}_{#1}}}
+\newcommand{\Winst}[1]{\ensuremath{\texttt{#1}}}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
 %\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
-\usepackage{amssymb}
 \let\oldemptyset\emptyset
 \let\emptyset\varnothing
 \newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
@@ -102,6 +109,8 @@
 \newcommand{\CM}{\mathop{\mathbf{CM}}}
 \newcommand{\CMT}[3]{\combtyp{CM}{(#1,\ #2,\ #3)}}
 \newcommand{\CMS}{\mathrm{CM}}
+\DeclareMathOperator{\fst}{fst}
+\DeclareMathOperator{\snd}{snd}
 \DeclareMathOperator{\type}{type}
 \DeclareMathOperator{\B}{B}
 \DeclareMathOperator{\xa}{a}
@@ -119,7 +128,15 @@
 \DeclareMathOperator{\xif}{if\ }
 \DeclareMathOperator{\xthen}{\ then\ }
 \DeclareMathOperator{\xelse}{\ else\ }
-\newcommand{\fupdate}{\mathbin\text{|+}}
+\newcommand{\fupdate}{\mathbin{\text{|+}}}
+\newcommand{\fupdates}{\mathbin{\text{|++}}}
+\newcommand{\ccirc}{\mathbin{\mathchoice
+  {\xcirc\scriptstyle}
+  {\xcirc\scriptstyle}
+  {\xcirc\scriptscriptstyle}
+  {\xcirc\scriptscriptstyle}
+}}
+\newcommand{\xcirc}[1]{\vcenter{\hbox{$#1\circ$}}}
 \DeclareMathOperator{\fdelete}{\ |-\ }
 \DeclareMathOperator{\h}{h}
 \DeclareMathOperator{\QI}{QI}
@@ -389,6 +406,7 @@
 	\input{./chapters/AmLH.tex}
 	\input{./chapters/EditorShell.tex}
 	\input{./chapters/Implementation.tex}
+  \input{chapters/implementation/exam_transfer.tex}
 	
 	\ZJUbackmatter
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

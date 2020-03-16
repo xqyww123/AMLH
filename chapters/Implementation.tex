@@ -85,20 +85,32 @@ p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 \[ \mathrm{chain} \Coloneqq (\mathrm{string},\ \mathrm{phenomenon})
 \mapsto \mathrm{phenomenon} \]
 链数据是作为字符串的表标识与作为现象的键的元组到作为现象的值的有限映射。
-类型 chain\_table 综合了表标识与键值理解
-  \[ \combtyp{chain\_table}{(\alpha,\ \beta)} \Coloneqq \mathbf{TC}\ 
-  \mathrm{string}\ (\itp{\alpha})\ (\itp\beta)\]
 $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
-的所有键与值，并类似地有 $\Dom_{(\mathbf{TC}\ c\ i\ j)}\ \phi$，$
-  \Ima_{(\mathbf{TC}\ c\ i\ j)}\ \phi$
+的所有键与值
   \[ \begin{array}{lcl}
     \Dom_c\ \phi &=& \{x\mbar (c,x) \in \Dom \phi\} \\
-    \Ima_c\ \phi &=& \{\phi\ (c,x) \mbar (c,x) \in \Dom \phi \} \\
-    \Dom_{(\mathbf{TC}\ c\ i\ j)}\ \phi &=& \{\epsilon\mbar (c,\Li_i 
+    \Ima_c\ \phi &=& \{\phi\ (c,x) \mbar (c,x) \in \Dom \phi \}
+\end{array} \]
+类型 chain\_table 综合了表标识与键值理解
+  \begin{gather*}
+  \combtyp{chain\_table}{(\alpha,\ \beta)} \Coloneqq \mathbf{TC}\ 
+  \mathrm{string}\ (\itp{\alpha})\ (\itp\beta)\\
+  \begin{align*}
+    (\mathbf{TC}\ c\ i\ j)_\mathrm{c} &\coloneqq c&
+    (\mathbf{TC}\ c\ i\ j)_\mathrm{i} &\coloneqq i&
+    (\mathbf{TC}\ c\ i\ j)_\mathrm{j} &\coloneqq j&
+  \end{align*} \end{gather*}
+记号 $\phi^{(\mathbf{TC}\ c\ i\ j)}$ 表示链数据 $\phi$ 的标识为 $c$ 的表
+在键理解 $i$ 与值理解 $j$ 的作用下的本体对应
+\[ \begin{array}{lrcl}
+  &\phi^{(\mathbf{TC}\ c\ i\ j)} &=& \Tr_j \ccirc\ \phi \ccirc \Li_i\\
+    \Dom&\phi^{(\mathbf{TC}\ c\ i\ j)} &=& \{\epsilon\mbar (c,\Li_i 
     \epsilon) \in \Dom \phi\} \\
-    \Ima_{(\mathbf{TC}\ c\ i\ j)}\ \phi &=& \{\Tr_j(\phi\ (c,\Li_i 
+    \Ima&\phi^{(\mathbf{TC}\ c\ i\ j)} &=& \{\Tr_j(\phi\ (c,\Li_i 
     \epsilon))\mbar (c,\Li_i \epsilon) \in \Dom \phi \}
 \end{array} \]
+$t_0$ 为表 $t$ 的零元素
+  \[ (\mathbf{TC}\ c\ i\ j)_0 = \Tr_j\ (\PhV\ 0\ \Si_j) \]
 类型 write\_chain 表示对链的写入操作命令，也是一个别名
 \[ \mathrm{write\_chain} \Coloneqq ((\mathrm{string},\ 
 \mathrm{phenomenon}),\ \mathrm{phenomenon}) \]
@@ -117,7 +129,7 @@ $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
   \alpha \rightarrow \beta \rightarrow \mathrm{write\_chain}
 \end{array}\\
 \begin{array}{lcl}
-\Has\ (\TC c\ i\ j)\ x\ k &\coloneqq& (c,\ \Li_i k) \in \Dom x\\
+\Has\ (\TC c\ i\ j)\ \phi\ k &\coloneqq& (c,\ \Li_i k) \in \Dom \phi\\
 \Read\ (\TC c\ i\ j)\ \phi\ k &\coloneqq& \Tr_j(\phi\ (c,\ \Li_i\ k))\\
   \ReadZ\ (\TC c\ i\ j)\ \phi\ k &\coloneqq& \left\{ \begin{split}
 &\xif \Has\ (\TC c\ i\ j)\ \phi\ k \xthen \Tr_j(\phi\ (c,\ \Li_i\ k))\\
@@ -125,17 +137,25 @@ $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
 \Write\ (\TC c\ i\ j)\ k\ v &\coloneqq& ((c,\ \Li_i k),\ \Li_j v)
 \end{array} \end{gather*}
 有一些显然的定理
-\begin{gather*}
-    \Read\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' =
+  \[ \begin{array}{rclcl}
+    &\vdash&\Has\ t\ \phi\ k &=& k \in \phi^t\\
+    &\vdash&\Read\ t\ \phi\ k &=& \phi^t\ k\\
+    &\vdash&\ReadZ\ t\ \phi\ k &=& \xif k \in \phi^t \xthen
+    \phi^t\ k \xelse t_0\\
+    &\vdash&\Read\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' &=&
     (\xif k = k' \xthen v \xelse \Read\ t\ \phi\ k') \\
-t_1 \neq t_2 \Rightarrow (\Read\ t_1\ (\phi \fupdate \Write\ 
-t_2\ k\ v)\ k' = \Read\ t_1\ \phi\ k') \\
-    \ReadZ\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' =
+  t_1 \neq t_2 &\vdash& \Read\ t_1\ (\phi \fupdate \Write\ 
+    t_2\ k\ v)\ k' &=& \Read\ t_1\ \phi\ k' \\
+    &\vdash&\ReadZ\ t\ (\phi \fupdate \Write\ t\ k\ v)\ k' &=&
     (\xif k = k' \xthen v \xelse \ReadZ\ t\ \phi\ k') \\
-t_1 \neq t_2 \Rightarrow (\ReadZ\ t_1\ (\phi \fupdate \Write\ 
-t_2\ k\ v)\ k' = \ReadZ\ t_1\ \phi\ k') \\
-  \ReadZ\ (\TC\ c\ i\ j)\ \emptyset\ k = \Tr_j\ (\PhV\ 0\ \Si_j)
-\end{gather*}
+    t_1 \neq t_2 &\vdash& \ReadZ\ t_1\ (\phi \fupdate \Write\ 
+    t_2\ k\ v)\ k' &=& \ReadZ\ t_1\ \phi\ k' \\
+    &\vdash& \ReadZ\ t\ \emptyset\ k &=& t_0 \\
+    k \in \phi^t &\vdash& \Ima_t\ (\phi \fupdate \Write\ t\ k\ v) 
+    &=& \Ima \phi^t - \{ \phi^t\ k \} \cup \{ v \}\\
+    k \notin \phi^t &\vdash& \Ima_t\ (\phi \fupdate \Write\ t\ k\ v) 
+    &=& \Ima \phi^t \cup \{ v \}
+  \end{array} \]
 \end{defin}
 
 链数据写入命令的内存结构为
@@ -286,7 +306,8 @@ $\mathbf{Has}\ t$ & 虚构定义自同构 $\mathbf{Has}\ t
 $\mathbf{Read0}\ t$ & 虚构定义自同构 
 $\mathbf{Read0}\ t \proctr{\OneI\ x|i|j}{\lambda x\ k.\ \T} \ReadZ\ t$
   \\\hline
-$\mathbf{Cart}$ & $\mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
+$\mathbf{Cart}\ n_1\ n_2$ & $\PB p_1 = n_1,\ \PB p_2 = n_2 \vdash
+  \mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
     $\mathbf{Seg}_{m,n}$ & $\mathbf{Seg}_{m,n}\ p \coloneqq \PhV\ 
     (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
 $\mathbf{If}$ & $\PB p_c = 1\Rightarrow \mathbf{If}\ p_c\ p_a\ p_b 
@@ -326,21 +347,22 @@ i}{\lambda l\ x.\ \T} (::)$ & 增加元素到列表的末尾，$(::)$
 是 HOL 系统库中列表的增加函数，$1::[2]$ 表示 $[1,2]$ \\ \hline
 $\mathbf{Has}\ t$ & $\mathbf{Has}\ t \proctr{\OneI\ x|i|\BoolI}
 {\K (\K \T)} \Has\ t$ &
-对给定的链数据 $x$，表标识 $c$，查询链数据$x$的表$c$是否拥有键 $k$
+查询链数据$x$的标识为$c$的表是否拥有键 $k$
   \\ \hline
 $\mathbf{Read}\ t$ & $\mathbf{Read}\ t\proctr{\OneI\ x|i|j}{\Has t}
   \Read\ t$ &
-对给定的链数据 $x$，表标识 $c$，读取链数据$x$的表$c$的$k$键 \\ \hline
+读取链数据$x$的标识为$c$的表的$k$键 \\ \hline
 $\mathbf{Read0}\ t$ & $\mathbf{Read0}\ t \proctr{\OneI\ x|i|j}
   {\K (\K \T)} \ReadZ\ t$ &
-对给定的链数据 $x$，表标识 $c$，若链数据$x$的表$c$中存在$k$键则读取，
-  否则返回 $j$ 理解下的0值\\ \hline
-$\mathbf{Write}\ t$ & $\mathbf{Write}\ t \proctr{i|j|\CWI}
+若链数据$x$的表$c$中存在$k$键则读取，否则返回 $j$ 理解的字节大小的0值
+\\ \hline $\mathbf{Write}\ t$ & $\mathbf{Write}\ t \proctr{i|j|\CWI}
   {\lambda k\ v.\ \T} \Write\ t$ &
 写入链数据的表$c$的键$k$为$v$的操作，产生写入命令 \\ \hline
-$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{i|j|i\times j}{\lambda
-  x\ y.\ \T} (\lambda x\ y.\ (x,\ y))$ & 合并两个值而构造元组 \\ \hline
-$\mathbf{Cart}$ & $\mathbf{Cart} \proctr{\ListI\ \CWI|i|\RsI\ i}
+$\mathbf{Cart}\ \Si_i\ \Si_j$ & $\mathbf{Cart}\ \Si_i\ \Si_j
+  \proctr{i|j|i\times j}{\lambda x\ y.\ \T}$\newline
+  $(\lambda x\ y.\ (x,\ y))$ & 合并两个值而构造元组 \\ \hline
+$\mathbf{Cart}\ \Si_i\ \Si_j$ & $\mathbf{Cart}\ \Si_i\ \Si_j
+  \proctr{\ListI\ \CWI|i|\RsI\ i}
   {\lambda l\ x.\ \T}$\newline$(\lambda l\ x.\ (l,\ x))$ &
   当第一个元素为链写入指令序列时，由定义 
   \ref{D.contract.interface} 此元组就构成了智能合约的响应 \\ \hline
@@ -470,4 +492,6 @@ $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\
 \end{split} \]
 就得到了编译结果 $\mathbf{IAdd}\ 2\ (\mathbf{IConv}\ 1\ 2\ x)\ y$。
 
-\input{chapters/implementation/exam_transfer.tex}
+附录 \ref{Ch.example.transfer} 给出了一个完整的 \amlhS 上转账合约的示例。
+
+\input{chapters/implementation/compilation.tex}

@@ -1,0 +1,132 @@
+\section{抽象机器 \amlhS 的编译}
+
+抽象机器 \amlh 的编译分为两步，首先程序被其定义展开成基元函数的组合，
+成为一种中间表达（IR）。IR 由 HOL 作为文本输出而交给外部程序，外部程序
+由基元函数到目标平台指令集的映射，将基元函数的组合翻译至目标平台。
+用户程序到 IR 的编译是在 HOL 内部进行而被保障的，IR 到目标平台的编译
+是在外部进行，是可能有错误的。
+
+本文的 \amlhS 的基元函数存在到 WASM 的映射，其上的程序可以被编译到 WASM
+，进而在任何 WASM 执行平台上运行。EOS.IO 等智能合约平台支持以 WASM 程序
+作为智能合约。
+
+WASM 的特点，只有 \Wi{32}，\Wi{64}，\Wf{32}，\Wf{64} 
+四种类型，分别表示 32位整数、64位整数、32位浮点数、64位浮点数。本工作的
+\amlhS 尚不支持浮点数，故只考虑 \Wi{32} 与 \Wi{64}。
+
+\amlhS 中每一个理解都具有确定的字节数，理解的现象以此字节数排布在内存中
+。计算时，所有小于等于4字节的现象以 WASM 的 \Wi{32} 表示，大于4字节但
+小于等于8字节的以 \Wi{64} 表示，大于8字节的以指针表示。
+本工作的实现中指针以32位整数 \Wi{32} 表示，但这是可变的。
+ $\mathcal{T}_b$ 表示 $b$ 个字节的值的 WASM 类型
+ \[ \mathcal{T}_b \coloneqq \left\{ \begin{array}{lcl} 
+\Wi{32} &\when& b \leq 4\\\Wi{64} &\when& 4 < b \leq 8\\
+   \Wpointer &\when& 8 < b \end{array} \right. \]
+
+WASM 上的指令也为各种类型设计了不同版本。例如整数加法有 \texttt{i32.add}
+，\texttt{i64.add} 两种版本。\amlhS 中的基元运算也根据字节长度有不同
+版本，例如 $\mbar{IAdd}\ n$ 表示 $n$ 个字节的整数加法基元函数，
+具体参见表 \ref{tab.IC.primop2}。$n$ 个字节的基元函数就对应 \Wtyp{n} 
+类型的版本的指令。基元函数 $\mathbf{IAdd}\ n$ 对应的 WASM 指令是
+\Winst{\Wtyp{n}.add}，这一记号表示类型 \Wtyp{n} 版本的 \texttt{add} 
+指令。
+
+以 WASM 为智能合约架构的智能合约平台一般提供外部函数以实现高精度运算。
+目前的 \amlhS 尚不支持高精度整数运算，仅支持最高64位的运算，故 $n > 8$
+，$\Wtyp{n} = \Wpointer$ 情况的整数运算不需要考虑。
+
+WASM 采用一种树形结构表达， \amlhS 的 IR 的也同以树形结构表达，与 WASM
+的结构类似。主要需要讨论的是临时变量，\amlhS 的 IR 不表达临时变量，
+编译器需要分析 \amlhS 的 IR 表达，找出重复的计算并将结果存入临时变量以
+重用计算结果以提高性能。\amlhS 采用了计算与状态分离的设计，其程序仅进行
+无状态的数值计算，故任何中间计算结果的重用都是安全的。
+对于分支结构，\amlhS 的 IR 的分支表达为
+\[ \mathbf{If}\quad condition\quad branch_A\quad branch_B \]
+对应的 WAST 表达为
+\[ (\texttt{if}\quad (condition)\quad (\texttt{then}\quad branch_A)
+\quad (\texttt{else}\quad branch_B)) \]
+整个 $branch_A$ 与 $branch_B$ 都在分支块中，只有那些重复的计算被重用
+地置于之前的临时变量赋值中。最后循环结构因 \amlhS 目前尚不支持而
+不需要讨论。表 \ref{tab.primop.WASM} 列出了基元函数到 WASM 指令的映射。
+
+\begin{table}[hp]
+\begin{threeparttable}
+\centering \caption{\amlhS 的基元函数到 WASM 指令的映射}
+\label{tab.primop.WASM}
+\begin{tabularx}{\linewidth}{ |c|c|c|X| } \hline
+{\bfseries 基元函数} & {\bfseries 条件} & {\bfseries WASM 指令} &
+{\bfseries 说明}\\ \hline
+$\mathbf{IAdd}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.add} & 
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{ISub}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.sub} & 
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{IMul}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.mul} &
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{ILt}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.lt} &
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{ILe}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.le} &
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{IEq}\ b$ & $b \leq 8$ & \Winst{\Wtyp{b}.eq} &
+不支持 $b > 8$ 时的高精度运算 \\ \hline
+$\mathbf{IConv}\ a\ b$ & $a \leq 4\ \land\ b \leq 4$ 
+& 不生成指令 & 不需要任何计算 \\ \hline
+$\mathbf{IConv}\ a\ b$ & $a \leq 4\ \land\ 4 < b \leq 8$ 
+& \texttt{i64.extend\_u/i32} & \\ \hline
+$\mathbf{IConv}\ a\ b$ & $4 < a \leq 8\ \land\ b < 4$ 
+& \texttt{i32.wrap/i64} &  \\ \hline
+$\mathbf{IConv}\ a\ b$ & $8 < a\ \land\ 8 < b$
+& 不生成指令 & 不需要任何计算 \\ \hline
+$\mathbf{IConv}\ a\ b$ & 其余情况
+& 不支持 & 不支持任何高精度运算 \\ \hline
+$\mathbf{INot}$ & $\T$ & \Winst{i32.eqz} & \\ \hline
+$\mathbf{Append}\ i$ & $\T$ & \Winst{call $\texttt{append}\_{\Si_i}$} 
+& 根据给定的理解 $i$ 的字节大小 $\Si_i$，生成 $\Si_i$ 字节版本的
+列表增添函数并调用。\\ \hline
+$\mathbf{Has}\ t$ & $\T$ & \Winst{call $\texttt{has}_t$}
+& 生成表 $t$ 版本的区块链数据查找函数并调用。\\ \hline
+$\mathbf{Read}\ t$ & $\T$ & \Winst{call $\texttt{read}_t$}
+& 生成表 $t$ 版本的区块链数据读取函数并调用。\\ \hline
+$\mathbf{Read0}\ t$ & $\T$ & \Winst{call $\texttt{read0}_t$}
+& 生成表 $t$ 版本的区块链数据读取函数并调用。\\ \hline
+$\mathbf{Write}\ t$ & $\T$ & \Winst{call $\texttt{write}_t$}
+& 生成表 $t$ 版本的区块链数据写入命令构造函数并调用。\\ \hline
+$\mathbf{Cart}\ n\ m$ & $\T$ & \Winst{call $\texttt{cart}_{n,m}$}
+& 生成表 $n,m$ 版本的内存拼接函数并调用。\\ \hline
+$\mathbf{Seg}\ n\ m$ & $\T$ & \Winst{call $\texttt{seg}_{n,m}$}
+& 生成表 $n,m$ 版本的内存部分读取函数并调用。\\ \hline
+$\mathbf{If}$ & $\T$ & \Winst{if} & 见正文的论述 \\ \hline
+\end{tabularx}\end{threeparttable}\end{table}
+
+一些基元函数不能直接对应到一个 WASM 上的指令，而是要通过预先构建的
+WASM 上的函数，这些函数可以理解为 \amlhS 运行时的系统库，
+当然这些函数也可以内联地展开在基元函数调用的地方。
+现在将论述表 \ref{tab.primop.WASM} 中提及的系统库函数 $\texttt{has}_t$，
+$\texttt{read}_t$，$\texttt{read0}_t$，$\texttt{write}_t$，
+$\texttt{cart}_{n,m}$，$\texttt{seg}_{n,m}$。
+
+\begin{description}
+\item[全局值 \texttt{heap\_pointer}] 指向堆的末尾。\amlhS 在 WASM 
+的编译实现的堆正向增长。\texttt{heap\_pointer} 的初始值是一常量，
+此值之前的为常量段内存，之后为堆。
+\item[函数 \texttt{malloc(size\ :\ \Wpointer)}\ :\ \Wpointer] 
+在堆中分配大小为 \texttt
+{size} 字节的内存。将 \texttt{heap\_pointer} 的值增加 \texttt{size}
+而返回 \texttt{heap\_pointer} 的原始值。
+\item[函数 $\texttt{has}_{(\mathbf{TC}\ c\ i\ j)}\texttt{(t\ :\ 
+\Wtyp{\Si_i})}\ :\ \Wi{32}$] 根据目标智能合约平台，
+调用智能合约平台提供的接口，查询链数据的表$c$
+中是否有键 $k$，并返回 \Wi{32} 类型的 Bool 值。
+\item[函数 $\texttt{read}_{(\mathbf{TC}\ c\ i\ j)}\texttt{(k\ :\ 
+\Wtyp{\Si_i})\ :\ \Wtyp{\Si_j}}$]
+根据目标智能合约平台，调用智能合约平台提供的接口，读取链数据的表$c$
+的键 $k$。并根据 $\Si_j$ 决定是以指针方式还是值方式返回数据，并返回类型
+\Wtyp{\Si_j}。
+\item[函数 $\texttt{write}_t$] 对 $t = \mathbf{TC}\ c\ i\ j$，
+$\texttt{write}_t$ 是一个接受 \Wtyp{\Si_i} 类型的参数 $k$ 与\Wtyp{\Si_j}
+类型的参数 $v$ 的函数，
+
+根据目标智能合约平台，调用智能合约平台提供的
+接口，读取链数据的表$c$
+的键 $k$。并根据 $\Si_j$ 决定是以指针方式还是值方式返回数据，并返回类型
+\Wtyp{\Si_j}。
+\end{description}

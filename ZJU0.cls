@@ -62,6 +62,16 @@
 \setlist[enumerate]{nosep}
 \setlist[itemize]{nosep}
 
+%\setCJKmainfont[BoldFont={SimHei},ItalicFont={KaiTi}]{SimSun}
+%\setCJKsansfont{SimHei}
+%\setCJKmonofont{SimSun}
+\setCJKfamilyfont{zhli}{LiSu}
+\setCJKfamilyfont{zhyou}{YouYuan}
+\newcommand*{\lishu}{\CJKfamily{zhli}}    % 隶书
+\newcommand*{\youyuan}{\CJKfamily{zhyou}} % 幼圆
+
+%\input{ctex-xecjk-winfonts.def}
+
 % 这里几行代码使得目录中的“第几章” 和后面的章节名称不致发生重叠
 \renewcommand{\numberline}[1]{%
   \settowidth\@tempdimb{#1\hspace{0.5em}}%
@@ -72,26 +82,26 @@
 
 
 % 重新定义chapter属性，使图表目中中章与章之间没有空行
-\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
-  \if@mainmatter
-  \refstepcounter{chapter}%
-  \typeout{\@chapapp\space\thechapter.}%
-  \addcontentsline{toc}{chapter}%
-  {\protect\numberline{第 \chaptername 章}\hspace{0.5em}#1}
-  %    {\protect\numberline{\chaptername}\hspace{4em}#1}
-  \else
-  \addcontentsline{toc}{chapter}{#1}%
-  \fi
-  \else
-  \addcontentsline{toc}{chapter}{#1}%
-  \fi
-  \chaptermark{#1}%
-  \if@twocolumn
-  \@topnewpage[\@makechapterhead{#2}]%
-  \else
-  \@makechapterhead{#2}%
-  \@afterheading
-  \fi}
+%\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+%  \if@mainmatter
+%  \refstepcounter{chapter}%
+%  \typeout{\@chapapp\space\thechapter.}%
+%  \addcontentsline{toc}{chapter}%
+%  {\protect\numberline{第 \thechapter 章}\hspace{0.5em}#1}
+%  %    {\protect\numberline{\chaptername}\hspace{4em}#1}
+%  \else
+%  \addcontentsline{toc}{chapter}{#1}%
+%  \fi
+%  \else
+%  \addcontentsline{toc}{chapter}{#1}%
+%  \fi
+%  \chaptermark{#1}%
+%  \if@twocolumn
+%  \@topnewpage[\@makechapterhead{#2}]%
+%  \else
+%  \@makechapterhead{#2}%
+%  \@afterheading
+%  \fi}
 
 % PDF文档超链接及书签标记，具体选项意义参考hyperref说明文档
 % hyperref包要2011年版的才行
