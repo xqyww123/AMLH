@@ -1,11 +1,11 @@
-\section{λ 演算介绍}
+\chapter{λ 演算介绍} \label{Ch.lambda}
 
 Sørensen 在其讲义中对$\lambda$演算的形式定义非常简洁，
 本节直接从 $\lamst$ 开始介绍，朴素 $\lambda$ 演算请参见其讲义第一章，
  $\lamst$参考自讲义第三章，$\lambda2$参考自讲义第十三章
 \cite{sorensen2006lecturesC1}。
 
-\subsection{λ→}
+\section{λ→}
 
 λ→ 演算有两种样式，Curry 式和 Church 式的，本文延续 Sørensen 的提法，
 简单地说 Curry 式的λ→演算为λ→演算，而说Church式的为Church式λ→演算。
@@ -99,7 +99,7 @@ U = \{\alpha,\beta,\cdots\}
 \end{defin}
 
 
-\subsection{Church式λ→}
+\section{Church式λ→}
 
 Church式λ→ 与 Curry 式 λ→ 的主要区别是，Church 式的抽象中的变量需要
 显示地标记类型。即Curry式的抽象写作
@@ -128,25 +128,16 @@ L_C = \bnf{V \mbar (L\ L) \mbar (\lambda V_C\ L)} \\
 \end{prooftree}
 \end{minipage}
 
-\hfill
-
-\begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
 \AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
 \BinaryInfC{$\Gamma \vdash M N : \tau$}
 \end{prooftree}
-\end{minipage}\begin{minipage}[b]{0.5\linewidth}
-\begin{prooftree}
-\AxiomC{$\Gamma \vdash (\lambda (v:\sigma)\ M)\ x : \tau$}
-\RightLabel{($\beta$规约)}
-\UnaryInfC{$\Gamma \vdash M[v/x] : \tau$}
-\end{prooftree}\end{minipage}
 
 Church 式$\lamst$就是三元组 $(L_C, \Pi, \vdash)$
 \end{defin}
 
-\subsection{λ2}
+\section{λ2}
 
 现在介绍λ2 演算，它有很多名字，System F，二阶λ演算，Girard–Reynolds
 多态λ演算。
@@ -179,22 +170,11 @@ $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 \end{prooftree}
 \end{minipage}
 
-\hfill
-
-\begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
 \AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(组合律)}
 \BinaryInfC{$\Gamma \vdash M N : \tau$}
 \end{prooftree}
-\end{minipage}\begin{minipage}[b]{0.5\linewidth}
-\begin{prooftree}
-\AxiomC{$\Gamma \vdash (\lambda (v:\sigma)\ M)\ x : \tau$}
-\RightLabel{($\beta$规约)}
-\UnaryInfC{$\Gamma \vdash M[v/x] : \tau$}
-\end{prooftree}\end{minipage}
-
-\hfill
 
 \begin{minipage}[b]{0.5\linewidth}
 \begin{prooftree}
@@ -217,7 +197,7 @@ $\mathcal{L}_* = \bnf{L_* : \Pi_*}$ 是λ2表达式，
 多态λ演算λ2就是三元组 $(L_*, \Pi_*, \vdash)$
 \end{defin}
 
-\subsection{β规约}
+\section{β规约}
 
 β 规约是一种 λ表达式上的偏序关系，
 上述的 λ 演算均具有 β 规约。

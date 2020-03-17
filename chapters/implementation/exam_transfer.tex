@@ -1,4 +1,4 @@
-\appendix\chapter{示例：\amlhS 上的转账合约} \label{Ch.example.transfer}
+\chapter{示例：\amlhS 上的转账合约} \label{Ch.example.transfer}
 
 这章将详细给出一个转账合约在 \amlhS 上的示例。首先
 定义理解，使用符号 \currency 表示本示例中的货币理解
@@ -77,28 +77,31 @@ $\mathrm{c_\currency}$，表为
   {\lambda k.\ \T} \ReadZ\ \tcurrency\ \phi&\label{f.Rcc}  \\
 &\text{\ref{f.Rcc} 调用 \ref{f.a.a}}& \tilde{c},\ \tilde{a}
 & \vdash \mathbf{Read0}\ \tcurrency\ \dot{c}\ A \widesim{\currency}
-\ReadZ\ \tcurrency\ \phi\ a& \label{f.Rcca} \\
+\ReadZ\ \tcurrency\ \phi\ a& \label{f.RccaX} \\
+  &\text{简写记号}& &\hat{a} = 
+  ((\letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)
+  \ \land\ (\letve{a} = \ReadZ\ \tcurrency\ \phi\ a))& \\
+&\text{\ref{f.RccaX} 记号 $\hat{a}$}& \tilde{c},\ \tilde{a}&,\ 
+  \hat{a}\vdash \letvp{a} \widesim{\currency} \letve{a}
+& \label{f.Rcca} \\
 &\text{\ref{f.lt} 调用 \ref{f.Rcca}}& \tilde{c},\ \tilde{a}
-  & \vdash \mathbf{ILt}\ \B_\currency\ (
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)
-\proctr{\currency|\BoolI}{\K \T} (\lambda x.\ \ReadZ\ \tcurrency\ \phi
-  \ a< x) & \label{f.LRcca} \\
-  &\text{\ref{f.LRcca} 调用 \ref{f.a.m}}& \tilde{c},\ \tilde{a},\ &
-  \tilde{m} \vdash \mathbf{ILt}\ \B_\currency\ (
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M
-\widesim{\BoolI} (\ReadZ\ \tcurrency\ \phi\ a < M) & \label{f.LRccam} \\
-&\text{简写记号}& P_1 &\coloneqq \ReadZ\ \tcurrency\ \phi\ a
-  < M & \label{f.P2} \\
-&\text{\ref{f.S} 调用 \ref{f.Rcca}}& \begin{split}\tilde{c},\ \tilde{a}
-  &\vdash \mathbf{ISub}\ \B_\currency\ (\mathbf{Read0}\ 
-    \tcurrency\ \dot{c}\ A) 
-  \proctr{\currency|\currency}{\lambda y.\ \ReadZ\ \tcurrency\ \phi\ a
-\geq y}\\ &\quad\quad (\lambda y.\ (\ReadZ\ \tcurrency\ \phi\ a) - y)
-  \end{split} & \label{f.SRcca}\\
-&\text{\ref{f.SRcca} 调用 \ref{f.a.m}}&  \tilde{c},\ \tilde{a},\ &
-  \tilde{m},\ \lnot P_1 \vdash \mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M \widesim{\currency}(\ReadZ
-  \ \tcurrency\ \phi\ a) - m& \label{f.SRccam}\\
+&,\ \hat{a} \vdash \mathbf{ILt}\ \B_\currency\ \letvp{a}
+  \proctr{\currency|\BoolI}{\K \T} (\lambda x.\ \letve{a} < x) 
+  & \label{f.LRcca} \\
+  &\text{\ref{f.LRcca} 调用 \ref{f.a.m}}& \tilde{c},\ \tilde{a}&,\ 
+  \tilde{m},\ \hat{a} \vdash \mathbf{ILt}\ 
+  \B_\currency\ \letvp{a}\ M \widesim{\BoolI} (\letve{a} < M) 
+  & \label{f.LRccam} \\
+&\text{简写记号}& P_1 &\coloneqq \letve{a} < m & \label{f.P2} \\
+&\text{\ref{f.S} 调用 \ref{f.Rcca}}& \tilde{c},\ \tilde{a}
+  &,\ \hat{a} \vdash \mathbf{ISub}\ \B_\currency\ 
+  \letvp{a} \proctr{\currency|\currency}{\lambda y.\ \letve{a}
+  \geq y} (\lambda y.\ \letve{a} - y)
+   & \label{f.SRcca}\\
+&\text{\ref{f.SRcca} 调用 \ref{f.a.m}}&  \tilde{c},\ \tilde{a}&,\ 
+  \tilde{m},\ \hat{a},\ \lnot P_1 \vdash 
+  \mathbf{ISub}\ \B_\currency\ \letvp{a}\ M \widesim{\currency}
+  \letve{a} - m& \label{f.SRccam}\\
 &\text{\ref{f.Write} SPEC $\tcurrency$}& \tilde{c} &\vdash 
   \mathbf{Write}\ \tcurrency \proctr{\AddressI|\currency|\CWI}
   {\lambda k\ v.\ \T} \Write\ \tcurrency& \label{f.Wc}\\
@@ -106,104 +109,98 @@ $\mathrm{c_\currency}$，表为
   \mathbf{Write}\ \tcurrency\ A \proctr{\currency|\CWI}
   {\lambda v.\ \T} \Write\ \tcurrency\ a& \label{f.Wca}\\
 &\text{\ref{f.Wca} 调用 \ref{f.SRccam}}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\tilde{m},\
+  \tilde{c},\ \tilde{a}&,\ \tilde{m},\ \hat{a},\ 
   \lnot P_1 \vdash \mathbf{Write}\ \tcurrency\ 
-  A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M) \\&
-  \quad\quad\widesim[2]{\CWI}\Write\ \tcurrency\ a\ ((\ReadZ
-\ \tcurrency\ \phi\ a) - m) \end{split}& \label{f.WcaSRcam} \\
+  A\ (\mathbf{ISub}\ \B_\currency\ \letvp{a}\ M) \\&
+\quad\quad\widesim[2]{\CWI}\Write\ \tcurrency\ a\ (\letve{a} - m)
+\end{split}& \label{f.WcaSRcam} \\
   &\text{\ref{f.Append} 调用 \ref{f.WcaSRcam}}& \begin{split}
-\tilde{c},\ \tilde{a},\ &\tilde{m},\ \lnot P_1 \vdash\mathbf{Append}\ (
+    \tilde{c},\ \tilde{a}&,\ \tilde{m},\ \hat{a},\ 
+    \lnot P_1 \vdash\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\\
+    \letvp{a}\ M))\\
     & \proctr{\ListI\ \CWI|\ListI\ \CWI}{\lambda l.\ \T} 
-    (\lambda l.\ (\Write\ \tcurrency\ a\ ((\ReadZ
-\ \tcurrency\ \phi\ a) - m)) :: l)
+    (\lambda l.\ (\Write\ \tcurrency\ a\ (\letve{a} - m)) :: l)
   \end{split} & \label{f.LWcaSRcam1} \\
   &\text{\ref{f.LWcaSRcam1} 调用 \ref{f.Nil}}& \begin{split}
-\tilde{c},\ \tilde{a},\ &\tilde{m},\ \lnot P_1 \vdash\mathbf{Append}\ (
+    \tilde{c},\ \tilde{a},\ &\tilde{m},\ \hat{a},\ 
+    \lnot P_1 \vdash\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist\\
-    & \widesim[3]{\ListI\ \CWI} [\Write\ \tcurrency\ a\ ((\ReadZ
-    \ \tcurrency\ \phi\ a) - m)]
+    \letvp{a}\ M))\ \emptylist\\
+  & \widesim[3]{\ListI\ \CWI} [\Write\ \tcurrency\ a\ (\letve{a} - m)]
   \end{split} & \label{f.LWcaSRcam} \\
 &\parbox{1.7cm}{\linespread{1}\selectfont 抽象范畴内的证明}&
 P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
 \leq 256^{\B_\currency} & \label{f.P.addOK} \\
   &\text{\ref{f.Rcc} 调用 \ref{f.a.b}}& \tilde{c},\ \tilde{b} &\vdash 
 \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \widesim{\currency}
-  \ReadZ\ \tcurrency\ \phi\ k & \label{f.Rccb}\\
-&\text{\ref{f.Rccb} 调用 \ref{f.A}}& \begin{split}
-  \tilde{c},\ \tilde{b} &\vdash \mathbf{IAdd}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B) \proctr{\currency|\currency}
-{\lambda y.\ (\ReadZ\ \tcurrency\ \phi\ b) + y < 256^{\B_\currency}}\\
-&(\lambda y.\ (\ReadZ\ \tcurrency\ \phi\ b) + y) \end{split} 
-  &\label{f.ARccb} \\
-  &\parbox{2.3cm}{\ref{f.ARccb} 调用 \ref{f.a.m} 且由
-\ref{f.P.addOK}}& \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1
-\vdash
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M \widesim{\currency} (\ReadZ\ \tcurrency\ \phi\ b) + m & 
-  \label{f.ARccbm} \\
-&\text{\ref{f.Wc} 调用 \ref{f.a.b}}& \tilde{c},\ \tilde{b}&\vdash 
-  \mathbf{Write}\ \tcurrency\ B \proctr{\currency|\CWI}
+  \ReadZ\ \tcurrency\ \phi\ b & \label{f.RccbX}\\
+&\text{简写记号}& &\hat{b} = ((\letvp{b} = \mathbf{Read0}\ \tcurrency\ 
+  \dot{c}\ B)\ \land\ (\letve{b} = \ReadZ\ \tcurrency\ \phi\ b)) & \\
+&\text{\ref{f.RccbX} 记号 $\hat{b}$}& \tilde{c},\ \tilde{b}&,\ 
+  \hat{b}\vdash \letvp{b} \widesim{\currency} \letve{b} 
+  & \label{f.Rccb}\\
+&\text{\ref{f.Rccb} 调用 \ref{f.A}}& 
+  \tilde{c},\ \tilde{b}&,\ \hat{b} \vdash \mathbf{IAdd}\ \B_\currency\ 
+  \letvp{b} \proctr{\currency|\currency}
+  {\lambda y.\ \letve{b} + y < 256^{\B_\currency}}
+  (\lambda y.\ \letve{b} + y) &\label{f.ARccb} \\
+&\parbox{2.4cm}{\ref{f.ARccb} 调用 \ref{f.a.m} 且由
+\ref{f.P.addOK}}& \tilde{c},\ \tilde{b}&,\ \hat{b},\ \tilde{m},\ P_0,\ 
+\lnot P_1 \vdash \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M 
+\widesim{\currency} \letve{b} + m & \label{f.ARccbm} \\
+&\text{\ref{f.Wc} 调用 \ref{f.a.b}}& \tilde{c},\ \tilde{b}&
+\vdash \mathbf{Write}\ \tcurrency\ B \proctr{\currency|\CWI}
   {\lambda v.\ \T} \Write\ \tcurrency\ b &\label{f.Wcb}\\
 &\text{\ref{f.Wcb} 调用 \ref{f.ARccbm}}& \begin{split}
-  \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1 
+  \tilde{c},\ \tilde{b},\ &\tilde{m},\ \hat{b},\ P_0,\ \lnot P_1 
   \vdash \mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M) \\ & \widesim[2]{\CWI} \Write\ \tcurrency\ b\ (
-(\ReadZ\ \tcurrency\ \phi\ b) + m) \end{split} &\label{f.WcbARccbm}\\
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M)
+  \\ & \widesim[2]{\CWI} \Write\ \tcurrency\ b\ (\letve{b} + m)
+\end{split} &\label{f.WcbARccbm}\\
 &\text{\ref{f.Append} 调用 \ref{f.WcbARccbm}}& \begin{split}
-  \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1 
+  \tilde{c},\ \tilde{b},\ &\tilde{m},\ \hat{b},\ P_0,\ \lnot P_1 
   \vdash \mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-M))\\ & \proctr{\ListI\ \CWI|\ListI\ \CWI}{\lambda l.\ \T} (\lambda l.\ 
-(\Write\ \tcurrency\ b\ ((\ReadZ\ \tcurrency\ \phi\ b) + m))::l)
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M))\\ & 
+  \proctr{\ListI\ \CWI|\ListI\ \CWI}{\lambda l.\ \T} (\lambda l.\ 
+  (\Write\ \tcurrency\ b\ (\letve{b} + m))::l)
 \end{split} & \label{f.LWcbARcbm}\\
 &\text{\ref{f.LWcbARcbm} 调用 \ref{f.LWcaSRcam}}& \begin{split}
-  \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1 
+\tilde{c},\ \tilde{b},\ &\tilde{m},\ \hat{a},\ \hat{b},\ P_0,\ \lnot P_1
   \vdash \mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M))\\&\quad\quad(\mathbf{Append}\ (
-  \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist) \\ 
-  &\widesim[3]{\ListI\ \CWI} [(\Write\ \tcurrency\ b\ 
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),\\&\quad\quad(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))]
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M))\\
+  &\quad\quad(\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ A\ 
+  (\mathbf{ISub}\ \B_\currency\ \letvp{a}\ M))\ \emptylist) \\ 
+  &\widesim[3]{\ListI\ \CWI} [(\Write\ \tcurrency\ b\ (\letve{b} + m)),
+  \ (\Write\ \tcurrency\ a\ (\letve{a} - m))]
 \end{split} & \label{f.LLtrans1} \\
 &\text{\ref{f.Rsp} 调用 \ref{f.LLtrans1}}& \begin{split}
-  \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1 
+\tilde{c},\ \tilde{b},\ &\tilde{m},\ \hat{a},\ \hat{b},\ P_0,\ \lnot P_1
   \vdash \mathbf{Cart}\ (\mathbf{Append}\ (
-  \mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{Write}\ \tcurrency\ B\ (\mathbf{IAdd}\ \B_\currency\ 
+  \letvp{b}\ M))\\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)) \\ 
+  \letvp{a}\ M))\ \emptylist)) \\ 
   &\proctr{i|\RsI\ i}{\lambda x.\ \T} (\lambda x.\ 
-  ([(\Write\ \tcurrency\ b\ 
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),\\&\quad\quad(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ x))
+  ([(\Write\ \tcurrency\ b\ (\letve{b} + m)),\ (
+  \Write\ \tcurrency\ a\ (\letve{a} - m))],\ x))
 \end{split} & \label{f.LLtrans2} \\
 &\text{\ref{f.LLtrans2} 调用 \ref{f.T}}& \begin{split}
-  \tilde{c},\ \tilde{b},\ &\tilde{m},\ P_0,\ \lnot P_1 
+\tilde{c},\ \tilde{b},\ &\tilde{m},\ \hat{a},\ \hat{b},\ P_0,\ \lnot P_1
   \vdash \mathbf{Cart}\ (\mathbf{Append}\ (
-  \mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{Write}\ \tcurrency\ B\ (\mathbf{IAdd}\ \B_\currency\ 
+  \letvp{b}\ M))\\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist))\ 
-  \texttt{T}\\ 
+  \letvp{a}\ M))\ \emptylist))\ \texttt{T}\\ 
   &\widesim{\RsI\ \BoolI} ([(\Write\ \tcurrency\ b\ 
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),\\&\quad\quad(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T)
+  (\letve{b} + m)),\ (\Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T)
 \end{split} & \label{f.LLtrans} \\
 &\text{\ref{f.If} 调用 \ref{f.LRccam}}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\tilde{m} \vdash
+  \tilde{c},\ \tilde{a}&,\ \hat{a},\ \tilde{m} \vdash
   (P_1 \Rightarrow p_a \widesim{i} \epsilon_a) \Rightarrow 
   (\lnot P_1 \Rightarrow p_b \widesim{i} \epsilon_b) \Rightarrow \\
-  \mathbf{If}\ &(\mathbf{ILt}\ \B_\currency\ (
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ p_a\ p_b \widesim{i} 
+  \mathbf{If}\ &(\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ 
+  p_a\ p_b \widesim{i} 
 \xif P_1 \xthen \epsilon_a \xelse \epsilon_b \end{split}& \label{f.bc}
 \\ &\text{\ref{f.Rsp} 调用 \ref{f.Nil}}&&\vdash \mathbf{Cart}\ 
 \emptylist \proctr{i|\RsI\ i}{\lambda x.\ \T} (\lambda x.\ (\Nil,\ x))
@@ -212,131 +209,96 @@ M))\\ & \proctr{\ListI\ \CWI|\ListI\ \CWI}{\lambda l.\ \T} (\lambda l.\
 \emptylist\ \texttt{F} \widesim{\RsI\ \BoolI} (\Nil,\ \F) 
 & \label{f.b1} \\
 &\text{\ref{f.bc} 调用 \ref{f.b1}}&\begin{split}
- \tilde{c},\ \tilde{a},\ &\tilde{m} \vdash
+  \tilde{c},\ \tilde{a}&,\ \hat{a},\ \tilde{m} \vdash
 (\lnot P_1 \Rightarrow p_b \widesim{\RsI\ \BoolI} \epsilon_b)
-  \Rightarrow \\&\mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
-  \mathbf{Cart}\ \emptylist\ \texttt{F})\ p_b\\
+\Rightarrow \\&\mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)
+  \ (\mathbf{Cart}\ \emptylist\ \texttt{F})\ p_b\\
   &\widesim{\RsI\ \BoolI} 
 \xif P_1 \xthen (\Nil,\ \F) \xelse \epsilon_b \end{split}& \label{f.ook}
 \\ &\text{\ref{f.ook} 调用 \ref{f.LLtrans}}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\tilde{b},\ \tilde{m},\ P_0 \vdash 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
+  \tilde{c},\ \tilde{a}&,\ \tilde{b},\ \hat{a},\ \hat{b},\ \tilde{m},\ 
+  P_0 \vdash \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ (
   \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
   \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ 
   M)))\\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T})\\ 
+  \letvp{a}\ M))\ \emptylist)\ \texttt{T})\\ 
   &\widesim{\RsI\ \BoolI} \xif P_1 \xthen (\Nil,\ \F) \xelse
-  ([(\Write\ \tcurrency\ b\ 
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),\\&\quad\quad(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T)
+  ([(\Write\ \tcurrency\ b\ (\letve{b} + m)),\\&\quad\quad(
+  \Write\ \tcurrency\ a\ (\letve{b} - m))],\ \T)
 \end{split} & \label{f.OK1} \\
 &\text{\ref{f.OK1} 条件 $P_0$}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\tilde{b},\ \tilde{m} \vdash 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
+\tilde{c},\ \tilde{a}&,\ \tilde{b},\ \hat{a},\ \hat{b},\ \tilde{m}
+  \vdash \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ (
   \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
   \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M)))
+  \\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T})\\ 
+  \letvp{a}\ M))\ \emptylist)\ \texttt{T})\\ 
   &\proctr{\RsI\ \BoolI}{P_0} \xif P_1 \xthen (\Nil,\ \F) \xelse
-  ([(\Write\ \tcurrency\ b\ 
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),\\&\quad\quad(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T)
+  ([(\Write\ \tcurrency\ b\ (\letve{b} + m)),\\&\quad\quad(
+  \Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T)
 \end{split} & \label{f.OK2} \\
-&\text{\ref{f.OK2} 抽象 $\tilde{m}$}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\tilde{b} \vdash (\lambda M.\ 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
+&\parbox{1.8cm}{\ref{f.OK2} 标记削除 $\hat{b},\ \hat{a}$}& \begin{split}
+\tilde{c},\ \tilde{a}&,\ \tilde{b},\ \tilde{m}
+\vdash \mathrm{Let}\ \letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A
+  ;\ \letvp{b} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \ \mathrm{in} \\
+  &\mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ (
   \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
   \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M)))
+  \\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T}))\\ 
-  &\proctr{\currency|\RsI\ \BoolI}{\lambda m.\ P_0} (\lambda m.\ 
-\xif P_1 \xthen (\Nil,\ \F) \xelse ([(\Write\ \tcurrency\ b\\&
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T))
-\end{split} & \label{f.OK3} \\
-&\text{\ref{f.OK3} 抽象 $\tilde{b}$}& \begin{split}
-  \tilde{c},\ \tilde{a},\ &\vdash (\lambda B\ M.\ 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
+  \letvp{a}\ M))\ \emptylist)\ \texttt{T})\\ 
+  &\proctr{\RsI\ \BoolI}{P_0} \mathrm{let}\ 
+  \letve{a} = \ReadZ\ \tcurrency\ \phi\ a;\ 
+  \letve{b} = \ReadZ\ \tcurrency\ \phi\ b\ 
+  \mathrm{in}\\&\quad\xif \letve{a} < m \xthen (\Nil,\ \F) \xelse 
+  \\&\quad\quad\quad([(\Write\ \tcurrency\ b\ (\letve{b} + m)),
+  \Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T)
+\end{split} & \label{f.OK2L2} \\ \hline
+&\parbox{2cm}{\ref{f.OK2L2} 抽象 $\tilde{m},\ \tilde{b},\ \tilde{a},\ 
+\tilde{c}$}& \begin{split} &\vdash (\lambda \dot{c}\ A\ B\ M.\ 
+\mathrm{Let}\ \letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A
+  ;\ \letvp{b} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \ \mathrm{in} \\
+  &\mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ (
   \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
   \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M)))
+  \\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T}))\\ 
-&\proctr{\AddressI|\currency|\RsI\ \BoolI}{\lambda b\ m.\ P_0} 
-  (\lambda b\ m.\ 
-\xif P_1 \xthen (\Nil,\ \F) \xelse ([(\Write\ \tcurrency\ b\\&
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T))
-\end{split} & \label{f.OK4} \\\hline
-&\text{\ref{f.OK4} 抽象 $\tilde{a}$}& \begin{split}
-  \tilde{c}&\vdash (\lambda A\ B\ M.\ 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
-  \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
-  \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
-  \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T}))\\ 
-&\proctr{\AddressI|\AddressI|\currency|\RsI\ \BoolI}
-  {\lambda a\ b\ m.\ P_0} (\lambda a\ b\ m.\ 
-\xif P_1 \xthen (\Nil,\ \F) \xelse ([(\Write\ \tcurrency\ b\\&
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T))
-\end{split} & \label{f.OK5}  \\
-&\text{\ref{f.OK5} 抽象 $\tilde{c}$}& \begin{split}
-  &\vdash (\lambda \dot{c}\ A\ B\ M.\ 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
-  \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
-  \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
-  \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-  \texttt{T}))\\ 
-&\proctr{\OneI\ \phi|\AddressI|\AddressI|\currency|\RsI\ \BoolI}
-  {\lambda \phi\ a\ b\ m.\ P_0} (\lambda \phi\ a\ b\ m.\ 
-\xif P_1 \xthen (\Nil,\ \F) \xelse ([(\Write\ \tcurrency\ b\\&
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T))
+  \letvp{a}\ M))\ \emptylist)\ \texttt{T}))\\ 
+  &\proctr{\RsI\ \BoolI}{\lambda \phi\ a\ b\ m.\ P_0} 
+  \lambda \phi\ a\ b\ m.\ \mathrm{let}\ 
+  \letve{a} = \ReadZ\ \tcurrency\ \phi\ a;\ 
+  \letve{b} = \ReadZ\ \tcurrency\ \phi\ b\ 
+  \mathrm{in}\\&\quad\xif \letve{a} < m \xthen (\Nil,\ \F) \xelse 
+  \\&\quad\quad\quad([(\Write\ \tcurrency\ b\ (\letve{b} + m)),
+  \Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T
 \end{split} & \label{f.Final}
 \end{flalign}
 
 式 \ref{f.Final} 是最后得到的定理。式 \ref{f.Final} 的左侧是构建的程序
-\[ \begin{split} &(\lambda \dot{c}\ A\ B\ M.\ 
-  \mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ ( 
-  \mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M)\ (
+\[ \begin{split} \lambda \dot{c}\ A\ &B\ M.\ 
+\mathrm{Let}\ \letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A
+  ;\ \letvp{b} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \ \mathrm{in} \\
+  &\mathbf{If}\ (\mathbf{ILt}\ \B_\currency\ \letvp{a}\ M)\ (
   \mathbf{Cart}\ \emptylist\ \texttt{F})\\ &\quad(
   \mathbf{Cart}\ (\mathbf{Append}\ (\mathbf{Write}\ \tcurrency\ B\ (
-\mathbf{IAdd}\ \B_\currency\ (\mathbf{Read0}\ \tcurrency\ \dot{c}\ B)\ 
-  M)))\\&\quad\quad(\mathbf{Append}\ (
+  \mathbf{IAdd}\ \B_\currency\ \letvp{b}\ M)))
+  \\&\quad\quad(\mathbf{Append}\ (
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
-  (\mathbf{Read0}\ \tcurrency\ \dot{c}\ A)\ M))\ \emptylist)\ 
-\texttt{T})) \end{split} \]
+  \letvp{a}\ M))\ \emptylist)\ \texttt{T})
+\end{split} \]
 右将此记为 $\mathbf{Transfer}_\mathrm{p}$。侧是其对应的抽象意义
-\[ \begin{split} (\lambda \phi\ a\ b\ m.\ &
-\xif \ReadZ\ \tcurrency\ \phi\ a
-  < M \xthen (\Nil,\ \F) \xelse ([(\Write\ \tcurrency\ b\\&
-  ((\ReadZ\ \tcurrency\ \phi\ b) + m)),(
-  \Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))],\ \T))
+\[ \begin{split} \lambda \phi\ a\ &b\ m.\ \mathrm{let}\ 
+  \letve{a} = \ReadZ\ \tcurrency\ \phi\ a;\ 
+  \letve{b} = \ReadZ\ \tcurrency\ \phi\ b\ 
+  \mathrm{in}\\&\quad\xif \letve{a} < m \xthen (\Nil,\ \F) \xelse 
+  \\&\quad\quad\quad([(\Write\ \tcurrency\ b\ (\letve{b} + m)),
+  \Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T
 \end{split} \]
 将此记为 $\mathrm{Transfer}_\epsilon$。中间的 Noesis 同构符号
 \[ \proctr{\OneI\ \phi|\AddressI|\AddressI|\currency|\RsI\ \BoolI}

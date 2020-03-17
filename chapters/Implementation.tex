@@ -158,19 +158,6 @@ $t_0$ 为表 $t$ 的零元素
   \end{array} \]
 \end{defin}
 
-链数据写入命令的内存结构为
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|} \hline
-\text{表标识}&\text{键指针}&
-\text{键大小}&\text{值指针}&\text{值大小}\\
-\text{1byte}&\text{PointerSize} bytes&
-\text{4bytes}&\text{PointerSize} bytes&\text{4byte} \\ \hline
-\end{tabular}
-\end{center}
-表标识占用1字节，理论上表标识可以是任意字符串，但在最终的编译实现中，
-一段合约所有使用的表标识会被唯一地分配$0\sim255$的编号，使用此编号表示
-表标识，故一个合约支持访问的表数量不超过256个。
-
 \begin{defin}[智能合约调用响应]
 类型 response 表示所期望的智能合约调用的返回类型。
   \[ \combtyp{response}{\alpha} \Coloneqq ((\combtyp{list}{
@@ -272,27 +259,27 @@ $\Li_{\NatSegI n} x$ & $\Li_{\NatSegI n} x \widesim[2]{\NatSegI\ n}
 \centering \caption{\amlhS 中基元函数的定义} \label{tab.IC.primop2}
 \begin{tabularx}{\linewidth}{ |c|X| }\hline
 \textbf{基元函数} & \textbf{定义} \\ \hline
-$\mathbf{IAdd}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{IAdd}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{IAdd}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\PX p_1 + \PX p_2 \mod 256^n)\ n$ \\ \hline
-$\mathbf{ISub}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{ISub}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{ISub}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\PX p_1 - \PX p_2 \mod 256^n)\ n$ \\ \hline
-$\mathbf{IMul}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{IMul}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{IMul}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\PX p_1 * \PX p_2 \mod 256^n)\ n$ \\ \hline
-$\mathbf{ILt}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{ILt}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{ILt}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\xif \PX p_1 < \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-$\mathbf{ILe}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{ILe}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{ILe}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\xif \PX p_1 \leq \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-$\mathbf{IEq}\ n$ & $\PB p_1 = \PB p_2 = n \Rightarrow
+$\mathbf{IEq}\ n$ & $\PB p_1 = \PB p_2 = n \vdash
 \mathbf{IEq}\ n\ p_1\ p_2 \coloneqq
 \PhV\ (\xif \PX p_1 = \PX p_2 \xthen 1 \xelse 0)\ n$ \\ \hline
-    $\mathbf{IConv}_{m,n}$ & $\PB p = m \Rightarrow
+    $\mathbf{IConv}_{m,n}$ & $\PB p = m \vdash
 \mathbf{IConv}_{m,n}\ p \coloneqq \PhV\ (\PX p \Mod 256^n)\ n$ \\\hline
-$\mathbf{INot}$ & $ \PB p = 1 \Rightarrow
+$\mathbf{INot}$ & $ \PB p = 1 \vdash
 \mathbf{INot}\ p = \PhV\ (\xif \PX p = 0 \xthen 1 \xelse 0)\ 1$\\ \hline
 $\mathbf{Append}\ i$ & 虚构定义自同构
 $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
@@ -308,9 +295,10 @@ $\mathbf{Read0}\ t \proctr{\OneI\ x|i|j}{\lambda x\ k.\ \T} \ReadZ\ t$
   \\\hline
 $\mathbf{Cart}\ n_1\ n_2$ & $\PB p_1 = n_1,\ \PB p_2 = n_2 \vdash
   \mathbf{Cart}\ p_1\ p_2 \coloneqq \PhS p_1\ p_2$ \\ \hline
-    $\mathbf{Seg}_{m,n}$ & $\mathbf{Seg}_{m,n}\ p \coloneqq \PhV\ 
-    (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
-$\mathbf{If}$ & $\PB p_c = 1\Rightarrow \mathbf{If}\ p_c\ p_a\ p_b 
+    $\mathbf{Seg}_{l,m,n}$ & $\PB p = l \vdash
+    \mathbf{Seg}_{l,m,n}\ p \coloneqq 
+    \PhV\ (\PX p \Div 256^m \Mod 256^n)\ n$ \\ \hline
+$\mathbf{If}$ & $\PB p_c = 1\vdash \mathbf{If}\ p_c\ p_a\ p_b 
   \coloneqq \xif \PX p_c = 1 \xthen p_a \xelse p_b$ \\ \hline
 \end{tabularx}\end{threeparttable}\end{table}
 \begin{table}[hp]\begin{threeparttable}
@@ -366,10 +354,11 @@ $\mathbf{Cart}\ \Si_i\ \Si_j$ & $\mathbf{Cart}\ \Si_i\ \Si_j
   {\lambda l\ x.\ \T}$\newline$(\lambda l\ x.\ (l,\ x))$ &
   当第一个元素为链写入指令序列时，由定义 
   \ref{D.contract.interface} 此元组就构成了智能合约的响应 \\ \hline
-    $\mathbf{Seg}_{0,\Si_i}$ & $\mathbf{Seg}_{0,\Si_i} 
-    \proctr{i\times j|i}{\K \T} \mathrm{fst}$ &
+$\mathbf{Seg}_{\Si_i+\Si_j,0,\Si_i}$ & $\mathbf{Seg}_
+  {\Si_i+\Si_j,0,\Si_i} \proctr{i\times j|i}{\K \T} \mathrm{fst}$ &
 取出元组的第一个元素 \\ \hline
-    $\mathbf{Seg}_{\Si_i,\Si_j}$ & $\mathbf{Seg}_{\Si_i,\Si_j} 
+    $\mathbf{Seg}_{\Si_i+\Si_j,\Si_i,\Si_j}$ & $
+    \mathbf{Seg}_{\Si_i+\Si_j,\Si_i,\Si_j} 
     \proctr{i\times j|j}{\K \T} \mathrm{snd}$ &
 取出元组的第二个元素 \\ \hline
   \textbf{If} & 不具有 Noesis 同构，但具有类似性质，见定理

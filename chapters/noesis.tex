@@ -7,12 +7,16 @@
 无穷的字符串集合 $\hat{\mathcal{P}},\ \hat{\mathcal{E}} \subseteq 
 \Words$ 分别表示现象、本体的字母集。
 其上的 λ 表达式 $\mathcal{P},\ \mathcal{E}$ 分别为现象集、本体集。
-\begin{align*}
-\mathcal{P} &= \bnf{\hat{\mathcal{P}}\mbar (\mathcal{P}\ \mathcal{P})
-\mbar (\lambda\ \hat{\mathcal{P}}\ \mathcal{P})} &
-\mathcal{E} &= \bnf{\hat{\mathcal{E}}\mbar (\mathcal{E}\ \mathcal{E})
-\mbar (\lambda\ \hat{\mathcal{E}}\ \mathcal{E})}&
-\end{align*}
+  \[ \begin{array}{lcrcccccccl}
+  \mathcal{P} &=& \bnf{&\hat{\mathcal{P}}&\mbar&
+    (\mathcal{P}\ \mathcal{P})&
+    \mbar&(\lambda\ \hat{\mathcal{P}}\ \mathcal{P})&\mbar&
+    (\mathrm{Let}\ \hat{\mathcal{P}\ \mathcal{P}\ \mathcal{P}})&}\\
+    \mathcal{E} &=& \bnf{&\hat{\mathcal{E}}&\mbar&
+    (\mathcal{E}\ \mathcal{E})&
+    \mbar&(\lambda\ \hat{\mathcal{E}}\ \mathcal{E})&\mbar&
+    (\mathrm{Let}\ \hat{\mathcal{E}}\ \mathcal{E}\ \mathcal{E})&}
+  \end{array} \]
 纯粹的 Noesis 系统不支持对理解的演算，理解是原子的，理解集 
 $\mathcal{I} \subseteq \Words$ 是单词集。
 
@@ -30,32 +34,32 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
 \vspace{5mm}
 
 \hspace{-8mm}%
-\begin{minipage}[b]{0.25\linewidth} \begin{prooftree} \centering
+\begin{minipage}{0.25\linewidth} \begin{prooftree} \centering
     \AxiomC{\hfill}
     \RightLabel{(公理)}
     \UnaryInfC{$p \widesim{i} e \vdash p \widesim{i} e$}
 \end{prooftree}\end{minipage}%
-\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+\begin{minipage}{0.4\linewidth} \begin{prooftree}
     \AxiomC{$\Gamma \vdash p \widesim{i} e$}
     \RightLabel{(一阶同构引入)}
     \UnaryInfC{$\Gamma \vdash p \proctr{i}{} e$}
 \end{prooftree}\end{minipage}%
-\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
+\begin{minipage}{0.3\linewidth} \begin{prooftree}
     \AxiomC{$\Gamma \vdash p \proctr{i}{} e$}
     \RightLabel{(一阶同构削除)}
     \UnaryInfC{$\Gamma \vdash p \widesim{i} e$}
 \end{prooftree}\end{minipage}%}
 
-\vspace{5mm}
+\vspace{3mm}
 
-\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+\begin{minipage}{0.45\linewidth} \begin{prooftree}
     \AxiomC{$\Gamma_1 \vdash p \widesim{i} e$}
     \AxiomC{$\Gamma_2 \vdash f \proctr{i|j|\cdots|k}{} \phi$}
     \RightLabel{(应用)}
     \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash
     f\ p \proctr{j|\cdots|k}{} \phi\ e$}
 \end{prooftree}\end{minipage}
-\begin{minipage}[b]{0.5\linewidth} \begin{prooftree}
+\begin{minipage}{0.5\linewidth} \begin{prooftree}
     \AxiomC{$\Gamma,\ p \widesim{i} e \vdash 
     f \proctr{j|\cdots|k}{} \phi$}
     \RightLabel{(抽象)}
@@ -63,7 +67,47 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
     \lambda e.\ \phi$}
 \end{prooftree}\end{minipage}
 
-\vspace{5mm}
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(对应记号 $x$)}
+  \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+  x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth} \begin{prooftree}
+  \AxiomC{$\Gamma \vdash p \proctr{i|\cdots|k}{cond} e$}
+    \RightLabel{(同构记号 $x$)}
+  \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+  x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \proctr{i|\cdots|k}{cond}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+    \AxiomC{$\Gamma,\ x_\mathrm{p} = p,\ x_\mathrm{e} = e \vdash
+     p' \widesim{i}  e'$}
+    \RightLabel{(对应记号 $x$ 削除)}
+    \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ x_\mathrm{p}\ p\ p'
+    \widesim{i} \mathrm{Let}\ x_\mathrm{e}\ e\ e'$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+  \AxiomC{$\Gamma,\ x_\mathrm{p} = p,\ x_\mathrm{e} = e \vdash
+   p' \proctr{i|\cdots|k}{cond}  e'$}
+  \RightLabel{(同构记号 $x$ 削除)}
+  \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ x_\mathrm{p}\ p\ p'
+  \proctr{i|\cdots|k}{cond} \mathrm{Let}\ x_\mathrm{e}\ e\ e'$}
+\end{prooftree}\end{minipage}
+
+\vspace{6mm}
 
 \noindent 
 形式系统朴素 Noesis 就是形式语言 $L_\mathrm{N}$ 和规则 $\vdash$ 
@@ -340,10 +384,13 @@ $cond$的 Noesis 对应。
       a_p \widesim{i} a_e \Rightarrow f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e} f_e\ a_e)
 \end{split} \end{equation}
 
-\begin{theo}[\noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律]
+\begin{theo}[\noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
+记号律、记号削除律]
 在 Noesis 对应的定义 \ref{Def.TR} 与 Noesis 同构的定义 \ref{def.proctr} 
-下，Noesis 系统的调用律、抽象律、一阶同构引入律、一阶同构削除律，以
-HOL 上的定理的形式出现。
+下，Noesis 系统的调用律、抽象律、一阶同构引入律、一阶同构削除律、
+记号律、记号削除律，以 HOL 上的定理的形式出现。
+
+\vspace{5mm}
 
 \hspace{-16mm}
 \begin{minipage}[b]{0.55\linewidth} \begin{prooftree}
@@ -360,6 +407,8 @@ HOL 上的定理的形式出现。
       \proctr{i|j|\cdots|l}{\lambda a_e.\ cond\ a_e} (\lambda a_e.\ b_e)$}
 \end{prooftree}\end{minipage}
 
+\vspace{3mm}
+
 \hspace{-10mm}
 \begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
     \AxiomC{$\Gamma, cond \vdash p \widesim{i} e$}
@@ -372,6 +421,50 @@ HOL 上的定理的形式出现。
     \RightLabel{(一阶同构削除)}
     \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i} e$}
 \end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(对应记号 $x$)}
+    \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+    x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}%
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth} \begin{prooftree}
+  \AxiomC{$\Gamma \vdash p \proctr{i|\cdots|k}{cond} e$}
+    \RightLabel{(同构记号 $x$)}
+    \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+    x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \proctr{i|\cdots|k}{cond}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+  \AxiomC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (x_\mathrm{e} = e 
+  ))\vdash p' \widesim{i}  e'$}
+    \RightLabel{(对应记号 $x$ 削除)}
+  \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ p\ (\lambda x_\mathrm{p}.\ p')
+    \widesim{i} \mathrm{Let}\ e\ (\lambda x_\mathrm{e}.\ e')$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+  \AxiomC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (x_\mathrm{e} = e))
+  \vdash p' \proctr{i|\cdots|k}{cond}  e'$}
+  \RightLabel{(同构记号 $x$ 削除)}
+\UnaryInfC{$\Gamma \vdash \mathrm{Let}\ p\ (\lambda x_\mathrm{p}.\ p')
+\proctr{i|\cdots|k}{cond} \mathrm{Let}\ e\ (\lambda x_\mathrm{e}.\ e')$}
+\end{prooftree}\end{minipage}
+
+\vspace{6mm}
+
+\noindent 其中 Let 就是 HOL 上定义的 Let。
 \end{theo}
 
 \begin{proof} 由定义 \ref{def.proctr}，递归公式 \ref{f.proctr_rec}，应用

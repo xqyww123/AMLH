@@ -36,11 +36,14 @@ WASM 上的指令也为各种类型设计了不同版本。例如整数加法有
 ，$\Wtyp{n} = \Wpointer$ 情况的整数运算不需要考虑。
 
 WASM 采用一种树形结构表达， \amlhS 的 IR 的也同以树形结构表达，与 WASM
-的结构类似。主要需要讨论的是临时变量，\amlhS 的 IR 不表达临时变量，
-编译器需要分析 \amlhS 的 IR 表达，找出重复的计算并将结果存入临时变量以
-重用计算结果以提高性能。\amlhS 采用了计算与状态分离的设计，其程序仅进行
-无状态的数值计算，故任何中间计算结果的重用都是安全的。
-对于分支结构，\amlhS 的 IR 的分支表达为
+的结构类似。
+
+\amlh 中的 Let 结构表示本地变量，
+\[ \mathrm{Let}\ p\ (\lambda x.\ p') \]
+将被编译为，赋值 $p$ 给名为 $x$ 的本地变量，并在编译 $p'$ 中，所有对
+$x$ 的引用都编译为读取本地变量 $x$。
+
+\amlhS 的 IR 中分支表达为
 \[ \mathbf{If}\quad condition\quad branch_A\quad branch_B \]
 对应的 WAST 表达为
 \[ (\texttt{if}\quad (condition)\quad (\texttt{then}\quad branch_A)
@@ -105,9 +108,10 @@ $\texttt{read}_t$，$\texttt{read0}_t$，$\texttt{write}_t$，
 $\texttt{cart}_{n,m}$，$\texttt{seg}_{n,m}$。
 
 \begin{description}
-\item[全局值 \texttt{heap\_pointer}] 指向堆的末尾。\amlhS 在 WASM 
-的编译实现的堆正向增长。\texttt{heap\_pointer} 的初始值是一常量，
-此值之前的为常量段内存，之后为堆。
+\item[全局值 \texttt{heap\_pointer : \Wpointer}] 指向堆的末尾。
+\amlhS 在 WASM 的编译实现的堆正向增长。
+\texttt{heap\_pointer} 的初始值是一常量，此值之前的为常量段内存，
+之后为堆。
 \item[函数 \texttt{malloc(size\ :\ \Wpointer)}\ :\ \Wpointer] 
 在堆中分配大小为 \texttt
 {size} 字节的内存。将 \texttt{heap\_pointer} 的值增加 \texttt{size}
@@ -121,12 +125,37 @@ $\texttt{cart}_{n,m}$，$\texttt{seg}_{n,m}$。
 根据目标智能合约平台，调用智能合约平台提供的接口，读取链数据的表$c$
 的键 $k$。并根据 $\Si_j$ 决定是以指针方式还是值方式返回数据，并返回类型
 \Wtyp{\Si_j}。
-\item[函数 $\texttt{write}_t$] 对 $t = \mathbf{TC}\ c\ i\ j$，
-$\texttt{write}_t$ 是一个接受 \Wtyp{\Si_i} 类型的参数 $k$ 与\Wtyp{\Si_j}
-类型的参数 $v$ 的函数，
-
-根据目标智能合约平台，调用智能合约平台提供的
-接口，读取链数据的表$c$
-的键 $k$。并根据 $\Si_j$ 决定是以指针方式还是值方式返回数据，并返回类型
-\Wtyp{\Si_j}。
+\item[函数 $\texttt{write}_{(\mathbf{TC}\ c\ i\ j)}\texttt{(k\ :\ 
+\Wtyp{\Si_i},\ v\ :\ \Wtyp{\Si_j})\ :\ \Wpointer}$] 
+构造链数据写入命令。
+首先调用 \texttt{malloc} 函数分配适当的空间将键值存于内存，即，当 
+$\Si_i \leq 8$ 时分配 $\Si_i$ 字节的内存并存储 $k$ 的值，当 $\Si_i
+> 8$ 时 $k$ 就是指向键数据的指针。$v$ 的处理相同。
+链数据写入命令的内存结构为
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|} \hline
+\text{表标识}&\text{键指针}&
+\text{键大小}&\text{值指针}&\text{值大小}\\
+\text{1byte}&\text{PointerSize} bytes&
+\text{4bytes}&\text{PointerSize} bytes&\text{4byte} \\ \hline
+\end{tabular}
+\end{center}
+表标识占用1字节，理论上表标识可以是任意字符串，但在编译实现中，
+一段合约所有使用的表标识被唯一地分配$0\sim255$的编号，使用此编号表示
+表标识，故一个合约支持访问的表数量不超过256个。\texttt{write} 函数
+如上地分配并写入此内存结构，最后返回此内存结构的指针。
+\item[函数 $\texttt{seg}_{l,m,n}\texttt{(v\ :\ \Wtyp{l})\ :\ 
+\Wtyp{n}}$] 返回 $v$ 的第 $m$ 字节到第 $m+n-1$ 字节（从0开始）的共
+$n$ 个字节的数据。若 $l > 8$ 则 $v$ 为指针，将指针位移 $m$ 并根据 $n$
+的值，若 $n > 8$ 则直接返回指针 $v + m$ 否则读取 $v + m$ 处的数据并
+根据 \Wtyp{n} 返回适当的 \Wi{32} 或 \Wi{64}。若 $l \leq 8$ 则 $v$
+为一值，$(v\ \texttt{>>}\ 8m)\ \texttt{\&}\ ((1\ \texttt{<<}
+\ 8n) - 1)$ 即是返回值，注意其中 $8m$，$((1\ \texttt{<<}\ 8n) - 1)$是
+常量。
 \end{description}
+
+以上，由表 \ref{tab.primop.WASM} 以及上述的运行时函数，可以将 \amlhS 
+的 IR 翻译成 WASM，进而完成编译。
+而这一编译是非常简洁的，外部编译器所肩负的职责仅仅是对 \amlh 的 IR 进行
+几乎指令对指令的翻译，不需要任何复杂的编排或逻辑。外部编译程序可以
+非常简短，以有效降低缺陷的出现可能，并使对其的形式化验证更加容易。

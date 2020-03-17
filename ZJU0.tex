@@ -49,6 +49,8 @@
 \newcommand{\Wpointer}{\texttt{pointer}}
 \newcommand{\Wtyp}[1]{\ensuremath{\mathcal{T}_{#1}}}
 \newcommand{\Winst}[1]{\ensuremath{\texttt{#1}}}
+\newcommand{\letvp}[1]{\ensuremath{\hat{#1}_\mathrm{p}}}
+\newcommand{\letve}[1]{\ensuremath{\hat{#1}_\mathrm{e}}}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
@@ -404,8 +406,10 @@
 	\input{./chapters/Content_Point.tex}
 	\input{./chapters/RequiredTheory.tex}
 	\input{./chapters/AmLH.tex}
-	\input{./chapters/EditorShell.tex}
 	\input{./chapters/Implementation.tex}
+  \appendix
+  \input{./chapters/RequiredTheory/lambda.tex}
+	\input{./chapters/EditorShell.tex}
   \input{chapters/implementation/exam_transfer.tex}
 	
 	\ZJUbackmatter
