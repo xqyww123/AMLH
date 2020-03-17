@@ -351,3 +351,41 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
 这一证明再次体现了 \amlh 的思想，不是直接证明程序的性质，而是证明程序
 的抽象对应的性质；对抽象的数理对象进行证明，而不是直接证明复杂而具象的
 程序代码。
+
+最后，程序 $\mathbf{Transfer}_\mathrm{p}$ 以 EOS.IO 为目标平台，
+此时账户类型是 64 位整数，且当 $4 < \B_\currency \leq 8$ ，
+指针为32位时编译得到的 WAST 为
+\begin{minted}[mathescape]{cl}
+  (func "transfer"
+      (param i64) ; 输入参数 账户 $A$
+      (param i64) ; 输入参数 账户 $B$
+      (param i64) ; 输入参数 转账金额 $M$
+      (local i64) ; 本地变量 $\letvp{a}$
+      (local i64) ; 本地变量 $\letvp{b}$
+      (result i64) ; 输出元组 $(l,x)$ ，$l$ 为指向链数据写入命令序列的指针，
+                   ; $x$ 是 $\mathrm{Bool}$ 值表示否转账成功
+    (local.set 3 (call read0_0_8_8 (local.get 0))) ; 赋值 $\letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A$
+              ; read0_0_8_8 表示以 $8$ 字节的键读取表 $0$，并期望得到 $8$ 字节的返回
+    (local.set 4 (call read0_0_8_8 (local.get 1))) ; 赋值 $\letvp{b} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ B$
+    (if (i64.lt (local.get 3) (local.get 2))
+      (then (call cart_4_1  ; 构造元组 $(\texttt{[]},\F)$
+        (i32.const 0) ; 指向 $0$ 的指针，表示空数组
+        (i32.const 0) ; $1$ 字节的 $0$ 值，表示 $\mathrm{Bool}$ 值 $\mathrm{False}$
+      ))
+      (else (call cart_4_1
+        (call append_17 
+          (call write_0_8_8 (local.get 1)
+                ; write_0_8_8 构造以 $8$ 字节的键 $8$ 字节的值对表 $0$ 的写入命令
+            (i64.add (local.get 4) (local.get 2)))
+          (call append_17
+            (call write_0_8_8 (local.get 0)
+              (i64.sub (local.get 3) (local.get 2)))
+            (i32.const 0) ; 指向 $0$ 的指针，表示空数组
+          ))
+        (i32.const 1) ; $1$ 字节的 $1$ 值，表示 $\mathrm{Bool}$ 值 $\mathrm{False}$
+      )))
+  )
+\end{minted}
+
+结合表 \ref{tab.primop.WASM} 与第 \ref{Sec.compile} 节的内容，清晰地看到
+$\mathbf{Transfer}_\mathrm{p}$ 是如何指令对指令地编译到上述 WASM 的。

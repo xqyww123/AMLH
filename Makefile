@@ -13,11 +13,11 @@ all:
 	(cd $(BUILD_DIR) && make thesis)
 
 zju0:
-	xelatex zju0
+	xelatex -shell-escape zju0
 	makeindex ZJU0.idx
 	bibtex ZJU0 || true
-	xelatex zju0
-	xelatex zju0
+	xelatex -shell-escape zju0
+	xelatex -shell-escape zju0
 
 simp:
 	xelatex simp 
