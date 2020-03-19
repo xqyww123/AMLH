@@ -17,7 +17,7 @@
     \mbar&(\lambda\ \hat{\mathcal{E}}\ \mathcal{E})&\mbar&
     (\mathrm{Let}\ \hat{\mathcal{E}}\ \mathcal{E}\ \mathcal{E})&}
   \end{array} \]
-纯粹的 Noesis 系统不支持对理解的演算，理解是原子的，理解集 
+朴素的 Noesis 系统不支持对理解的演算，理解是原子的，理解集 
 $\mathcal{I} \subseteq \Words$ 是单词集。
 
 \noindent Noesis 对应集 $N_1$
@@ -342,20 +342,21 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 
 
 \begin{defin}[过程的 Noesis 对应同构] \label{def.proctr}
-定义4元符号 $f_p \proctr{i}{cond} f_e$ 表示有条件的值的 Noesis 对应。
-定义5元符号 $f_p \proctr{i|j}{cond} f_e$ 表示1个参数的且以
-$cond$为条件的过程的 Noesis 对应，$n+3$ 元符号
-$f_p \proctr{i_1 | \cdots | i_n}{cond} f_e$ 表示 $n$ 个参数的过程的且条件为
-$cond$的 Noesis 对应。
+记号 $f_p \proctr{i}{cond} f_e$ 表示有条件的 Noesis 对应。
+记号 $f_p \proctr{a_e \sim i|j}{cond} f_e$ 表示1个参数的且以
+$cond$为条件的过程的 Noesis 同构，记号
+$f_p \proctr{e_1 \sim i_1 | \cdots | e_n \sim i_n|j}{cond} f_e$ 表示 $n$ 个参数的过程的且条件为
+$cond$的 Noesis 同构。
 
 \begin{equation} \begin{split}
     p \proctr{i}{cond} e \coloneqq &\ (cond \Rightarrow p \widesim{i} e) \\
-    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & \proctr{i|j}{cond}
+    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & 
+    \proctr{a_e \sim i|j}{cond}
     (f_e:\alpha \rightarrow \beta) \coloneqq \\
     (\forall a_p\ a_e.\quad & a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
     f_p\ a_p \widesim{j} f_e\ a_e) \\
     (f_p:\mathrm{phenomenon}\rightarrow \cdots \rightarrow \mathrm{phenomenon})\ & 
-    \proctr{i | \cdots | l}{cond}
+    \proctr{a_e \sim i | \cdots | c_e \sim k | l}{cond}
     (f_e:\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow \delta) \coloneqq \\
     (\forall a_p\ a_e \cdots c_p\ c_e.\quad a_p \widesim{i} a_e \Rightarrow &
     \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow cond\ a_e\ \cdots\ c_e 
@@ -364,8 +365,7 @@ $cond$的 Noesis 对应。
 \end{split} \end{equation}
 
     $cond$ 表示过程正确执行的条件。
-
-    对于$\proctr{i | \cdots | k | l}{cond}$ 若理解
+    对于$\proctr{a \sim i | \cdots | c \sim k | l}{cond}$ 若理解
     $i, \cdots, k$ 的类型分别为 $\itp{\alpha},\ \cdots,\ \itp{\gamma}$，
     那么 $cond$ 的类型为 $\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow 
     \mathrm{bool}$，即 $cond$ 是在本体层面上描述执行条件。
@@ -377,12 +377,58 @@ $cond$的 Noesis 对应。
 
 \end{defin}
 
-上述定义具有如下的递归形式。
-
+上述记号具有如下的递归形式。
 \begin{equation} \label{f.proctr_rec} \begin{split}
-    f_p \proctr{i|j|\cdots|l}{cond} f_e = (\forall a_p\ a_e.\quad
-      a_p \widesim{i} a_e \Rightarrow f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e} f_e\ a_e)
+    f_p \proctr{a_e \sim i|b_e \sim j|\cdots|l}{cond} f_e = 
+    (\forall a_p\ a_e.\quad a_p \widesim{i} a_e \Rightarrow f_p\ a_p 
+    \proctr{b_e \sim j|\cdots|l}{cond\ a_e} f_e\ a_e)
 \end{split} \end{equation}
+
+$\proctr{a \sim i | \cdots | c \sim k | l}{cond}$ 中的理解 $i \cdots k$
+与本体 $a \cdots c$ 可以相互依赖。
+首先本体可以依赖于本体，这是显然的。
+理解可以依赖于理解，可以由一个理解计算得出。序列的增加是一个例子
+\[ \mathbf{Append} \proctr{x \sim i | l \sim \ListI\ i | 
+\ListI i}{\lambda x\ l.\ \T} (::) \]
+将 Noesis 同构记号展开后
+\[ \forall x_p\ x\ i\ l_p\ l.\ x_p \widesim{i} x \Rightarrow
+  l_p \widesim[2]{\ListI\ i} l \Rightarrow \mathbf{Append}\ x_p\ l_p
+  \widesim[2]{\ListI\ i} x::l \]
+是合理合法的 HOL 逻辑表达式。
+理解可以依赖于本体，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
+数的本体集的理解，自然数减法 $\mathbf{NSub}$ 的 Noesis 同构可以表达为
+\[ \mathbf{NSub} \proctr{a \sim \mathcal{N}^{\leq}_n|b \sim
+\mathcal{N}^{\leq}_a|\mathcal{N}^{\leq}_a}{\lambda a\ b.\ \T} (-) \]
+记号展开后是
+\[ \forall a_p\ a\ n\ b_p\ b.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
+\Rightarrow b_p \widesim[2]{\mathcal{N}^\leq_a} b \Rightarrow
+\mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_a} a - b \]
+也是合法的。本体可以依赖于理解，
+\[ f_p \proctr{a\sim \mathcal{N}^\leq_n|\mathcal{N}^\leq_n}
+{\K \T} (\lambda a.\ n - a) f_e \]
+展开后是
+\[ \forall a_p\ a\ n.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
+\Rightarrow f_p\ a_p \widesim[2]{\mathcal{N}^\leq_n} (\lambda a.\ 
+n - a) \]
+因为理解与本体以及现象均是 HOL 逻辑上普通的数理对象，所以自然可以
+相互依赖。这一点揭示出类似依赖类型（Dependent Type）的性质，但一切都
+更加自然与理所应当。而在实际使用中，一般很少会本体依赖理解或理解依赖本体
+，一般都只是理解依赖理解。在最后一章的结论中会指出，理解承载现象的
+共性，而本体承载现象的共性在内的全部特性，所以理解是不需要非常精细的，
+并不像依赖类型系统的语言使用类型描述值的性质，Noesis 系统中是现象由理解
+对应到本体而本体体现现象的性质，所以 Noesis 系统中并不特别需要理解与
+本体互相依赖尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
+本体的部分，一般将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
+简写为 $\proctr{i|j|k}{cond}$。而将一些必要的本体限制放在 $cond$ 中，
+上述的 $\mathbf{NSub}$ 更常用的 Noesis 同构是
+\[ \mathbf{NSub} \proctr{\mathcal{N}^\leq_n|\mathcal{N}^\leq_n|
+\mathcal{N}^\leq_n}{\lambda a\ b.\ a \geq b} (-) \]
+展开后的表达是
+\[ \forall n\ a_p\ a_e\ b_p\ b_e.\ a_p \widesim[2]{\mathcal{N}^\leq_n}
+ a_e \Rightarrow b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
+ a_e \geq b_e \Rightarrow
+ \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_n} a_e - b_e\]
+基本充分利用调用条件 $cond$ 就不怎么需要本体与理解互相依赖。
 
 \begin{theo}[\noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
 记号律、记号削除律]
