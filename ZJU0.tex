@@ -32,8 +32,8 @@
 \newunicodechar{。}{{\watermark.\ }}
 %\newunicodechar{。}{{.\ }}
 \newunicodechar{，}{{,\ }}
-\newunicodechar{（}{{(}}
-\newunicodechar{）}{{)}}
+\newunicodechar{（}{{ (}}
+\newunicodechar{）}{{) }}
 %\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
 \newunicodechar{❚}{{\miscsymfontd\symbol{"275A}}}
 \newunicodechar{¶}{{\miscsymfontd\symbol{"00B6}}}
@@ -52,6 +52,9 @@
 \newcommand{\Winst}[1]{\ensuremath{\texttt{#1}}}
 \newcommand{\letvp}[1]{\ensuremath{\hat{#1}_\mathrm{p}}}
 \newcommand{\letve}[1]{\ensuremath{\hat{#1}_\mathrm{e}}}
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{center}
 
 \allowdisplaybreaks
 %\usepackage[mathscr]{euscript}
@@ -66,12 +69,12 @@
 \newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
 \newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
 \newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
-\newcommand{\amlhS}[0]{$\mathrm{A}_{\HOL}^{\lamcr}\mathrm{-C}$}
+\newcommand{\amlhS}[0]{$\mathrm{A}{{\lamcr}\over{\HOL}}|\mathrm{S_c}$}
 \newcommand{\ES}{\ \raisebox{-.05\baselineskip}
 {$\mathrm{E}$}$|$\ }
 \newcommand{\ESm}[1]{$\mathrm{E}^{#1}|$}
 \newcommand{\Eamlh}[0]{\raisebox{-.05\baselineskip}
-{\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{(A}_{\HOL}^{\lamcr}}}
+{\ensuremath{\mathrm{E}}}\ensuremath{\mathrm{|A}{{\lamcr}\over{\HOL}}}}
 \newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
 \newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamcr}}}
 \newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamcr}}}
@@ -112,6 +115,8 @@
 \newcommand{\CM}{\mathop{\mathbf{CM}}}
 \newcommand{\CMT}[3]{\combtyp{CM}{(#1,\ #2,\ #3)}}
 \newcommand{\CMS}{\mathrm{CM}}
+\DeclareMathOperator{\Whilex}{WHILE}
+\DeclareMathOperator{\Whileb}{\mathbf{While}}
 \DeclareMathOperator{\fst}{fst}
 \DeclareMathOperator{\snd}{snd}
 \DeclareMathOperator{\type}{type}
@@ -123,6 +128,7 @@
 \DeclareMathOperator{\F}{F}
 \DeclareMathOperator{\Ima}{ran}
 \DeclareMathOperator{\Dom}{dom}
+\newcommand{\bool}{\mathrm{bool}}
 \newcommand{\DomF}{\Dom^{\rightarrow}}
 \newcommand{\ImaF}{\Ima^{\rightarrow}}
 \DeclareMathOperator{\EVERY}{EVERY}
@@ -218,6 +224,7 @@
 \newcommand{\eset}{\mathrel{\texttt{--}}}
 \newcommand{\combtyp}[2]{#2\ \mathrm{#1}}
 \newcommand{\terminology}[2]{\textbf{#1}&#2}
+\newenvironment{sprooftree}{\begin{center}}{\DisplayProof\end{center}}
 \newenvironment{estable}{
 \begin{tabular}{ | p{1.3cm} | p{2cm} | p{12cm} | } \hline
 \textbf{种类} & \textbf{标识} & \textbf{类型与介绍} \\

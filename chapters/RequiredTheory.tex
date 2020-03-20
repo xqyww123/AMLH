@@ -40,122 +40,93 @@ HOL 系列内部使用一个微小的“核”（kernel）程序，决定了基�
 
 \subsection{HOL 逻辑概述} \label{Sec.HOL}
 
-HOL 逻辑是 HOL 定理证明器上的证明系统，而 $\amlh$ 构建在 HOL 逻辑上，故有必要介绍 HOL逻辑。
+HOL 逻辑是 HOL 定理证明器上的证明系统，其详细定义比较复杂，可以
+参见 HOL 系统描述\cite{norrish2019hol}。
+$x : t$ 为类型标记，表达式 $x$ 具有类型 $t$。一般可以省略类型标记。
+HOL 逻辑上的演绎律很多，以下是本文需要使用的部分。
 
-HOL 逻辑的详细定义非常复杂，参见 HOL 系统描述\cite{norrish2019hol}，这里仅简单概要
-为描述本文工作必须的基础。
-
-\begin{defin}[HOL 逻辑上的表达式与类型]
-    集合 $\mathrm{V}_\mathrm{H}$ 表示 HOL 逻辑上的表达式（term），每一个表达式
-    $t \in \mathrm{V}_\mathrm{H}$ 拥有确定的类型 $\mathcal{T}(t)$，所有的类型构成集合
-    $\mathrm{T}_\mathrm{H}$
-\end{defin}
-
-一般使用英文字母$t_1,t_2,\cdots$表示变量，$x_1,x_2,\cdots$表示量词内的变量，
-而以小写希腊字母$\alpha,\beta,\cdots$
-表示类型变量。如非必要，表示时一般省略表达式的类型。
-
-HOL 逻辑上的推理由一系列规则构成，以下是部分本文需要使用的规则。
-
-\begin{defin}[HOL 逻辑上的部分推理规则]
-
-\hfill
-
-\begin{minipage}[b]{0.5\linewidth}
-\begin{prooftree}
+\vspace{\baselineskip}
+{\centering\begin{tabular}{c c}
     \AxiomC{$ \Gamma_1 \vdash t_1 \Rightarrow t_2 $}
     \AxiomC{$\Gamma_2 \vdash t_1 $}
     \RightLabel{(MP)}
-    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$}
-\end{prooftree}
-\end{minipage}%
-\begin{minipage}[b]{0.3\linewidth}
-\begin{prooftree}
-    \AxiomC{$ \Gamma_1 \vdash t_1 = t_2 $}
-    \AxiomC{$\Gamma_2 \vdash t_1 $}
-    \RightLabel{(EQ\_MP)}
-    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$}
-\end{prooftree} \end{minipage}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$} \DisplayProof&
+    %\AxiomC{$ \Gamma_1 \vdash t_1 = t_2 $}
+    %\AxiomC{$\Gamma_2 \vdash t_1 $}
+    %\RightLabel{(EQ\_MP)}
+    %\BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash t_2$} \DisplayProof
+    \AxiomC{$ \Gamma \vdash t $}
+    \RightLabel{(DISCH $u$)}
+    \UnaryInfC{$\Gamma - \{u\} \vdash u \Rightarrow t$} \DisplayProof
+\end{tabular}
 
-\hfill
-
-\begin{minipage}[b]{0.6\linewidth} \begin{prooftree}
+\vspace{\baselineskip}\begin{tabular}{c c}
     \AxiomC{$ \Gamma_1 \vdash \forall x_1\cdots x_n.\ t_1 \Rightarrow t_2 $}
     \AxiomC{$\Gamma_2 \vdash t_1 $}
     \RightLabel{(MATCH\_MP)}
-    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash \forall x_a\cdots x_k.\ t_2$}
-\end{prooftree} \end{minipage}%
-\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
-    \AxiomC{$\ $}
-    \RightLabel{(ASSUME)}
-    \UnaryInfC{$ t \vdash t$}
-\end{prooftree} \end{minipage}%
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash \forall x_a\cdots x_k.\ t_2$} 
+    \DisplayProof&
+    \AxiomC{$\ $} \RightLabel{(ASSUME)}
+    \UnaryInfC{$ t \vdash t$} \DisplayProof
+  \end{tabular}
 
-\hfill
-
-\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
-    \AxiomC{$ \Gamma \vdash t $}
-    \RightLabel{(DISCH $u$)}
-    \UnaryInfC{$\Gamma - \{u\} \vdash u \Rightarrow t$}
-\end{prooftree} \end{minipage}%
-\begin{minipage}[b]{0.3\linewidth} \begin{prooftree}
+\vspace{\baselineskip} \begin{tabular}{c c c}
     \AxiomC{$ \Gamma \vdash t $}
     \RightLabel{(GEN $x$)}
-    \UnaryInfC{$\Gamma \vdash \forall x.\ t$}
-\end{prooftree} \end{minipage}
+    \UnaryInfC{$\Gamma \vdash \forall x.\ t$} \DisplayProof&
+    \AxiomC{$ \Gamma \vdash A\ \land\ B $}
+    \RightLabel{(CONJUNCT1)}
+    \UnaryInfC{$\Gamma \vdash A$} \DisplayProof &
+    \AxiomC{$ \Gamma \vdash A\ \land\ B $}
+    \RightLabel{(CONJUNCT2)}
+    \UnaryInfC{$\Gamma \vdash B$} \DisplayProof
+\end{tabular}\par}
 
+\vspace{\baselineskip}
+其中 MP 意为 Modus Ponens 即肯定前件，MATCH\_MP 是带有自动全称量化匹配的肯定前件
+（Modus Ponens with matching of universal quantification），
+DISCH 是 dischard 的简写，将一个假设作为条件移入结论，ASSUME 是假设公理，
+GEN 将表达 $t$ 中的自由变量 $x$ 全称量化，CONJUNCT1 与 CONJUNCT2 分解合取（conjunction）。
 
-\end{defin}
+HOL 定理证明器的使用需要使用一种修改过的 SML 语言 HOL 编程语言完成，
+包括定义、推理、证明在内的操作都需要通过调用 HOL 编程语言的函数来完成。
 
-HOL 定理证明器是基于 SML 语言（标准元语言，Standard Meta Language）实现的，
-包括定义、推理、证明在内的操作都需要通过 SML 程序完成。
-以下介绍本文构造HOL逻辑上定义的记号，以及这些记号到 SML 代码的对应。
-
-\begin{defin}[用于定义HOL逻辑上新的类型的记号] 使用如下文法表示 HOL 逻辑上的新的类型定义的构造。
+\begin{notation}[用于定义HOL逻辑上新的类型的记号] 
+使用如下文法表示 HOL 逻辑上的新的类型定义的构造。
     \[ \begin{split} 
         type\_name\ ::= \ & Constructor1\ arg1_1\ \cdots\ arg1_i \mbar \cdots \\
                         \mbar & ConstructorN\ argN_1\ \cdots\ argN_k
     \end{split} \]
-\end{defin}
 
 $Constructor1 \cdots ConstructorN$ 表示构造函数的名称，$arg1_1 \cdots arg1_i \cdots argN_k$
 均为类型，表示对应构造函数的参数的类型，即各构造函数具有如下类型。
-
 \begin{gather*}
     Constructor1 :\ arg1_1 \rightarrow arg1_2 \cdots \rightarrow arg1_i \rightarrow type\_name \\
     \cdots \\
     ConstructorN :\ argN_1 \rightarrow argN_2 \cdots \rightarrow argN_k \rightarrow type\_name
 \end{gather*}
-
-这一记号对应的 SML 代码是：
-
-\begin{lstlisting}[language=ML]
+这一记号对应的 HOL 代码是：
+\begin{minted}{sml}
 val _ = Datatype `type_name = Constructor1 arg11 ... arg1i | ...
                    | ConstructorN argN1 ... argNk`;
-\end{lstlisting}
+\end{minted}
+\end{notation}
 
-然后是值与函数的定义。
-
-\begin{defin}[用于定义HOL逻辑上值与函数的记号]
+\begin{defin}[用于定义HOL逻辑上值与函数的记号] 然后是定义值与函数的记号
     \[ \begin{split}
         & value \coloneqq expression \\
         & function\ x_1\ \cdots\ x_n \coloneqq expression
     \end{split}   \]
-
 其中 $x_1\cdots x_n$ 为参数符号。可以显示地指定参数类型：
     \[ 
         function\ (x_1:\tau_1) \cdots\ (x_n:\tau_n) \coloneqq expression
     \]
-\end{defin}
-
-不造成混淆的情况下可以省略类型指示。
-
-以上对应的 SML 代码是：
-
-\begin{lstlisting}[language=ML]
+不造成混淆的情况下可以省略类型指示。对应的 HOL 代码是
+\begin{minted}{sml}
 val value_def = Define `value = expression`;
 val func_def = Define `function x1 ... xn = expression`;
-\end{lstlisting}
+\end{minted}
+\end{defin}
 
 %\section{其他一些需要的理论与工具}
 %

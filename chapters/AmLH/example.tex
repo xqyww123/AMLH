@@ -69,34 +69,34 @@ $\abs{\mathbf{List}_S} \leq \aleph_1$
     (\mathbf{Se}_{\mathbf{LI}(i)} = \mathbf{List}(\mathbf{Se}_i))
 \end{equation}
 然后由常量虚构律引入空列表常量
-{\center \begin{prooftree}
+\begin{prooftree}
     \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
     \AxiomC{$\vdash [\ ] \in \mathbf{List}(\mathbf{Se}_i)$}
 \BinaryInfC{$\vdash \exists \mathrm{EMPTY}.\ \mathrm{EMPTY} \widesim[3]{\mathbf{LI}\ i} [\ ]$}
-\end{prooftree}}
+\end{prooftree}
 
 接下来是基元虚构律引入各种需要的功能，记号 $l_k$ 表示列表 $l$ 中的第$k$个元素，
 
 $h::l$ 表示 $[h,l_1,\cdots,l_n]$
 
-{\center \begin{prooftree}
+\begin{prooftree}
     \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
     \AxiomC{$h \in \mathbf{Se}_i,\ l \in \mathbf{Se}(\mathbf{LI}\ i)
     \vdash (h::l) \in \mathbf{Se}_{\mathbf{LI}\ i} $}
 \BinaryInfC{$\vdash \exists \mathrm{APPEND}.\ \mathrm{APPEND}
     \proctr{i|\mathbf{LI}(i)|\mathbf{LI}(i)}{\lambda h\ l.\ \mathrm{T}}
     (\lambda h\ l.\ h::l)$}
-\end{prooftree}}
+\end{prooftree}
 
 令 $\mathcal{N}$ 为一自然数集的理解。
-{\center \begin{prooftree}
+\begin{prooftree}
     \AxiomC{$\vdash \forall i.\ \mathbf{V}_i \Rightarrow \ \mathbf{V}_{\mathbf{LI}(i)}$}
 \AxiomC{$k \in \mathbf{Se}_{\mathcal{N}},\ l \in \mathbf{Se}(\mathbf{LI}\ i),\ 
   k < \mathrm{len}\ l \vdash l_k \in \mathbf{Se}_{\mathbf{LI}\ i} $}
 \BinaryInfC{$\vdash \exists \mathrm{GET}.\ \mathrm{GET}
     \proctr{\mathbf{LI}(i)|\mathcal{N}|\mathbf{LI}(i)}{\lambda l\ k.\ k < \mathrm{len}\ l}
     (\lambda l\ k.\ l_k)$}
-\end{prooftree}}
+\end{prooftree}
 
 以上，$\mathbf{LI}$，APPEND，GET 均是虚构的，不需要涉及具体的实现，就可以使用这些进行
 列表功能的编程。
@@ -454,3 +454,24 @@ WF 命题是需要证明技巧的，在斐波那契函数的例子中可以构�
 以上，就可以再次利用归纳法，证明如下性质
 \[ g \proctr{\mathcal{N}|\mathcal{N}}{\K \T} \mathrm{fib} \]
 
+\subsection{循环}
+
+HOL 逻辑中已经定义了循环函数 $\Whilex : (\alpha \rightarrow \bool)
+\rightarrow (\alpha \rightarrow \alpha) \rightarrow 
+\alpha \rightarrow \alpha$ 
+\[ \Whilex \coloneqq \forall P\ g\ x.\ \Whilex\ P\ g\ x = \xif P\ x 
+\xthen \Whilex\ P\ g\ (g\ x) \xelse x \]
+基础的循环构造作为一个基元指令可以被定义为
+\[ \begin{split}
+  \forall i\ c_p\ c_e.\ (\forall a_p\ a_e.\ &a_p \widesim{i} a_e 
+\Rightarrow c_p\ a_p \widesim{\BoolI} c_e\ a_e) \Rightarrow \\
+  \forall b_p\ b_e.\ &(\forall a_p\ a_e.\ a_p \widesim{i} a_e \Rightarrow
+b_p\ a_p \widesim{i} b_e\ a_e) \Rightarrow \forall s_p\ s_e.\ s_p \widesim{i} s_e
+  \Rightarrow \\&
+  \Whileb\ c_p\ b_p\ s_p \widesim{i} \Whilex\ c_e\ b_e\ s_e 
+\end{split} \]
+即 $\Whileb$ 广义 Noesis 同构于 $\Whilex$，尽管这一广义的同构无法被
+简单地用 Noesis 同构记号表示。
+
+直接使用 $\Whileb$ 可能是困难的，可以由 $\Whileb$ 构建诸如列表的
+map，reduce 等高级操作以简化。

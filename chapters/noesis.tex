@@ -340,42 +340,89 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \begin{proof} 显然，略
 \end{proof}
 
+接下来论述 Noesis 同构，Noesis 同构描述函数映射的原像与像具有某种可能不同的 Noesis 对应
+或与 Noesis 对应相关的性质。注意 Noesis 同构是一个宽泛的概念。对于
+\[ \forall p\ e.\ p \widesim{i} e \Rightarrow f_p\ p \widesim{j} f_e\ e \]
+$f_p$ 是 Noesis 同构于 $f_e$，
+\[ \forall p\ e.\ p \widesim{i} e \Rightarrow f_p\ p \Rightarrow cond\ e
+\widesim{j} f_e\ e \]
+还可以具有条件 $cond$，也是 Noesis 同构，
+\[ \forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow \forall y_p\ y_e.\ 
+y_p \widesim{i} y_e \Rightarrow cond\ x_e\ y_e \Rightarrow f_p\ x_p\ y_p \widesim{j} 
+f_e\ x_e\ y_e \]
+高阶函数也可以有 Noesis 同构。而更宽泛地
+\[ \forall g_p\ g_e.\ (\forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow 
+g_p\ x_p \widesim{j} g_e\ x_e) \Rightarrow cond\ g_e \Rightarrow
+f_p\ g_p \widesim{k} f_e\ g_e \]
+$f_p,f_e$ 间也具有 Noesis 同构。
 
-\begin{defin}[过程的 Noesis 对应同构] \label{def.proctr}
+\begin{defin}[Noesis 同构] 这里给出 Noesis 同构的严谨定义。
+  $f_p$ 是现象的函数或者是现象的函数的函数以及各种高阶函数的函数，即
+  $f_p$ 可以具有类型 $\mathrm{phenomenon} \rightarrow \mathrm{\phenomenon}$
+  或 $\mathrm{phenomenon} \rightarrow \mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$
+  或 $(\mathrm{phenomenon} \rightarrow \mathrm{phenomenon})
+\rightarrow \mathrm{phenomenon}$ 等等。当 $f_p$ 与本体 $f_e$ 间的二元关系 $H$
+具有如下形式，则是一种 $f_p,f_e$ 间的 Noesis 同构。
+  \[ \forall p\ e.\ p\ R\ e \Rightarrow f_p\ p\ H'\ f_e\ e\]
+其中 $p$ 是现象或者现象的各种高阶函数，$e$ 是作为本体的任意对象，$R$ 是任意某种二元关系，
+多数情况下是某种理解 $i$ 的 Noesis 对应 $\widesim{i}$，$H'$ 是某种理解 $l$ 的 Noesis
+对应 $\widesim{i}$ 或者另一个不等于 $H$ 的 Noesis 同构。
+$f_p,f_e$ 间的所有的 Noesis 同构均是具有上述形式满足上述要求的二元关系。
+Noesis 同构即被递归定义完成。
+\end{defin}
+
+\begin{notation}[过程的 Noesis 同构记号] \label{def.proctr}
 记号 $f_p \proctr{i}{cond} f_e$ 表示有条件的 Noesis 对应。
-记号 $f_p \proctr{a_e \sim i|j}{cond} f_e$ 表示1个参数的且以
+记号 $f_p \proctr{a_e \sim i|j}{cond} f_e$ 表示一种只有1个参数的且以
 $cond$为条件的过程的 Noesis 同构，记号
-$f_p \proctr{e_1 \sim i_1 | \cdots | e_n \sim i_n|j}{cond} f_e$ 表示 $n$ 个参数的过程的且条件为
-$cond$的 Noesis 同构。
-
-\begin{equation} \begin{split}
-    p \proctr{i}{cond} e \coloneqq &\ (cond \Rightarrow p \widesim{i} e) \\
-    (f_p:\mathrm{phenomenon}\rightarrow\mathrm{phenomenon})\ & 
-    \proctr{a_e \sim i|j}{cond}
-    (f_e:\alpha \rightarrow \beta) \coloneqq \\
-    (\forall a_p\ a_e.\quad & a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
+$f_p \proctr{e_1 \sim i_1 | \cdots | e_n \sim i_n|j}{cond} f_e$ 表示一种有 $n$ 个参数的
+过程的且条件为 $cond$的 Noesis 同构。
+\begin{gather*}
+    p \proctr{i}{cond} e \coloneqq \ (cond \Rightarrow p \widesim{i} e) \\
+    \begin{array}{lcrll}
+      f_p\ &\proctr{a_e \sim i|j}{cond}&
+      (f_e:\alpha \rightarrow \beta) &\coloneqq&
+    (\forall a_p\ a_e.\quad  a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
     f_p\ a_p \widesim{j} f_e\ a_e) \\
-    (f_p:\mathrm{phenomenon}\rightarrow \cdots \rightarrow \mathrm{phenomenon})\ & 
-    \proctr{a_e \sim i | \cdots | c_e \sim k | l}{cond}
+      f_p\ &\proctr{a_e|j}{cond}&
+      (f_e:\alpha \rightarrow \beta) &\coloneqq&
+    (\forall a_p\ a_e.\quad  a_p \widesim{i} a_e \Rightarrow cond\ a_e \Rightarrow
+    f_p\ a_p \widesim{j} f_e\ a_e)
+    \end{array}  \\ \begin{split}
+    f_p\  \proctr{a_e \sim i | \cdots | c_e \sim k | l}{cond} &
     (f_e:\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow \delta) \coloneqq \\
-    (\forall a_p\ a_e \cdots c_p\ c_e.\quad a_p \widesim{i} a_e \Rightarrow &
+    (\forall a_p\ a_e.\ a_p \widesim{i} a_e \Rightarrow\ &\forall b_p\ c_p.
     \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow cond\ a_e\ \cdots\ c_e 
     \Rightarrow  \\
     & f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e)
-\end{split} \end{equation}
-
+    \end{split} \\ \begin{split}
+    f_p\  \proctr{i | \cdots | k | l}{cond} &
+    (f_e:\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow \delta) \coloneqq \\
+    (\forall a_p\ a_e.\ a_p \widesim{i} a_e \Rightarrow\ &\forall b_p\ c_p.
+    \ b_p \widesim{j} b_e \Rightarrow \cdots \Rightarrow cond\ a_e\ \cdots\ c_e 
+    \Rightarrow  \\
+    & f_p\ a_p\ \cdots\ c_p \widesim{l} f_e\ a_e\ \cdots\ c_e)
+    \end{split}
+\end{gather*} 
     $cond$ 表示过程正确执行的条件。
     对于$\proctr{a \sim i | \cdots | c \sim k | l}{cond}$ 若理解
-    $i, \cdots, k$ 的类型分别为 $\itp{\alpha},\ \cdots,\ \itp{\gamma}$，
+    $i, \cdots, k$ 的类型分别为 \[\itp{\alpha},\ \cdots,\ \itp{\gamma}\]
     那么 $cond$ 的类型为 $\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow 
     \mathrm{bool}$，即 $cond$ 是在本体层面上描述执行条件。
+
+    此处的记号仅是 Noesis 同构的一种表达记号，仅用于易于理解与增加可读性，
+    只能表达一部分 Noesis 同构，一些复杂的 Noesis 同构例如
+\[ \forall g_p\ g_e.\ (\forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow 
+g_p\ x_p \widesim{j} g_e\ x_e) \Rightarrow cond\ g_e \Rightarrow
+f_p\ g_p \widesim{k} f_e\ g_e \]
+无法用这种记号表达。
+\end{notation}
 
     过程的 Noesis 对应同构构成了一种契约，
     在输入参数可以被约定的理解$i,\cdots,k$解释，
     且解释后的意义也即本体$a_e,\cdots,c_e$满足给定的条件，
     那么此过程可以正确执行并返回以约定的理解$l$的解释下对应本体$f\ a_e\ \cdots\ c_e$ 的输出
 
-\end{defin}
 
 上述记号具有如下的递归形式。
 \begin{equation} \label{f.proctr_rec} \begin{split}
@@ -384,32 +431,32 @@ $cond$的 Noesis 同构。
     \proctr{b_e \sim j|\cdots|l}{cond\ a_e} f_e\ a_e)
 \end{split} \end{equation}
 
-$\proctr{a \sim i | \cdots | c \sim k | l}{cond}$ 中的理解 $i \cdots k$
-与本体 $a \cdots c$ 可以相互依赖。
+Noesis 同构中的理解 $i \cdots k$ 与本体 $a \cdots c$ 可以相互依赖。
 首先本体可以依赖于本体，这是显然的。
-理解可以依赖于理解，可以由一个理解计算得出。序列的增加是一个例子
+其次理解可以依赖于理解，可以由一个理解计算得出。序列的增加是一个例子
 \[ \mathbf{Append} \proctr{x \sim i | l \sim \ListI\ i | 
 \ListI i}{\lambda x\ l.\ \T} (::) \]
 将 Noesis 同构记号展开后
-\[ \forall x_p\ x\ i\ l_p\ l.\ x_p \widesim{i} x \Rightarrow
+\[ \forall i\ x_p\ x.\ x_p \widesim{i} x \Rightarrow \forall l_p\ l.\ 
   l_p \widesim[2]{\ListI\ i} l \Rightarrow \mathbf{Append}\ x_p\ l_p
   \widesim[2]{\ListI\ i} x::l \]
 是合理合法的 HOL 逻辑表达式。
-理解可以依赖于本体，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
+第三，理解可以依赖于本体，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
 数的本体集的理解，自然数减法 $\mathbf{NSub}$ 的 Noesis 同构可以表达为
 \[ \mathbf{NSub} \proctr{a \sim \mathcal{N}^{\leq}_n|b \sim
 \mathcal{N}^{\leq}_a|\mathcal{N}^{\leq}_a}{\lambda a\ b.\ \T} (-) \]
 记号展开后是
-\[ \forall a_p\ a\ n\ b_p\ b.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
-\Rightarrow b_p \widesim[2]{\mathcal{N}^\leq_a} b \Rightarrow
+\[ \forall n\ a_p\ a.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
+\Rightarrow \forall b_p\ b.\ b_p \widesim[2]{\mathcal{N}^\leq_a} b \Rightarrow
 \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_a} a - b \]
-也是合法的。本体可以依赖于理解，
+也是合法的。最后本体可以依赖于理解，
 \[ f_p \proctr{a\sim \mathcal{N}^\leq_n|\mathcal{N}^\leq_n}
 {\K \T} (\lambda a.\ n - a) f_e \]
 展开后是
-\[ \forall a_p\ a\ n.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
+\[ \forall n\ a_p\ a.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
 \Rightarrow f_p\ a_p \widesim[2]{\mathcal{N}^\leq_n} (\lambda a.\ 
 n - a) \]
+
 因为理解与本体以及现象均是 HOL 逻辑上普通的数理对象，所以自然可以
 相互依赖。这一点揭示出类似依赖类型（Dependent Type）的性质，但一切都
 更加自然与理所应当。而在实际使用中，一般很少会本体依赖理解或理解依赖本体
@@ -424,79 +471,67 @@ n - a) \]
 \[ \mathbf{NSub} \proctr{\mathcal{N}^\leq_n|\mathcal{N}^\leq_n|
 \mathcal{N}^\leq_n}{\lambda a\ b.\ a \geq b} (-) \]
 展开后的表达是
-\[ \forall n\ a_p\ a_e\ b_p\ b_e.\ a_p \widesim[2]{\mathcal{N}^\leq_n}
- a_e \Rightarrow b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
+\[ \forall n\ a_p\ a_e.\ a_p \widesim[2]{\mathcal{N}^\leq_n}
+ a_e \Rightarrow \forall b_p\ b_e.\ b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
  a_e \geq b_e \Rightarrow
  \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_n} a_e - b_e\]
 基本充分利用调用条件 $cond$ 就不怎么需要本体与理解互相依赖。
 
-\begin{theo}[\noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
-记号律、记号削除律]
-在 Noesis 对应的定义 \ref{Def.TR} 与 Noesis 同构的定义 \ref{def.proctr} 
-下，Noesis 系统的调用律、抽象律、一阶同构引入律、一阶同构削除律、
-记号律、记号削除律，以 HOL 上的定理的形式出现。
+接下来论述 \noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
+记号律、记号削除律。这些演绎律可以易于理解地写成下面的形式，尽管这些形式并不完整。
+\footnotetext[1]{准确地说 \noesishol 上的调用律就是 HOL 逻辑的 MATCH\_MP
+    律，此处的形式是 MATCH\_MP 的应用，更具有可读性，但并非所有的调用律的应用都具有
+    这种形式。MATCH\_MP 律才是完整的 \noesishol 上的调用律。}
+\footnotetext[2]{同样 \noesishol 上的抽象律是 HOL 逻辑的 DISCH 律，此处的形式也是为了
+可读性。}
 
-\vspace{5mm}
-
-\hspace{-16mm}
-\begin{minipage}[b]{0.55\linewidth} \begin{prooftree}
+\begin{center}
     \AxiomC{$\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e$}
     \AxiomC{$\Gamma_2 \vdash a_p \widesim{i} a_e$}
-    \RightLabel{(调用)}
+    \RightLabel{(调用\footnotemark[1])}
     \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e}
       f_e\ a_e$}
-\end{prooftree}\end{minipage}%
-\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+\DisplayProof
+
+  \vspace{\baselineskip}
     \AxiomC{$\Gamma_1,\ a_p \widesim{i} a_e \vdash b_p \proctr{j|\cdots|l}{cond} b_e$}
-    \RightLabel{(抽象)}
+    \RightLabel{(抽象\footnotemark[2])}
     \UnaryInfC{$\Gamma_1 \vdash (\lambda a_p.\ b_p)
       \proctr{i|j|\cdots|l}{\lambda a_e.\ cond\ a_e} (\lambda a_e.\ b_e)$}
-\end{prooftree}\end{minipage}
+\DisplayProof
 
-\vspace{3mm}
-
-\hspace{-10mm}
-\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
+\vspace{\baselineskip}
+\begin{tabular}{c c}
     \AxiomC{$\Gamma, cond \vdash p \widesim{i} e$}
     \RightLabel{(一阶同构引入)}
-    \UnaryInfC{$\Gamma \vdash p \proctr{i}{cond} e$}
-\end{prooftree}\end{minipage}%
-\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
+    \UnaryInfC{$\Gamma \vdash p \proctr{i}{cond} e$} \DisplayProof &
     \AxiomC{$\Gamma_1 \vdash p \proctr{i}{cond} e$}
     \AxiomC{$\Gamma_2 \vdash cond$}
     \RightLabel{(一阶同构削除)}
-    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i} e$}
-\end{prooftree}\end{minipage}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash p \widesim{i} e$} \DisplayProof
+\end{tabular}
 
-\vspace{3mm}
-
-\begin{minipage}{\linewidth}\begin{prooftree}
+\vspace{\baselineskip}
     \AxiomC{$\Gamma \vdash p \widesim{i} e$}
     \RightLabel{(对应记号 $x$)}
     \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
     x_\mathrm{e} = e)) \vdash
-     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$}
-\end{prooftree}\end{minipage}%
+     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$} \DisplayProof
 
-\vspace{3mm}
-
-\begin{minipage}{\linewidth} \begin{prooftree}
+\vspace{\baselineskip}
   \AxiomC{$\Gamma \vdash p \proctr{i|\cdots|k}{cond} e$}
     \RightLabel{(同构记号 $x$)}
     \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
     x_\mathrm{e} = e)) \vdash
-     x_\mathrm{p} \proctr{i|\cdots|k}{cond}  x_\mathrm{e}$}
-\end{prooftree}\end{minipage}
+     x_\mathrm{p} \proctr{i|\cdots|k}{cond}  x_\mathrm{e}$} \DisplayProof
 
-\vspace{3mm}
-
-\begin{minipage}{\linewidth}\begin{prooftree}
+\vspace{\baselineskip}
   \AxiomC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (x_\mathrm{e} = e 
   ))\vdash p' \widesim{i}  e'$}
     \RightLabel{(对应记号 $x$ 削除)}
   \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ p\ (\lambda x_\mathrm{p}.\ p')
-    \widesim{i} \mathrm{Let}\ e\ (\lambda x_\mathrm{e}.\ e')$}
-\end{prooftree}\end{minipage}
+    \widesim{i} \mathrm{Let}\ e\ (\lambda x_\mathrm{e}.\ e')$}\DisplayProof
+\end{center}
 
 \vspace{3mm}
 
@@ -511,13 +546,80 @@ n - a) \]
 \vspace{6mm}
 
 \noindent 其中 Let 就是 HOL 上定义的 Let。
-\end{theo}
 
-\begin{proof} 由定义 \ref{def.proctr}，递归公式 \ref{f.proctr_rec}，应用
-    \ref{Sec.HOL} 节中介绍的HOL逻辑上的 MATCH\_MP 律、DISCH 律。
-\end{proof}
+这些演绎律全部是 HOL 逻辑中已有演绎律的复合，\noesishol 本身不引入
+新的演绎律，所以 \noesishol 作为一个形式系统其实是 HOL 逻辑的一种应用。
+接下来将论述如何由已有的 HOL 逻辑的演绎律复合出上述 \noesishol 的规则。
 
-作为一种定理，可以自然地被证明，或者被演绎得出。
+\noesishol 调用律就是 HOL 逻辑中的 MATCH\_MP 律，MATCH\_MP 的意味是自动匹配全称量化
+的肯定前件（Modus Ponens with quantification matching）。
+将 \[\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e \]
+的同构记号展开，注意 $a_p',b_p'$ 上的撇号与接下来的 $a_p,b_p$ 区分
+\[\begin{split} \Gamma_1 \vdash \forall a_p'\ a_e'.\ a_p' \widesim{i} a_e' &\Rightarrow
+    \forall b_p\ b_e.\ b_p \widesim{j} b_e \Rightarrow
+    \cdots \Rightarrow\\ &cond\ a_e'\ b_e\ \cdots \Rightarrow f_p\ a_p'\ b_p\ \cdots
+\widesim{l} f_e\ a_e'\ b_e\ \cdots \end{split}\]
+对 $\Gamma_2 \vdash a_p \widesim{i} a_e$ 进行 MATCH\_MP 律得到
+\[\begin{split} \Gamma_1 \cup \Gamma_2 \vdash \forall b_p\ &b_e.\ b_p \widesim{j} 
+  b_e \Rightarrow
+    \cdots \Rightarrow\\ &cond\ a_e\ b_e\ \cdots \Rightarrow f_p\ a_p\ b_p\ \cdots
+\widesim{l} f_e\ a_e\ b_e\ \cdots \end{split}\]
+就是同构记号下的
+\[\Gamma_1 \cup \Gamma_2 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e \]
+MATCH\_MP 是 \noesishol 上的调用律，却并不局限于这种形式，
+\begin{sprooftree}
+    \AxiomC{$\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e$}
+    \AxiomC{$\Gamma_2 \vdash a_p \widesim{i} a_e$}
+    \RightLabel{MATCH\_MP}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash f_p\ a_p \proctr{j|\cdots|l}{cond\ a_e}
+      f_e\ a_e$}
+\end{sprooftree}
+对于更复杂的 Noesis 同构，例如
+\[ \forall g_p\ g_e.\ (\forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow 
+cong_g\ x_e \Rightarrow
+g_p\ x_p \widesim{j} g_e\ x_e) \Rightarrow cond\ g_e \Rightarrow
+f_p\ g_p \widesim{k} f_e\ g_e \]
+由 MATCH\_MP 律实现的 \noesishol 的调用律以 $g_p' \proctr{i|j}{cond_g} g_e'$ 作为参数
+调用可以得到
+\[ f_p\ g_p \proctr{k}{cond_g\ g_e} f_e\ g_e \]
+非常有趣。如果非要用某个记号表达的话，$f_p,f_e$ 间的同构也许适合表达为
+\[ f_p \proctr{\proctr{i|j}{cond_g}|k}{cond} f_e \]
+
+\noesishol 上的抽象律就是 HOL 逻辑的 DISCH 律
+\begin{sprooftree}
+    \AxiomC{$\Gamma,\ a_p \widesim{i} a_e \vdash b_p \proctr{j|\cdots|k}{cond} b_e$}
+    \RightLabel{DISCH\ $a_p \widesim{i} a_e$}
+\UnaryInfC{$\Gamma \vdash a_p \widesim{i} a_e \Rightarrow b_p \proctr{j|\cdots|k}{cond} 
+  b_e$}
+  \RightLabel{即是}
+    \UnaryInfC{$\Gamma \vdash \lambda a_p.\ b_p \proctr{i|j|\cdots|k}{\lambda a_e.\ cond} 
+    \lambda a_e.\ b_e$}
+\end{sprooftree}
+
+最后一阶同构引入律也是 DISCH 律，一阶同构削除律是 MATCH\_MP 律。
+
+记号律
+\begin{sprooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(对应记号 $x$)}
+    \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+    x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$}
+\end{sprooftree}
+是由 ASSUME 律得到
+\[ (x_p = p)\ \land\ (x_e = e)\vdash (x_p = p)\ \land\ (x_e = e) \]
+再 CONJUNCT1 律与 CONJUNCT2 律分别得到
+\begin{align*}
+  (x_p = p)\ \land\ (x_e = e)&\vdash x_p = p&
+  (x_p = p)\ \land\ (x_e = e)&\vdash x_e = e&
+\end{align*}
+而后依次 EQ\_MP 律即是。
+
+记号削除律简单地就是
+\[\begin{split}
+  \mathrm{MATCH\_MP}\ (\ \vdash &(\forall p\ p'\ e\ e'\ R.\ ((p = p')\ \land\ 
+  (e = e')) \Rightarrow p\ R\ e) \\&\Rightarrow
+(\mathrm{let}\ p = p';\ e = e'\ \mathrm{in}\ p\ R\ e)) \end{split} \]
 
 %又也许理解可以尝试地作为这样一种类型，但问题在于，任何一个现象都可以被应用于大量的理解
 %——只要现象在理解的现象集内就行，若尝试将理解作为类型，就意味着每一个现象都可以属于大量的类型，
