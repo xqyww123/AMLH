@@ -1,5 +1,17 @@
 \chapter{本发明的技术方案}
 \section{本发明采用的技术方案}
+
+本发明首先开创性地提出 Noesis 对应关系，并以 Noesis 对应关系 $\widesim{\cdot}$ 替代
+传统编程语言中的类型关系，以 Noesis 对应关系构成的形式系统 Noesis 形式系统
+替代传统的类型系统，以此构建程序，这是本发明的核心技术。
+
+具体而言，Noesis 对应关系 $\widesim{\cdot}$ 是一个三元关系
+具有形式 $x \widesim{i} \epsilon$，其中 $x$ 表示程序部分，名叫 {\it 现象}
+({\it phenomenon, φαινόμενον})，$i$ 表示理解方式叫做 {\it 理解}
+({\it understanding, nóēsis, νόησῐς})，$\epsilon$ 表示程序 $x$ 在理解 $i$ 下的抽象对应，
+表示抽象意义，名叫 {\it 本体}({\it noumenon, νoούμενον})。
+
+朴素 Noesis 形式系统围绕 Noesis 对应关系，提供演绎 Noesis 对应关系的定理以构建程序的能力。
 图 \ref{fig:naive_noesis_lang} 表示朴素 Noesis 形式系统的形式语言，
 其中 $\hat{\mathcal{P}}, \hat{\mathcal{E}}, \mathcal{I}$ 为给定的单词集，
 记号 $\bnf{BNF}$ 表示 BNF 语法，最后的 $L_\mathrm{N}$ 即为朴素 Noesis 形式系统的形式语言。
@@ -10,17 +22,31 @@
 用于函数调用，抽象律用于函数构建，对应记号律、同构记号律用于临时变量的引入，
 对应记号削除律、同构记号削除律用于函数构建前临时变量的封装。
 
+\noesishol 是 Noesis 形式系统在交互式高阶逻辑证明器（HOL interactive theorem prover）
+的逻辑（HOL 逻辑，HOL Logic）上的实现，由图 \ref{fig:noesis-hol-rule} 表示。
+它允许使用 HOL 定理证明器应用 Noesis 形式系统，进而演绎 Noesis 对应关系的定理以构建程序。
+
+本发明提出的新技术是取代传统类型系统而以 Noesis 形式系统通过演绎 Noesis 对应关系的
+定理以构建程序，这种技术通过一个名为 \Eamlh 的软件实现，并最终提供给用户使用。
+图 \ref{fig:total-frame} 为软件 \Eamlh 的整体架构。
+
+
+Noesis 形式系统实现在 HOL 交互式定理证明器上，
+编辑壳层操作 HOL 交互式定理证明器演绎 Noesis 定理以构造程序。
+
+程序的编译流程为图 \ref{fig:compilation} 。
+
+
 \section{本发明的关键点}
-\subsection{类型系统的扩广 Noesis 形式系统}
+\subsection{使用类型系统的扩广 Noesis 形式系统构造程序并形式化验证}
+
+类型关系被替换成 Noesis 对应，类型系统被替换成围绕 Noesis 对应
+构造的名为 {\it Noesis 系统}({\it Noesis system }) 的形式系统。
+本发明不再关注类型关系而是围绕 Noesis 对应，
+通过构造具有形式 $x \widesim{i} \epsilon$ 的定理以构建程序，
+无论是通过对已有定理的演绎还是从头证明。
 
 \chapter{附图}
 \input{./patent_noesis/naive_noesis_rule.tex}
+\input{./patent_noesis/figure.tex}
 
-\begin{figure} \centering
-\begin{tikzpicture}
-\draw (0,0) node {编辑壳层} circle [radius=2];
-%\path[name=bar1] (-3,)
-\draw (0,2.5) arc [start angle=90, end angle=135, radius=2.5] -- ++ (0,2);
-\draw (0,2.5) arc [start angle=90, end angle=45, radius=2.5];
-\end{tikzpicture}
-\end{figure}
