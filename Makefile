@@ -1,8 +1,14 @@
 BUILD_DIR:=/tmp/thesis
 
+.PHONY: patent_noesis
+
 all-zju0:
 	rsync . $(BUILD_DIR) --exclude=.git -r
 	(cd $(BUILD_DIR) && make zju0)
+
+all-patent_noesis:
+	rsync . $(BUILD_DIR) --exclude=.git -r
+	(cd $(BUILD_DIR) && make patent_noesis)
 
 all-simp:
 	rsync . $(BUILD_DIR) --exclude=.git -r
@@ -11,6 +17,12 @@ all-simp:
 all:
 	rsync . $(BUILD_DIR) --exclude=.git -r
 	(cd $(BUILD_DIR) && make thesis)
+
+patent_noesis:
+	xelatex -shell-escape patent_noesis
+	bibtex patent_noesis || true
+	xelatex -shell-escape patent_noesis
+	xelatex -shell-escape patent_noesis
 
 zju0:
 	xelatex -shell-escape zju0

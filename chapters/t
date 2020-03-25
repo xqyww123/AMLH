@@ -1,2 +1,38 @@
 \section{}
 类型
+
+程序 $x$ 要求必须是基元指令的组合，这些基元指令意味着目标执行平台的
+指令集，而抽象对应 $\epsilon$ 可以是任意的抽象对象。
+
+%\begin{figure}[h] \centering
+%\usetikzlibrary {intersections}
+%\begin{tikzpicture}
+%\draw (0,0) node {编辑壳层} circle [radius=1.2];
+%\path[name path=vbar] (4.5,1.2) -- (4.5,-1.2);
+%  \path[name path=hbarD] (-45:1.5) -- +(4,0);
+%  \path[name path=hbarU] (45:1.5) -- +(4,0);
+%  \draw [name intersections={of=vbar and hbarD, by=x}] 
+%  (1.5,0) arc [start angle=0, end angle=-45, radius=1.5] -- (x) -- (4.5,0);
+%\draw [name intersections={of=vbar and hbarU, by=x}]
+%  (1.5,0) arc [start angle=0, end angle=45, radius=1.5] -- (x) -- (4.5,0);
+%  \draw [align=center] (3,0) node {HOL 交互式\\定理证明器};
+%  \draw [->,thick] (5:1) -- +(0.8,0);
+%  \draw [<-,thick] (-5:1) -- +(0.8,0);
+%\path[name path=Vbar] (-4,1.2) -- (-4,-1.2);
+%  \path[name path=Dhbar] (-135:1.5) -- +(-3,0);
+%  \path[name path=Uhbar] (135:1.5) -- +(-3,0);
+%  \draw [name intersections={of=Vbar and Uhbar, by=x}] 
+%  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+%\draw [name intersections={of=Vbar and Dhbar, by=x}]
+%  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+%  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+%  \draw [->,thick] (175:1) -- +(-0.8,0);
+%  \draw [<-,thick] (-175:1) -- +(-0.8,0);
+%  \draw (-4.4,0) node[left] {用户};
+%  \draw [->,thick] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+%  \draw [<-,thick] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+%  \draw (5.6,0) node [align=center, shape aspect=1,diamond,draw] {Noesis\\理论};
+%\end{tikzpicture}
+%\caption{演绎 Noesis 理论以构建程序的整体框架}  \label{fig:total-frame}
+%\end{figure}
+

@@ -6,8 +6,8 @@
 一定的辅助，特别是在语义层面上。
 作为一种工具，类型系统的重心集中在类型推导与类型检查上，前者意味着
 性质的自动推导而后者是性质的证明。
-一个类型关系（Typing）是类型系统作为一个形式系统上的定理，类型推导
-是对此定理的自动推理（inference）而类型检查则是对此定理的证明。
+一对类型关系（Typing）是类型系统作为一个形式系统上的定理，类型推导
+是对此定理的推理（inference）或感知（reasoning）而类型检查则是对此定理的证明。
 这个定理包含了两部分，一般写作 $x : \tau$ 即值 $x$ 具有类型 $\tau$，
 而类型系统定义了一系列定理的推导规则，例如：
 
@@ -20,14 +20,11 @@
 即如果有定理 $f : \sigma \rightarrow \tau$ 且有定理 $a : \sigma$ 那么
 可以演绎出定理 $f\ x : \tau$。
 
-一直以来，类型系统与编程语言始终聚焦在，给出了一种计算，或者说一段源代码
-，即类型关系的左边 $x$ 这一部分，这一部分可能包含一定的类型标注，
-而类型系统推导或者验证类型关系的右边部分 $\tau$。包括各种编程语言如
-C/C++、Jave、Ruby，以及那些 Curry-Howard 同构下用于形式化证明的系统如
-Coq、Agda、Idris，都是着重于计算，由程序到类型关系。只不过编程语言
-注重于程序本身，类型系统是辅助程序开发；而Coq 系的证明系统注重于
-类型关系在 Curry-Howard 同构下对应的被形式验证的定理，而计算是以
-得到这些定理的证明过程。
+一直以来，旨在构建程序的编程语言仅将类型系统作为一种辅助工具——
+给出了一种计算，或者说一段源代码，即类型关系$x : \tau$的左边 $x$ 这一部分，
+这一部分可能包含一定的类型标注，而类型系统推导或者验证类型关系的右边部分 $\tau$。
+包括各种编程语言如 C/C++、Jave、Ruby，都是着重于程序部分，
+一般是由程序推演类型关系，而类型系统是辅助程序开发。
 
 既然一个类型关系 $x : \tau$ 已经包含了程序部分 $x$，而类型关系是一个
 定理，那能否着重于类型关系作为一个定理本身，推导作为定理的类型关系而
@@ -38,215 +35,362 @@ Coq、Agda、Idris，都是着重于计算，由程序到类型关系。只不�
 
 \begin{center} 演绎定理以构建程序。\end{center}
 
-这一思路下，作为定理的类型关系成为构造的对象，而此定理甚至不需要具有
-$x : \tau$ 的形式，不需要类型关系，
-只要包含程序 $x$ 以及对程序 $x$ 的任意性质的描述。
+Curry-Howard 同构下程序即是证明的编程语言与定理证明工具踩在了点上。特别是 Coq，
+完美地实现了演绎定理以构建程序。
 
-在本文，用于演绎以构建程序的定理，是程序到其抽象意义的对应关系，这些抽象
-意义可以是任意的数学对象，比如集合与数学函数。
-定理本身证明程序实现与其抽象意义的对应性的正确，自然如此，
-否则定理也不该被叫做定理。
-而后用户只要证明程序的抽象意义对设计的满足性，就能证明程序的正确实现。
-抽象意义是数学对象，于是对设计满足的证明非常自然与容易，就像
-证明自然数 $7$ 是质数，或者 $2^n + 1$ 不总是质数，而不是去面对一段复杂的程序。
+只是 Coq、Agda、Idris、F* 等等基于构造演算的系统还是将思维停留在了盒子中，
+本文的贡献在于，在演绎定理以构建程序的思路下，{\bfseries 演绎以构建程序的定理，
+根本不必须是 $x : \tau$ 的形式，不必须是二元的类型关系}。Curry-Howard 同构自然
+只在类型系统中显现，但单纯为了构建程序而演绎的定理，不必须限制在类型关系，
+只需要定理中包含程序就行了，{\bfseries 就可以是别的，呈现更多性质的扩展}，
+而在此扩展下会有对应的 Curry-Howard 同构的扩展。
 
-这一切是可行的。
-形式证明程序实现正确于其设计的前提是其设计在一个证明系统中被形式地描述，
-即所谓形式描述（Formal Specification）。
-在本文，用于演绎以构建程序的定理，是程序到形式描述所位于的证明系统的对应
-，更直白地说，是程序到其抽象意义的对应，这种抽象意义位于一个可被形式描述
-的证明系统，可以在此证明系统上形式描述程序设计，证明抽象意义对程序设计
-的相等性，进而证明程序正确实现了其设计。
+%$x \widesim{i} \epsilon$，
+%其中 $x$ 是程序，$i$ 是各种不同的理解方式，$\epsilon$ 是在理解 $i$ 下程序 $x$ 的抽象
+%对应，抽象的意义。
+%
 
-这种定理具有形式 $x \widesim{i} \epsilon$，
-$\widesim{\cdot}$ 是一个三元关系，$x$ 表示程序部分，名叫 {\it 现象}
+在本文，演绎以构建程序的定理，是程序到其抽象意义的对应关系，$x \widesim{i} \epsilon$，
+其中 $\widesim{\cdot}$ 是一个三元关系，$x$ 表示程序部分，名叫 {\it 现象}
 ({\it phenomenon, φαινόμενον})，
 $i$ 表示理解方式叫做 {\it 理解}({\it understanding, nóēsis, νόησῐς})，
-$\epsilon$ 表示程序 $x$ 在理解 $i$ 下的指称，是抽象对应或者意义，
-名叫 {\it 本体}({\it noumenon, νoούμενον})，$\widesim{\cdot}$
-关系叫做{\it Noesis 对应}({\it Noesis correspondence})或者强行翻译成
+$\epsilon$ 表示程序 $x$ 在理解 $i$ 下的抽象对应，表示抽象意义，
+名叫 {\it 本体}({\it noumenon, νoούμενον})，
+$\widesim{\cdot}$ 关系叫做{\it Noesis 对应}({\it Noesis correspondence})或者强行翻译成
 中文的话，最恰当的也许是{\it 理解对应关系}。
 类型关系被替换成 Noesis 对应，类型系统被替换成围绕 Noesis 对应
 构造的名为 {\it Noesis 系统}({\it Noesis system }) 的形式系统。
-本文不再关注类型关系而是围绕本体对应，
+本文不再关注类型关系而是围绕 Noesis 对应，
 通过构造具有形式 $x \widesim{i} \epsilon$ 的定理以构建程序，
 无论是通过对已有定理的演绎还是从头证明。
 当然 $x$ 要有些别的要求，它们必须是一些可以
 看作是计算机处理器指令的特定函数的组合，以允许编译到这些指令上。
 
-这套系统的灵感来源于本体论(Ontolog)，在程序构成的世界中，
-现象是数值与数值的计算过程，而本体是计算所表示的抽象的理念（idea），这
-理念很可能是编写程序的用户赋予。在程序的世界中，作为现象的计算的意义
-存在于理念的空间而无法被执行计算的计算机设备直接感受，计算设备直接
-感受到的是作为现象的值，故术语本体(noumenon)的使用是恰当的。而
-现象与本体直接的对应关系是通过程序的造物者，用户的智慧去理解的，
-词汇 noesis 意为 nous 的行动，具有理解的意味，而 nous 是本体 noumenon 的
-词源，noumenon 是 nous 的进行时，故 noesis 的使用也是恰当的。
-对现象 phenomenon 进行理解 noesis 的结果是本体 noumenon。
+抽象对应 $\epsilon$ 是定理证明器上任意的数学对象，是数学友好的并易于分析与证明的，
+比如集合与数学映射。抽象意义的分析与证明是容易的，因为它们是数学友好的数学对象。
+Noesis 定理保障了程序实现与其抽象意义的对应，
+而后用户只需证明抽象意义的性质以证明程序的性质，比如证明作为一个值的抽象对应的
+自然数 $7$ 是质数以证明这个值表达一个质数，或者关于参数 $n$ 的程序的抽象对应
+$2^n + 1$ 不总是质数以证明此程序并不总是输出质数。
+是去分析抽象的数学对象，而不是面对一段现实的复杂的程序。
 
-在本文提出的 Noesis 系统中，抽象的理念以形式语言表达，
-或者不精准但能帮助理解地说，
-以数学语言表达。一个理念可以映射到不同现象，而更有趣的，
-在本文的 Noesis 系统中，
-一个现象可以在不同的理解下下对应到不同的本体。用户的编程行为，
-是利用现象操作作为本质的理念。
+若将程序的设计也由此定理证明器上的形式语言描述，描述为一种抽象的数学对象，
+就与程序的抽象意义位于同一个形式语言的空间中，
+那么证明程序的抽象意义与此设计的抽象表达的相等性，就能彻底证明程序实现对于此设计的正确性。
+而这种证明是容易的，因为程序的抽象意义是数学友好的，易于分析的。
 
-这些有点像指称语义，有类似的意味，也许可以参考以助于理解，
+这也许有点像指称语义（Denotation Semantic），有类似的意味，也许可以参考以助于理解，
 但理论内容是完全不同，不应被混淆。
 最大的区别在于，指称语义从来不尝试替代类型系统，不考虑构建程序，其
 找到的指称对应，也不过仅仅是一种理解。指称语义既限制了不同理解的可能，
 它始终只围绕一种理解方式，又根本不精准，始终只是满足关系，而不是等价
 关系，这会疏漏很多的细节。
 
-一个例子能很好地说明这些。
+Noesis 系统的灵感来源于形而上学(Metaphysics)的本体论(Ontolog)，在程序构成的世界中，
+直观可感受的现象值是数值与数值的计算，这些作为现象的数值背后的本体是计算所承载的
+抽象的理念（idea），这理念多数是由程序的编写者赋予。
+在程序的世界中，作为现象的计算的意义存在于理念的空间而无法被执行计算的计算机设备
+直接感受，计算设备直接感受到的只是作为现象的数值，故术语现象(phenomenon)与
+本体(noumenon)的使用是恰当的。而现象与本体直接的对应关系是通过程序的编写者，
+用户的智慧(nous)去理解的，词汇 noesis 意为智慧 nous 的行使，具有理解的意味，
+而 nous 是本体 noumenon 的词源，故 noesis 的使用也是恰当的。
+对现象 phenomenon 进行理解 noesis 的结果是本体 noumenon。
+
+可以用一些例子更细致地说明 Noesis 系统，及其是如何演绎定理以构建程序的。
 若已拥有定理 $x \widesim{i} \epsilon$ 表示值 $x$ 对应抽象意义 
 $\epsilon$，定理 $\forall a\ \phi.\ a \widesim{i} \phi \Rightarrow
 f(a) \widesim{i} g\ \phi$ 表示过程 $f$ 对应数学函数 $g$，
 于是自然地由肯定前件（Modus Ponens）推导出
 \[ f(x) \widesim{i} g\ \epsilon \]
-即过程调用 $f(x)$ 的本质为 $g\ \epsilon$。以此构建程序 $f(x)$。
+即过程调用 $f(x)$ 的本体为 $g\ \epsilon$。此肯定前件律的应用是程序 $f(x)$ 的构建。用户的编程行为，既是利用现象操作作为本体的理念，也是在理念
+的世界中变换抽象的本体以构建作为现象的程序。
 
-定理 $x \widesim{i} \epsilon$ 也根本不是类型关系，
+一个本体可以表现不同现象，这是自然的。
+而更有趣的，在本文的 Noesis 系统中，一个现象可以在不同的理解下下对应
+到不同的本体，或者说不同的本体在不同理解下可以表达为同一个现象
+（现象的欺骗）。
 $\widesim{\cdot}$ 是一个三元关系，可以允许 $x$ 在 $i$ 解释下 
 $x \widesim{i} \epsilon$ 的同时又在 $j$ 解释下 $x \widesim{j} \phi$。
-程序 $x$ 要求必须是基元指令的组合，这些基元指令意味着目标执行平台的
-指令集，而抽象对应 $\epsilon$ 可以是任意的抽象对象。
+这也意味着 Noesis 对应根本不是某种类型关系的变形，而是根本地对
+类型关系的扩展。
 
-单独的指称并没有任何意义，{\it 理解}可以肆意捏造，例如
-一些诡异的理解将黑指代为白，而将鹿指代为马。
-意义体现在同构(Homomorphism)，无论怎样肆意设定的{\it 理解} $i$，当其确定，若能证明
-一段程序过程$p$在理解$i$下指代到某个本质$\epsilon$的输入会
-输出另一种理解$j$下指代到本质$f(\epsilon)$的输出，此函数的抽象意义
-就被理解 $i,\ j$ 确定，即本质 $f$。
+单独的指称并没有任何意义，{\it 理解}可以肆意捏造以将任意的现象对应到
+任何本体，例如一些诡异的理解可以将黑指代为白，而将鹿指代为马。
+意义体现在同构(Homomorphism)，无论怎样肆意设定的{\it 理解} $i$，当其确定
+，若能证明对
+一段程序过程$p$输入理解$i$下指代到某个本体$\epsilon$的现象会产生
+理解$j$下指代到本体$f(\epsilon)$的输出，此函数的抽象意义
+就被理解 $i,\ j$ 确定，即本体 $f$。
 例如某个定理表明名叫 Add 的程序输入理解 $\mathcal{N}$ 下
-对应 $x$ 和 $y$ 的值，$x, y$ 是自然数，就能输出在同样解释 $\mathcal{N}$
+对应 $x$ 和 $y$ 的值，$x, y$ 是自然数，就能输出在解释 $\mathcal{N}$
 下对应 $x + y$ 的值，程序 Add 满足了 Noesis 对应的同构，
 显然是在这种情形下对应着自然数加法。那么解释 $\mathcal{N}$
 的本质为何根本没有任何意义，不需要纠结它的本体论问题而只要某段程序过程
 满足某几个解释的 Noesis 对应的同构，就足够表明这段过程的抽象意义。
-这种同构会在后文叫做 Noesis 同构，用记号 $\proctr{i|j|\cdots|k}{cond}$ 表达，
+这种同构会在后文叫做 Noesis 同构，部分简单形式能用记号 
+$\proctr{i|j|\cdots|k}{cond}$ 表达，
 例如$\mathrm{Add} \proctr{\mathcal{N}|\mathcal{N}|\mathcal{N}}{cond} (+)$，
 其中 $cond$ 表示过程 Add 执行的条件。更通用的
 \[ f \proctr{i|j|\cdots|k}{cond} \psi \]
 表示程序过程 $f$ 拥有参数的理解为 $i,j,\cdots$ 返回值的理解为 $k$ 
 的 Noesis 对应的同构并同构于抽象的 $\psi$ ，且执行条件为 $cond$。
 
-Noesis 系统中主要的规则表示如下
-\begin{center}
-\begin{minipage}[b]{0.45\linewidth} \begin{prooftree}
-\AxiomC{$a \widesim{i} \epsilon$}
-\AxiomC{$f \proctr{i|j|\cdots|k}{cond} \psi $} \RightLabel{(调用律)}
-    \BinaryInfC{$f\ a \proctr{j|\cdots|k}{cond\ \epsilon} \psi\ \epsilon$}
-\end{prooftree}\end{minipage}
-\begin{minipage}[b]{0.4\linewidth} \begin{prooftree}
-\AxiomC{$cond$} \AxiomC{$x \proctr{i}{cond} \phi $}
-\RightLabel{(条件满足律)} \BinaryInfC{$x \widesim{i} \phi$}
-\end{prooftree}\end{minipage}
-\end{center}
-Neosis 系统的公理中的现象，那些值与过程，构成了 Neosis 系统
-上的程序的常量集与指令集。而 Neosis 系统上的定理演绎，在由公理构造
-定理的同时也由常量集和指令集构造了程序。一个形式系统中的定理是
-所有那些公理在该系统定义的推导规则下的构造。于是自然是一种形式系统的
-Neosis 系统的所有定理也来自于其定义的有限的推导规则对公理的应用，
-于是Neosis 系统上所有的程序也来自于指令集和常量集的组合。推导规则定义了
-组合方式，在下文的详细讨论中将会看到，就是组合调用与抽象。
+Noesis 系统中核心的演绎律是
 
-而一个形式系统的所谓形式证明即是推导规则对公理的复合作用。当这有限的
-推导规则合乎逻辑时，公理的合理性就非常重要。在 Noesis 系统中，
-推导规则本文认为是合乎逻辑的。而 Noesis 系统的公理是
-对基元指令与常量的 Noesis 对应的描述，当一切指令集与常量集的 Noesis 对应
-，即那些公理，都合乎逻辑时，Noesis 系统上的定理与程序也都合乎逻辑。
-当那些公理正确地对某个执行系统建模时，即正确地找到各个常量与基元指令的
-抽象的本体对应，或者说这对应是正确时，Noesis 系统得出的定理也就是正确的。
-尽管，一如任何证明系统，公理的正确性都是无从着手的，否则也不会被叫做
-公理。任何的模型，其对自然世界建模的正确性，这是个持续了千年的哲学命题，
-涉及到可知论、认识论等哲学的深层领域，本文不去染指。
+\vspace{6mm}
+{\centering 
+  \begin{tabular}{c c}
+\AxiomC{$\Gamma_1 \vdash a \widesim{i} \epsilon$}
+\AxiomC{$\Gamma_2 \vdash
+  f \proctr{i|j|\cdots|k}{cond} \psi $} \RightLabel{(调用)}
+\BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash
+  f\ a \proctr{j|\cdots|k}{cond\ \epsilon} \psi\ \epsilon$}
+    \DisplayProof &
+\AxiomC{$\Gamma_1 \vdash cond$} 
+\AxiomC{$\Gamma_2 \vdash x \proctr{i}{cond} \phi $}
+\RightLabel{(条件削除)} \BinaryInfC{$\Gamma_1 \cup \Gamma_2
+  \vdash x \widesim{i} \phi$} \DisplayProof \end{tabular}
+
+\hfill
+
+\begin{tabular}{c c c}
+  \AxiomC{$\Gamma, a \widesim{i} \epsilon \vdash f \proctr{j|\cdots|k}
+  {cond} \phi $} \RightLabel{(抽象)}
+\UnaryInfC{$\Gamma \vdash \lambda a.\ f \proctr{i|j|\cdots|k}{\lambda
+  \epsilon.\ cond} \lambda\epsilon.\ \psi$}
+  \DisplayProof & \AxiomC{} \RightLabel{(参数)} \UnaryInfC{
+  $p \widesim{i} \epsilon \vdash p \widesim{i} \epsilon$}
+    \DisplayProof &
+\AxiomC{$\Gamma,\ cond \vdash x \widesim{i} \epsilon $}
+\RightLabel{(条件引入)} \UnaryInfC{$\Gamma \vdash 
+  x \proctr{i}{cond} \phi$} \DisplayProof
+  \end{tabular} \par}
+
+\vspace{6mm}
+Neosis 系统的公理中的现象，那些值与过程，构成了 Neosis 系统
+上的程序的常量集与指令集。
+一个形式系统的所有定理都来自于其公理按在其定义的演绎律的演绎。
+而同样是一种形式系统的 Neosis 系统，在通过演绎律由公理构造定理的同时也
+由常量集和指令集构造了程序，这些程序就是指令集和常量集的组合.
+而组合方式是上述的调用与抽象，即函数调用与函数构建。
+
+于是 Noesis 系统中作为公理的基元指令与常量构建了一台抽象机器，
+而 Noesis 系统构建的程序就是此抽象机器上的程序。
+对程序等价变化展开成基元指令与常量的表达就成为了编译。
+令抽象机器的基元指令与常量的设定尽可能接近某个目标执行环境，以至于这些基元指令与常量
+可以实现在此目标执行环境上，于是程序的基元指令与常量表达也可以实现在那目标执行环境上，
+就将 Noesis 系统上的程序编译到了目标执行环境，就能生产切实可执行的程序。
+此即如何演绎 Noesis 定理以构建程序。
 
 Agda、Idris 等基于依赖类型系统的语言使用类型表述程序的性质，
-即 $x : P$，$P$ 即是类型又是性质。
-而程序 $x$ 不得不扮演多个角色，依赖类型系统基于的 Curry-Howard 同构
-意味了这一点，首先它必须是对定理的证明，然后又是
-承载业务功能的可执行程序。
+即 $x : P$，$P$ 即是类型又是性质，而程序得兼任证明，必须一人分饰两角，
+这些批评前面已经讨论了。
 
-而本文的情况，先是在某种解释或者某种解释的同构下证明程序$x$对应于
+而本文的情况，先是在某种解释或某种解释的同构下证明程序$x$对应于
 抽象$\epsilon$，再证明抽象 $\epsilon$ 满足的任意性质 $Q$ 
 以证明程序 $x$ 的性质。例如上文的 Add 函数的例子，可以轻易地证明
 $(+)$ 属于 $\mathrm{Even} \rightarrow \mathrm{Even} \rightarrow 
 \mathrm{Even}$ 或者 
 $\mathrm{Odd} \rightarrow \mathrm{Odd} \rightarrow \mathrm{Odd}$
-而由此证明 Add 在那理解下也有此性质。
+而由此证明 Add 在也有此性质。
 于是 Add 的实现，只要专注于工程性能就可以，任意性质的证明只发生在其
 抽象对应上，是在抽象的领域内完成的，抽象和工程的两个世界不会相互干扰。
 于是在得到很好执行性能的编译结果的同时，对其性质的证明依旧容易。
 
 演绎定理以构建程序。
 Curry-Howard 同构连接起了程序与证明。
-本文的新思路应与 Curry-Howard 同构有什么联系，看似如此而深入的思索与
-更严谨的论述笔者都失败了。构造演算（CoC）与基于此的 Coq 证明工具
+本文的新思路应与 Curry-Howard 同构有什么联系。Coq 证明工具
 受 Curry-Howard 同构的启发，从程序走向证明。本文似是相反的，
 演绎或者证明定理以构建程序。但更严谨地论述，这套构建程序的新方法中并没有
 类型系统，虽然这些程序也基于 λ 演算，但跟 λ 演算的类型系统关联并不大。
 这似乎是种新的对应，一个看起来理所当然的对应，一个描述程序 Noesis 对应关系
-的定理自然包含那个程序，于是演绎与证明这种定理自然也就在构造其中的程序。而背后是有内在关联的，定理的演绎与程序的构造，这两者的对应关系正是
-Curry-Howard 同构的内涵。
+的定理自然包含那个程序，于是演绎与证明这种定理自然也就在构造其中的程序。
 
 更有趣的是， Noesis 对应在一些特例下退化为类型关系，令冒号 $:$ 为一种程序
 到定理的理解，而 $\mathrm{Abs}$ 同构于 $\rightarrow$
 \[ \mathrm{Abs} \proctr{:|:|:}{\K \K \T}
 (\lambda x\ y.\ x \rightarrow y) \]
-这意味着 Noesis 对应是类型关系的扩广。而此时
+这再次揭示 Noesis 对应是类型关系的扩广。而此时
 以 $:$ 为理解的 Noesis 对应也显示出了 Curry-Howard 同构，程序成为证明
-而意义是定理。既然 Noesis 对应是类型关系的扩广，那似乎暗示着 
+而本体是定理。既然 Noesis 对应是类型关系的扩广，那似乎暗示着 
 Curry-Howard 同构也应存在着某种扩广，也许是沟通起程序与建构主义式的
-抽象构造。似乎显然的一点是，一切建构主义式的构造，都有一个程序对应。
+抽象构造。似乎显然的一点是，一切被建构的构造，都有一个程序对应，数学是，证明是，
+一块布丁也是。
 
-现在放下理念的美好回到现实，讨论如何使用 Noesis 系统在实际的工业生产中
-构建程序。
-\begin{center} 演绎定理以构建程序。\end{center}
+现在放下理念的美好回到现实，讨论如何演绎 Noesis 理论以在实际的工业生产中
+构建程序，图 \ref{fig:total-frame} 为整体实施框架。
 
+\begin{figure}[h] 
+  \centering \begin{tikzpicture}\useasboundingbox (-5,-5) rectangle (5,5);
+\baselineskip=0.5cm
+    \draw (0,0) node (O) {编辑壳层} circle [radius=1.2];
+  \path[name path=vCbarD] (60:3.3) -- ([turn]-90:1.5);
+  \path[name path=vCbarU] (60:3.3) -- ([turn]90:1.5);
+  \path[name path=hCbarD] (15:1.5) -- ([turn]45:4);
+  \path[name path=hCbarU] (105:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vCbarD and hCbarD, by=x}] 
+  (60:1.5) arc [start angle=60, end angle=15, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vCbarU and hCbarU, by=x}]
+  (60:1.5) arc [start angle=60, end angle=105, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (60:2.4) node {编译\\后端};
+  \draw (60:4) node[dart,draw,minimum size=1cm, shape border rotate=60,
+    shape border uses incircle,fill=white] (B) {编译};
+  \draw [->] (65:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (55:0.9) -- ([turn]5:0.8);
 
-本文将 Noesis 系统实现在 HOL 交互式定理证明工具的证明系统中，通过
-构造 HOL 定理证明工具上的一系列定义、谓词、定理以及证明策略完成。
-Noesis 系统实现在 HOL 定理证明器的 HOL 逻辑中，于是可以使用 HOL 逻辑
-表述现象、理解、理念。于是 Noesis 对应成为 HOL 定理证明工具上的定理，
-本体 noumenon 可以用 HOL 逻辑中的数理对象(mathematical object)表达，
-例如数学函数、集合、有限域。即定理 $x \widesim{i} \epsilon$ 中的
-本质 $\epsilon$ 是 HOL 逻辑上任意的数理对象，
-于是可以进一步自由地证明 $\epsilon$ 的任意性质，
-$\epsilon$ 就是 HOL 逻辑上普通的数理对象于是一切证明都自然而然。
-证明得到的关于本质的性质，在 Noesis 对应下就直接成为程序的性质。
-于是可以由此证明程序的任意性质，而这证明是自然而然的。
+  \path[name path=vbarD] (-60:3.7) -- ([turn]-90:1.5);
+  \path[name path=vbarU] (-60:3.7) -- ([turn]90:1.5);
+  \path[name path=hbarD] (-105:1.5) -- ([turn]45:4);
+  \path[name path=hbarU] (-15:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vbarD and hbarD, by=x}] 
+  (-60:1.5) arc [start angle=-60, end angle=-105, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vbarU and hbarU, by=x}]
+  (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (-60:2.5) node {HOL\\证明器};
+  \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
+  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw [->] (-55:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (-65:0.9) -- ([turn]5:0.8);
+  \path[name path=Vbar] (-4,1.2) -- (-4,-1.2);
+  \path[name path=Dhbar] (-135:1.5) -- +(-3,0);
+  \path[name path=Uhbar] (135:1.5) -- +(-3,0);
+  \draw [name intersections={of=Vbar and Uhbar, by=x}] 
+  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+  \draw [name intersections={of=Vbar and Dhbar, by=x}]
+  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+  \draw [<-] (175:1) -- +(-0.8,0);
+  \draw [->] (-175:1) -- +(-0.8,0);
+  \draw (-4.4,0) node[left] {用户};
+  \draw [<-] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \draw [->] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  %\path (B) ([turn]-90:2) node (BX) {};
+  %\draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
+\end{tikzpicture}
+\caption{演绎 Noesis 理论以构建程序的整体框架} \label{fig:total-frame}
+\end{figure}
 
-程序的描述可以在 HOL 逻辑上进行，作为 HOL 逻辑上的一种形式描述，
-是由 HOL 逻辑的数理对象表达的。那么既然是数理对象而程序的本质亦是
-HOL 逻辑的数理对象，就可以由 HOL 证明系统证明描述与本质的相等性。
-于是由 Noesis 对应，就是程序对描述的等价性，即是程序实现的彻底正确性
-的证明。
+本工作使用 HOL 交互式定理证明工具作为定理推理引擎，对其详细介绍在 \ref{Sec.ITP} 节中进行。
 
-而这一切 Noesis 系统上证明正确亦即定理正确的前提
-，是在上文提及的表述常量集与指令集的对应的公理的正确。
-以计算机科学的视角，Neosis 系统上的常量集与指令集实质构建了一台抽象机器
-(Abstract Machine)，而Neosis 系统上的程序是这抽象机器上的程序。
-这种抽象机器，本文命名为 \amlh，
+首先在 HOL 定理证明工具上构造一系列定义、谓词、定理以及证明策略，将
+Noesis 系统实现在 HOL 交互式定理证明器的证明系统中，进而可以使用 HOL 逻辑
+表述现象、理解、理念。其中现象与理解将被特别地定义，而
+本体 noumenon 就是 HOL 逻辑中任意的数学对象(mathematical object)，
+例如数学映射、集合、有限域。于是可以有效且自然地证明本体的任意性质，
+因为这本体是就是 HOL 逻辑上自然存在的数理对象。
+
+Noesis 对应成为 HOL 定理证明工具上的定理，演绎 Noesis 定理就是演绎 HOL 的定理。
+关于定理演绎的一切数学操作都由 HOL 定理证明器完成，这些演绎的正确性，即定理推导的正确性，
+就都由 HOL 定理证明器保障。
+
+于是本工作的工程实现是缺陷免疫的。任何实现上的缺陷只会导致用户无法编织所期望的程序，
+而任何推导出的定理必定是正确的，因为本工作推导出的一切定理都来自于 HOL 定理证明器，
+本工作本身不生产定理只是操作 HOL 定理证明器演绎推导定理。而 HOL 定理证明器的正确性，
+在 \ref{Sec.deBruijn} 节 de Bruijn 标准中详细的讨论。本工作是满足 de Bruijn 标准的，
+本工作给出的任何定理的正确性严格等于 HOL 定理证明器的正确性，
+而与本工作本身的工程实现无关。
+即便工程实现中不幸引入了缺陷，也不影响本工作输出的定理的正确性。
+
+实现在 HOL 证明器上的 Noesis 系统叫做 \noesishol，结合常量与基元指令设定后构成的
+抽象机器叫做 \amlh。
 \lamcr 是 Noesis 的古希腊文词源 νόησις 的动词原型，意为去理解、去思考。
 
-演绎定理以构建程序，本文主要的工作内容，是围绕抽象机 \amlh，
-实现其上的一整套软件工程方案，包括工具与方案去构建 \amlh 上的程序，
-以及将 \amlh 上的程序编译到实际计算机的执行环境的方案与工具，
-以最终实现
-\begin{center} 演绎定理以构建程序。\end{center}
+用户不需要直接操作定理证明器，交互式的编辑器前端与编辑壳层将定理证明器封装，并提供用户
+统一的易于使用的接口。
+
+最后编译方面，分为两步。首先操纵 HOL 证明器对 \amlh 上的程序等价变换展开成基元指令与常量
+的表达，注意这种变换是由 HOL 证明器保障的，故至此的编译是被形式化验证的。
+而后程序的基元指令与常量表达作为一种中间表达（Intermediate Representation, IR），
+以文本的形式由 HOL 证明器输出，编辑壳层将其输入编译后端，并最终生成目标执行平台上的可执行
+程序。编译后端最后的编译加工是没有保障的，在形式化验证之外的，可能有错误的。
+但如前所述，\amlh 的基元指令集与常量被设定的如此接近目标执行环境以至于编译后端的工作
+尽可能的简单，几乎就只是 IR 文本到机器代码的映射，以至于潜在编译缺陷尽可能的非常少。
+且编译后端作为一个程序是固定的，可以后续对其形式化验证以将形式化验证的范围扩展。
+总之，本工作的形式化验证的保障范围是 IR 级别的，可以保障用户程序到 IR 级别的正确性。
+
+\begin{figure}[h] 
+  \centering \begin{tikzpicture} \baselineskip=0.5cm
+    \draw (0,0) node (O) {编辑壳层} circle [radius=1.2];
+  \path[name path=vCbarXD] (60:3.3) -- ([turn]-90:1.5);
+  \path[name path=vCbarXU] (60:3.3) -- ([turn]90:1.5);
+  \path[name path=hCbarXD] (15:1.5) -- ([turn]45:4);
+  \path[name path=hCbarXU] (105:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vCbarXD and hCbarXD, by=x}] 
+  (60:1.5) arc [start angle=60, end angle=15, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vCbarXU and hCbarXU, by=x}]
+  (60:1.5) arc [start angle=60, end angle=105, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (60:2.4) node {编译\\后端};
+  \draw (60:4) node[dart,draw,minimum size=1cm, shape border rotate=60,
+    shape border uses incircle,fill=white] (B) {编译};
+  \draw [->] (65:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (55:0.9) -- ([turn]5:0.8);
+
+  \path[name path=vbarXD] (-60:3.7) -- ([turn]-90:1.5);
+  \path[name path=vbarXU] (-60:3.7) -- ([turn]90:1.5);
+  \path[name path=hbarXD] (-105:1.5) -- ([turn]45:4);
+  \path[name path=hbarXU] (-15:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vbarXD and hbarXD, by=x}] 
+  (-60:1.5) arc [start angle=-60, end angle=-105, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vbarXU and hbarXU, by=x}]
+  (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (-60:2.5) node {HOL\\证明器};
+  \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
+  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw [->] (-55:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (-65:0.9) -- ([turn]5:0.8);
+  \path[name path=VbarX] (-4,1.2) -- (-4,-1.2);
+  \path[name path=DhbarX] (-135:1.5) -- +(-3,0);
+  \path[name path=UhbarX] (135:1.5) -- +(-3,0);
+  \draw [name intersections={of=VbarX and UhbarX, by=x}] 
+  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+  \draw [name intersections={of=VbarX and DhbarX, by=x}]
+  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+  \draw [<-] (175:1) -- +(-0.8,0);
+  \draw [->] (-175:1) -- +(-0.8,0);
+  \draw (-4.4,0) node[left] {用户};
+  \draw [<-] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \draw [->] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \path (B) ([turn]-90:2) node (BX) {};
+  \draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
+\draw [align=center] (A) ([turn]90:2) node[right]{等价变换\\展开成基元指令\\与常量的表达};
+    \draw [align=center] (2.7,0) node[right] {中间表达};
+    \draw [align=center] (BX) node[right] {编译中间表达\\至目标执行环境};
+\end{tikzpicture}
+\caption{编译流程示意} \label{fig:compilation}
+\end{figure}
 
 一切角落都充满创新活力。既然是演绎定理来构建程序，就显然不能将源代码
 写在纸上或者文本编辑器里，文本形式的源代码自然应当抛弃而定理与数理逻辑
-对象才是 \amlh 上程序的源代码。本文设计了名为{\it 编辑壳层}交互式工具
-以允许用户演绎定理以构造程序。既然是演绎定理来构建程序，就显然不能
+对象才是 \amlh 上程序的源代码。本文设计了 {\it 编辑壳层}
+以允许用户交互式地演绎定理、操作数学对象，以构造程序。
+既然是演绎定理来构建程序，就显然不能
 基于源代码分析而为用户提供编程辅助与支持，编程辅助与支持变成一种全新的
 数理范畴内的，是使用定理证明器构造一系列证明策略与分析工具而为编程提供
 支持，并且允许分析与辅助做得更多的多。由下层定理证明器对 \amlh 上程序
 进行符号分析允许对程序进行模拟执行，时间、开销、并行模型与资源都可以
-考虑进来。这种符号分析还可以是向下的展开，将一程序展开成基元指令与常量
-的表达就成为对程序的编译，且这编译作为定理证明器上的等价变换，正确性
-是被保障的。
+考虑进来。
 
 诸如此类，非常多令人振奋的新视角新方法将在接下来慢慢论述。
+
+\section{章节安排}
+
+\begin{itemize}
+\item[第 \ref{Ch.intro} 章] 概括性地介绍本文工作。
+  \item[第 \ref{Ch.ReqTh} 章] 进行混淆区分、记号定义、与必要的理论介绍，包括 HOL 交互式定理证明器
+的介绍。
+\item[第 \ref{Ch.AmLH} 章] 细致地论述 Noesis 系统的定义，其在 HOL 上的实现，以及相关的各种细节。
+\item[附录 \ref{Ch.ES}] 论述编辑壳层，因内容过多且与 Noesis 系统相对无关故置于附录。
+  仅给感兴趣的读者，可以选择性阅读或跳过。
+\item[第 \ref{Ch.Implementation} 章] 论述本文工作在智能合约场景上的实现，包括用于智能合约
+  的抽象机器 \amlhS 的定义与实现，\amlhS 上程序的编译方法。这一章给出了一种实际可行的
+  构造正确性被证明的智能合约的方案，并最终能编译出可运行于 EOS.IO 等智能合约平台的
+  WASM 格式的智能合约。
+\item[第 \ref{Ch.conclusion} 章] 总结本文工作，与其他现有方案比较，特别是与依赖类型系统
+  比较。
+\item[附录 \ref{Ch.lambda}] 包括了 λ 演算粗浅的介绍与定义，可供数学背景较弱的读者参考。
+\item[附录 \ref{Ch.example.transfer}] 是第 \ref{Ch.Implementation} 章的扩充，
+  给出了一段相对完整的代币合约转账部分在 \amlhS 上具体的构建过程与编译。
+  因内容过于细致放于附录。
+\end{itemize}
 

@@ -1,0 +1,40 @@
+\documentclass[cs4size,a4paper,fancyhdr,hyperref]{ctexrep}
+
+\AtBeginDocument{\makeatletter\input{yunphant.cfg}\makeatother}
+\oddsidemargin -0.14 true cm  %orignal
+\evensidemargin -0.14 true cm
+\topmargin -0.74 true cm
+\headheight 0.8 true cm
+\headsep 0.3 true cm
+\topsep 0.7 true cm
+\textheight 23.9 true cm
+\textwidth 16.6 true cm
+\footskip 0.9 true cm
+\parskip 0.5ex plus 0.25ex minus 0.25ex
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,bm,mathtools}
+\usepackage{algorithm}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\input{macros.tex}
+\newunicodechar{。}{{.\ }}
+
+\hypersetup{CJKbookmarks=true,%
+             bookmarksnumbered,%
+               linkcolor=blue,%
+              plainpages=false,%
+            pdfstartview=FitH,
+               hidelinks
+         }
+
+\title{基于 Noesis 形式系统的程序开发技术}
+\author{徐启源}
+
+\begin{document}
+\maketitle
+\input{./patent_noesis/attension.tex}
+\input{./patent_noesis/background.tex}
+\input{./patent_noesis/work.tex}
+  \bibliographystyle{plain}
+  \bibliography{bib}
+\end{document}

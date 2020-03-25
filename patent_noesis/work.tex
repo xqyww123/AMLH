@@ -1,0 +1,26 @@
+\chapter{本发明的技术方案}
+\section{本发明采用的技术方案}
+图 \ref{fig:naive_noesis_lang} 表示朴素 Noesis 形式系统的形式语言，
+其中 $\hat{\mathcal{P}}, \hat{\mathcal{E}}, \mathcal{I}$ 为给定的单词集，
+记号 $\bnf{BNF}$ 表示 BNF 语法，最后的 $L_\mathrm{N}$ 即为朴素 Noesis 形式系统的形式语言。
+图 \ref{fig:naive_noesis_rule} 为朴素 Noesis 形式系统的演绎规则。
+图 \ref{fig:naive_noesis_lang} 与图 \ref{fig:naive_noesis_rule} 共同表示了
+朴素 Noesis 形式系统。
+其中参数律用于构建参数，一阶同构引入律与一阶同构削除律为技术性操作无实际意义，应用律
+用于函数调用，抽象律用于函数构建，对应记号律、同构记号律用于临时变量的引入，
+对应记号削除律、同构记号削除律用于函数构建前临时变量的封装。
+
+\section{本发明的关键点}
+\subsection{类型系统的扩广 Noesis 形式系统}
+
+\chapter{附图}
+\input{./patent_noesis/naive_noesis_rule.tex}
+
+\begin{figure} \centering
+\begin{tikzpicture}
+\draw (0,0) node {编辑壳层} circle [radius=2];
+%\path[name=bar1] (-3,)
+\draw (0,2.5) arc [start angle=90, end angle=135, radius=2.5] -- ++ (0,2);
+\draw (0,2.5) arc [start angle=90, end angle=45, radius=2.5];
+\end{tikzpicture}
+\end{figure}

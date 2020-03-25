@@ -31,7 +31,7 @@
 % longnamesfirst参数用于处理长人名顺序，将first name排前面，用于外国人名
 % square参数，引用标号用方括号括起
 % super参数，引用标号为上标格式
-\RequirePackage[sort&compress,longnamesfirst,square,super]{natbib}
+%\RequirePackage[sort&compress,longnamesfirst,square,super]{natbib}
 % 设置图片，表格头字体选项。间距10pt，字号为小字号，标题与题目间距1个字符
 \RequirePackage[margin=10pt,font={small},labelsep=quad]{caption}
 % 粗线型表格以及表格着色需要的扩展包
@@ -52,6 +52,8 @@
 % 表目录
 \usepackage{longtable} % for "longtable"
 \usepackage{rotating}  %for "sideways"
+
+\usepackage[sort&compress]{gbt7714}
 
 % 英文、数字字体宏包
 \usepackage{fontspec}
@@ -663,12 +665,12 @@
      \NAT@citexnum[][]}
 
 \newcommand\ZJUthesisbib[1]{%
-  \setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
+  %\setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
   \setlength{\bibsep}{0.5ex}
   \setlength{\bibhang}{2em}
   \renewcommand{\bibfont}{\songti\zihao{-4}}
 
-  \bibliographystyle{ZJUthesis}
+  \bibliographystyle{gbt7714-2005-numerical}
   \bibliography{#1}
 }
 
