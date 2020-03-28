@@ -26,7 +26,7 @@
   (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
   \draw [align=center] (-60:2.5) node {HOL\\证明器};
   \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
-  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw (-60:4.6) node [align=center] (A) {\amlh};
   \draw [->] (-55:0.9) -- ([turn]-5:0.8);
   \draw [<-] (-65:0.9) -- ([turn]5:0.8);
   \path[name path=Vbar] (-4,1.2) -- (-4,-1.2);
@@ -45,7 +45,7 @@
   %\path (B) ([turn]-90:2) node (BX) {};
   %\draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
 \end{tikzpicture}
-\caption{演绎 Noesis 理论以构建程序的整体框架} \label{fig:total-frame}
+\caption{软件 \Eamlh 的主体框架} \label{fig:total-frame}
 \end{figure}
 
 \begin{figure}[h] 
@@ -75,7 +75,7 @@
   (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
   \draw [align=center] (-60:2.5) node {HOL\\证明器};
   \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
-  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw (-60:4.6) node [align=center] (A) {\amlh};
   \draw [->] (-55:0.9) -- ([turn]-5:0.8);
   \draw [<-] (-65:0.9) -- ([turn]5:0.8);
   \path[name path=VbarX] (-4,1.2) -- (-4,-1.2);
@@ -207,5 +207,25 @@
     \draw [align=center] (\x,2.2) node [shade,draw,cylinder,shape border rotate=90,
     bottom color=white!50!gray,top color=white,
     minimum height=1.5cm, aspect=.17, font={\linespread{1.1}\tiny}] {常\\量};
+    \draw (8.5,0) node [shade,draw,cylinder,shape border rotate=90,
+    bottom color=white!50!gray,top color=white,
+    minimum width=4cm, minimum height=1cm, aspect=.3] {HOL 逻辑};
+    \draw (8.5,-1) node {\amlh 上的程序};
+    \draw (8.5,1) node [shade,draw,cylinder,shape border rotate=90,
+    bottom color=white!50!gray,top color=white,
+    minimum width=3cm, minimum height=1cm, aspect=.2] {Noesis 系统};
+    \foreach \x in {7.5,8.7}
+    \draw [align=center] (\x,2.2) node [shade,draw,cylinder,shape border rotate=90,
+    bottom color=white!50!gray,top color=white,
+    minimum height=1.5cm, aspect=.17, font={\linespread{1.1}\tiny}] {基\\元\\指\\令};
+    \foreach \x in {8.1,9.3}
+    \draw [align=center] (\x,2.2) node [shade,draw,cylinder,shape border rotate=90,
+    bottom color=white!50!gray,top color=white,
+    minimum height=1.5cm, aspect=.17, font={\linespread{1.1}\tiny}] {常\\量};
+    \draw (8.5,3.2) node [shade,draw,cylinder,shape border rotate=90,
+    bottom color=white!50!gray,top color=white,
+    minimum width=3cm, minimum height=1cm, aspect=.2] {\amlh 上的程序};
   \end{tikzpicture}
+\caption{朴素 Noesis 系统、\noesishol、\amlh、\amlh 上的程序之间的关系} 
+  \label{fig:noesis-rela}
 \end{figure}

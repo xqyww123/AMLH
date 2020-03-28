@@ -131,8 +131,8 @@ Noesis 系统的主要扩广，例如那些产生理解的 HOL 函数，
 HOL 逻辑上的类型 phenomenon 表示 \noesishol 的现象，
 根据不同的具体实现可以不同方式具体定义，不同的具体定义不影响本章理论。
 
-唯独特别的，phenomenon 类型中需要包含一个特别的零元素$\mathrm{p}_0$，
-表示计算客体中不需要被任何实在的现象表示而自然地于虚无中存在的，
+唯独特别的，phenomenon 类型中需要包含一个零元素$\mathrm{p}_0$，
+表示计算客体中不需要被任何实在的现象表示而自然地于背景中存在，
 例如0个二进制位或者C语言的void类型。
 \end{defin}
 
@@ -153,7 +153,7 @@ HOL 逻辑上的类型 phenomenon 表示 \noesishol 的现象，
 \end{defin}
 
 $\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本体的理解。
-例如现象到布尔值间的超越映射就要届由到 bool 类型的理解来完成。
+例如现象到布尔值间的 Noesis 对应就要届由到 bool 类型的理解来完成。
 $\mathbf{Noesis}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定本体到
 现象的映射；$tr$ 是超越函数，确定现象到本体的映射；$s$ 是本体集合，
 有 $s \subseteq \mathrm{dom}\ l \land s \subseteq \mathrm{rng}\ tr$；
@@ -299,7 +299,7 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \[p \widesim[2]{ia \cdot ib} (e_a,\ e_b) = p \widesim{i_a} e_a \land p \widesim{i_b} e_b \]
 \end{proof}
 
-由合并的理解的 Noesis 对应关系就可以提取出其中各个理解的 Noesis 对应。
+由合并的理解的 Noesis 对应就可以提取出其中各个理解的 Noesis 对应。
 
 \begin{gather*}
     p \widesim{i_1 \cdot i_2} (e_1,\ e_2) \Rightarrow p \widesim{i_1} e_1 \\
@@ -419,9 +419,9 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 \end{notation}
 
     过程的 Noesis 对应同构构成了一种契约，
-    在输入参数可以被约定的理解$i,\cdots,k$解释，
-    且解释后的意义也即本体$a_e,\cdots,c_e$满足给定的条件，
-    那么此过程可以正确执行并返回以约定的理解$l$的解释下对应本体$f\ a_e\ \cdots\ c_e$ 的输出
+    当输入参数可以被约定的理解$i,\cdots,k$解释，
+    且解释后的意义也即本体$a_e,\cdots,c_e$满足给定的条件时，
+那么此过程可以正确执行，并返回以约定的理解$l$的解释下对应本体$f\ a_e\ \cdots\ c_e$ 的现象。
 
 
 上述记号具有如下的递归形式。
@@ -464,7 +464,7 @@ n - a) \]
 共性，而本体承载现象的共性在内的全部特性，所以理解是不需要非常精细的，
 并不像依赖类型系统的语言使用类型描述值的性质，Noesis 系统中是现象由理解
 对应到本体而本体体现现象的性质，所以 Noesis 系统中并不特别需要理解与
-本体互相依赖尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
+本体互相依赖，尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
 本体的部分，一般将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
 简写为 $\proctr{i|j|k}{cond}$。而将一些必要的本体限制放在 $cond$ 中，
 上述的 $\mathbf{NSub}$ 更常用的 Noesis 同构是
@@ -475,7 +475,7 @@ n - a) \]
  a_e \Rightarrow \forall b_p\ b_e.\ b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
  a_e \geq b_e \Rightarrow
  \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_n} a_e - b_e\]
-基本充分利用调用条件 $cond$ 就不怎么需要本体与理解互相依赖。
+充分利用调用条件 $cond$ 就不怎么需要本体与理解互相依赖。
 
 接下来论述 \noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
 记号律、记号削除律。这些演绎律可以易于理解地写成下面的形式，尽管这些形式并不完整。

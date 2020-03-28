@@ -39,11 +39,11 @@ simp:
 	xelatex simp
 
 thesis:
-	xelatex thesis 
+	xelatex -shell-escape thesis 
 	makeindex thesis.idx
 	bibtex thesis || true
-	xelatex thesis
-	xelatex thesis
+	xelatex -shell-escape thesis
+	xelatex -shell-escape thesis
 
 clean:
 	rm -f *.aux *.bbl *.blg *.idx *.ilg *.ind *.lof *.log *.lot *.out *.toc

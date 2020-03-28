@@ -1,0 +1,50 @@
+
+\begin{figure}[h] 
+  \centering \begin{tikzpicture}\useasboundingbox (-5,-5) rectangle (5,5);
+\baselineskip=0.5cm
+    \draw (0,0) node (O) {编辑壳层} circle [radius=1.2];
+  \path[name path=vCbarD] (60:3.3) -- ([turn]-90:1.5);
+  \path[name path=vCbarU] (60:3.3) -- ([turn]90:1.5);
+  \path[name path=hCbarD] (15:1.5) -- ([turn]45:4);
+  \path[name path=hCbarU] (105:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vCbarD and hCbarD, by=x}] 
+  (60:1.5) arc [start angle=60, end angle=15, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vCbarU and hCbarU, by=x}]
+  (60:1.5) arc [start angle=60, end angle=105, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (60:2.4) node {编译\\后端};
+  \draw (60:4) node[dart,draw,minimum size=1cm, shape border rotate=60,
+    shape border uses incircle,fill=white] (B) {编译};
+  \draw [->] (65:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (55:0.9) -- ([turn]5:0.8);
+
+  \path[name path=vbarD] (-60:3.7) -- ([turn]-90:1.5);
+  \path[name path=vbarU] (-60:3.7) -- ([turn]90:1.5);
+  \path[name path=hbarD] (-105:1.5) -- ([turn]45:4);
+  \path[name path=hbarU] (-15:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vbarD and hbarD, by=x}] 
+  (-60:1.5) arc [start angle=-60, end angle=-105, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vbarU and hbarU, by=x}]
+  (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (-60:2.5) node {HOL\\证明器};
+  \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
+  \draw (-60:4.6) node [align=center] (A) {\amlh};
+  \draw [->] (-55:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (-65:0.9) -- ([turn]5:0.8);
+  \path[name path=Vbar] (-4,1.2) -- (-4,-1.2);
+  \path[name path=Dhbar] (-135:1.5) -- +(-3,0);
+  \path[name path=Uhbar] (135:1.5) -- +(-3,0);
+  \draw [name intersections={of=Vbar and Uhbar, by=x}] 
+  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+  \draw [name intersections={of=Vbar and Dhbar, by=x}]
+  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+  \draw [<-] (175:1) -- +(-0.8,0);
+  \draw [->] (-175:1) -- +(-0.8,0);
+  \draw (-4.4,0) node[left] {用户};
+  \draw [<-] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \draw [->] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  %\path (B) ([turn]-90:2) node (BX) {};
+  %\draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
+\end{tikzpicture}
+\caption{软件 \Eamlh 的主体框架} \label{fig:total-frame}
+\end{figure}

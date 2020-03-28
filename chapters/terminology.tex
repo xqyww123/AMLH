@@ -1,34 +1,51 @@
-\Nchapter{术语、符号与中英文对照}
+\chapter*{术语、符号与中英文对照}
 
 本章列出本文用到的所有术语与中英文的对照。部分术语没有通用的中译名，
 读者可以根据其英文名称查找相关文献。
 \begin{center}
     \begin{tabular}{ p{2.5cm} p{5cm} p{2.5cm} p{5cm} } 
     %\begin{tabular}{ l l l l } 
-    \terminology{元数}{arity}&
-\terminology{编纂系统}{Collation System}\\
-    \terminology{演绎律}{Deductive Rule}&
-\terminology{形式语言}{Formal Language}\\
-    \terminology{形式系统}{Formal System}&
-\terminology{泛型}{Generic}\\
-    \terminology{高阶逻辑}{High Order Logic}&
-\terminology{中间表达}{Intermediate Representation}\\
-    \terminology{直觉逻辑}{Intuitionistic Logic}&
-\terminology{数理对象}{mathematical object}\\
-    \terminology{证明系统}{Proof System}&
-\terminology{类型系统}{Type System}\\
-    \terminology{类型构造器}{Type Constructor}&
-\terminology{全称量化}{universal quantification}\\
-    \terminology{唯一解读性}{unique readability}&
+\terminology{WASM}{WebAssembly}&
+\terminology{SML}{Standard Meta Language}\\
+\terminology{安全严苛}{safety critical}&
+\terminology{本体}{noumenon, νoούμενον}\\
+\terminology{编纂系统}{Collation System}&
+\terminology{定理证明器}{Theorem Prover}\\
+\terminology{定理证明器}{Proof Assistance\footnote{Theorem Prover 与 Proof Assistance
+      在机器证明界是同义词。}}&
+\terminology{对应}{correspondence}\\
+\terminology{泛型}{Generic}&
+\terminology{符号逻辑}{Symbolic Logic}\\
+\terminology{高阶逻辑}{High Order Logic}&
+\terminology{公理系统}{Axiomatic System}\\
+\terminology{构造演算}{Calculus of Constructions}&
+\terminology{归纳}{induct}\\
+\terminology{结构化归纳}{structual induction}&
 \terminology{肯定前件}{Modus Ponens}\\
-        \terminology{现象}{phenomenon, φαινόμενον}&
-        \terminology{理解}{understanding, nóēsis, νόησῐς}\\
-        \terminology{本体}{noumenon, νoούμενον}&
-        \terminology{同构}{homomorphism}\\
-        \terminology{对应}{correspondence}&
-        \terminology{演绎}{deduct}\\
-        \terminology{归纳}{induct}&
-        \terminology{符号逻辑}{Symbolic Logic}
+\terminology{类型构造器}{Type Constructor}&
+\terminology{类型关系}{typing}\\
+\terminology{类型系统}{Type System}&
+\terminology{理解}{understanding, nóēsis, νόησῐς}\\
+\terminology{排中律}{law of excluded middle}&
+\terminology{皮亚诺数}{Peano number}\\
+\terminology{全称量化}{Universal Quantification}&
+\terminology{数理对象}{Mathematical Object}\\
+\terminology{同构}{homomorphism}&
+\terminology{唯一解读性}{Unique Readability}\\
+\terminology{现象}{phenomenon, φαινόμενον}&
+      \terminology{项}{term}\\
+      \terminology{形式化方法}{Formal Method}&
+\terminology{形式化描述}{Formal Specification}\\
+      \terminology{形式系统}{Formal System}&
+      \terminology{形式语言}{Formal Language}\\
+      \terminology{演绎}{deduct}&
+\terminology{演绎律}{Deductive Rule}\\
+      \terminology{依赖类型}{Dependent Type}&
+\terminology{元数}{arity}\\
+      \terminology{证明系统}{Proof System}&
+\terminology{指称语义}{Denotation Semantic}\\
+      \terminology{直觉逻辑}{Intuitionistic Logic}&
+      \terminology{中间表达}{Intermediate Representation}
 \end{tabular}
 \end{center}
 
@@ -37,13 +54,30 @@
 
 \begin{align*}
     &\begin{array}{ll}
-        \sequence{X}& \text{由集合}\ X\ \text{中的元算构成的序列}\\
+        \sequence{X}& \text{由集合}\ X\ \text{中的元素构成的序列}\\
         x\mathbin\Vert y& \text{序列}\ x,\ y\ \text{的连接}\\
-        \abs{X} & \text{集合或序列}\ X \text{的大小}
+        \abs{X} & \text{集合或序列}\ X \text{的大小}\\
+        \Dom f & \text{映射 $f$ 的原像}\\
+        A \rightarrow B & \text{从 $A$ 到 $B$ 的映射}\\
+        \bnf{B} & \text{满足BNF语法 $B$ 的字符串集合}\\
+        type \coloneqq \cdots & \text{HOL 逻辑上项的定义} \\
     \end{array}&
     &\begin{array}{ll}
         x\concat y & \text{字符串}\ x,\ y\ \text{的拼接}\\
         \underline{\mathrm{abc}} & \text{字面量为 abc 的字符串}\\
-        \abs{X} & \text{集合或序列}\ X \text{的大小}
+        \Gamma \vdash A & \text{由前提 $\Gamma$ 可得结论 $A$}\\
+        \Ima f & \text{映射 $f$ 的像}\\
+        A \mapsto B & \text{从 $A$ 到 $B$ 的有限映射}\\
+        type \Coloneqq \cdots & \text{HOL 逻辑上类型的定义} \\
+        &
     \end{array}&
 \end{align*}
+
+\noindent 一些过于基础的数学记号并未在上标列出。另外注意本文遵循 HOL 逻辑
+使用符号 $\Rightarrow$ 表示逻辑 $if$，替代常用记号 $\rightarrow$，
+而 $\rightarrow$ 表示 HOL 逻辑中的函数类型。
+\begin{center}
+  \AxiomC{$\Gamma_1 \vdash P \Rightarrow Q$}
+  \AxiomC{$\Gamma_2 \vdash P$} \RightLabel{(Modus Ponens)}
+  \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash Q$} \DisplayProof
+\end{center}

@@ -264,7 +264,7 @@
       \vspace{10mm}
       \bfseries\fangsong\zihao{2} 
       一种类型系统的扩广
-      与演绎定理以构造程序
+      与基于其的形式化方法
 
      \vspace{8mm}
 
@@ -665,12 +665,12 @@
      \NAT@citexnum[][]}
 
 \newcommand\ZJUthesisbib[1]{%
-  %\setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
+  \setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
   \setlength{\bibsep}{0.5ex}
   \setlength{\bibhang}{2em}
   \renewcommand{\bibfont}{\songti\zihao{-4}}
 
-  \bibliographystyle{gbt7714-2005-numerical}
+  \bibliographystyle{ZJUthesis}
   \bibliography{#1}
 }
 

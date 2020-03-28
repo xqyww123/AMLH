@@ -3,11 +3,11 @@
 一个优秀的理论，定义下少数几个简单的公理与规则，各种丰富的重要而富有
 意义的定理引理可以由此推出。本节介绍的内容不属于 \noesishol 与
 \amlh 理论的定义，而是对 \noesishol 与 \amlh 的应用。
-这些应用体现了 \noesishol 与 \amlh 的魅力。
+这些应用体现了 \noesishol 与 \amlh 的灵活与魅力。
 
 \subsection{列表的理解}
 
-这一节给出虚一个构理解与虚构基元的具体案例，列表的理解，具有实际意义。
+这一节给出一个虚构理解与虚构基元的具体案例，列表的理解，具有实际意义。
 
 \begin{lemma}[单射与子集] \label{L.inj_subset}
     \[ \forall f\ S\ T_1\ T_2.\ T_1 \subseteq T_2 \Rightarrow \mathbf{INJ}\ f\ S\ T_1
@@ -108,13 +108,13 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
     \[ \mathbf{I1}\ e = \mathbf{Interpretation}\ (\K \mathrm{p}_0)\ (\K e)\ 
     \{e\}\ \{\mathrm{p}_0\} \]
 最主要的特点是，$\mathbf{I1}\ e$ 不需要实际地表达，因为本质集中只有一个元素，
-于是表示这一个元素不需要使用任何实质的计算客体除了独特的零现象$\mathrm{p}_0$，
+于是表示这一个元素不需要使用任何实质的现象除了独特的零现象$\mathrm{p}_0$，
 不占用任何二进制位，而在最后编译出的
 目标程序中不需要也不会被表达，一如C语言的void。但却是一种合理合法的理解，可以参与
 整个 $\amlh$ 的方方面面。
 
 类似很多其他编程语言中的常量概念，$\mathbf{I1}\ e$ 也可以作为某个过程的参数，而 $e$ 
-可以在那过程中被全称量化（universal quantification），
+可以在那过程中被全称量化（Universal Quantification），
 下面是如此应用的一个例子。
 \end{example}
 
@@ -143,7 +143,7 @@ AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函
 同样可以引入对一个有限序列（Finite Sequence）的理解，
 现象记录编号而其本质即是序列中编号上的元素。
 
-至今尚未明确限制现象的定义而是留作了可定制的框架性参数，令 $\rho(i)$ 表示用以表示数字i
+至今尚未明确地具体定义现象，而是留作为可定制的框架，令 $\rho(i)$ 表示用以表示数字i
 的现象，此外有简写$\rho_i = \rho(i)$
 
 \begin{defin}[有限本质序列的理解]
@@ -162,18 +162,18 @@ AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函
 接下来的两节重点讨论函数参数在 $\amlh$ 上的实现。
 
 函数参数分为两种，静态参数与动态参数。静态参数指在编译时可以确定函数参数所具体指代的过程，
-于是更类似于模板的概念可以在编译时进行函数参数的带入；而动态参数相反，需要在运行时动态
+更类似于模板的概念可以在编译时进行函数参数的带入；而动态参数则相反，需要在运行时动态
 调用函数指针。不同语言对此有不同的名称，另一种叫法是静态调用与动态调用。
 本节先论述静态参数，而下一节论述动态参数。
 
-而静态参数的理解，非常简单，就是 $\mathbf{I1}$。
+静态参数的理解，非常简单，就是 $\mathbf{I1}$。
 更具体一点，一元过程的理解是 $\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$
 二元过程是 $\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$，
 更高元类似。
 
 重点在于$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \cdots \rightarrow \mathrm{phenomenon}}$
-仅仅将现象超越对应到现象过程，即本质是现象过程，而很多时候期望对函数参数的本质约束更多，
-诸如这种现象过程具有某些特定理解下的超越对应并对应到一个本质上的函数以利于本质上的运算。
+仅仅将现象 Noesis 对应到现象过程，本体只是现象过程，而很多时候期望对函数参数的本体约束更多，
+诸如这种现象过程具在某些特定理解下 Noesis 对应到一个本质上的函数。
 例如一个过程可能期望一个具有本质 $f_e : num \rightarrow num$ 的函数参数，而
 $\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$ 给出的本质仅仅是
 $f_p:\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$ 的。
@@ -303,12 +303,12 @@ f \proctr{i|l}{cond} f_e\ f,\ cond\ x_e \vdash \mathbf{V}_l \ \land\
 本节示例性地论述如何在 $\amlh$ 上定义递归函数，以及其上递归函数定义与归纳法（Induction）的
 内在联系。
 这种对递归函数的支持说明$\amlh$是图灵完备的。
-$\amlh$ 提供两种编写递归函数的方法，第一种严谨而难以使用，困难在于递归良好性的证明（Well Formed），需要有经验的数学家巧妙地技巧；
+$\amlh$ 提供两种编写递归函数的方法，第一种严谨而难以使用，困难在于递归良好性的证明（wellfound），需要有经验的数学家巧妙地技巧；
 第二种易于使用，可供普通用户使用，但无法证明停机性。
 
 首先要引入结构化归纳。
 
-\begin{defin}[结构化归纳（Structual Induction）]
+\begin{defin}[结构化归纳（structual induction）]
 对于由如下范式定义的类型 $t$
 \[ \begin{split} t \Coloneqq\ & C_1\ a^1_1\ \cdots\ a^1_{o_1} \mbar \cdots \mbar C_m\ 
     a^m_1\ \cdots\ a^m_{o_m} \\

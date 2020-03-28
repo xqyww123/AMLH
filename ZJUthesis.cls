@@ -63,6 +63,8 @@
 \usepackage{longtable} % for "longtable"
 \usepackage{rotating}  %for "sideways"
 
+\usepackage[sort&compress]{gbt7714}
+
 % 英文、数字字体宏包
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
@@ -71,6 +73,12 @@
 \usepackage[shortlabels]{enumitem}
 \setlist[enumerate]{nosep}
 \setlist[itemize]{nosep}
+
+\setCJKfamilyfont{zhli}{LiSu}
+\setCJKfamilyfont{zhyou}{YouYuan}
+\newcommand*{\lishu}{\CJKfamily{zhli}}    % 隶书
+\newcommand*{\youyuan}{\CJKfamily{zhyou}} % 幼圆
+
 
 % 这里几行代码使得目录中的“第几章” 和后面的章节名称不致发生重叠
 \renewcommand{\numberline}[1]{%
@@ -81,27 +89,27 @@
   \hb@xt@\@tempdima{\@cftbsnum #1\@cftasnum\hfil}\@cftasnumb}
 
 
-% 重新定义chapter属性，使图表目中中章与章之间没有空行
-\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
-  \if@mainmatter
-  \refstepcounter{chapter}%
-  \typeout{\@chapapp\space\thechapter.}%
-  \addcontentsline{toc}{chapter}%
-  {\protect\numberline{第 \chaptername 章}\hspace{0.5em}#1}
-  %    {\protect\numberline{\chaptername}\hspace{4em}#1}
-  \else
-  \addcontentsline{toc}{chapter}{#1}%
-  \fi
-  \else
-  \addcontentsline{toc}{chapter}{#1}%
-  \fi
-  \chaptermark{#1}%
-  \if@twocolumn
-  \@topnewpage[\@makechapterhead{#2}]%
-  \else
-  \@makechapterhead{#2}%
-  \@afterheading
-  \fi}
+%% 重新定义chapter属性，使图表目中中章与章之间没有空行
+%\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+%  \if@mainmatter
+%  \refstepcounter{chapter}%
+%  \typeout{\@chapapp\space\thechapter.}%
+%  \addcontentsline{toc}{chapter}%
+%  {\protect\numberline{第 \chaptername 章}\hspace{0.5em}#1}
+%  %    {\protect\numberline{\chaptername}\hspace{4em}#1}
+%  \else
+%  \addcontentsline{toc}{chapter}{#1}%
+%  \fi
+%  \else
+%  \addcontentsline{toc}{chapter}{#1}%
+%  \fi
+%  \chaptermark{#1}%
+%  \if@twocolumn
+%  \@topnewpage[\@makechapterhead{#2}]%
+%  \else
+%  \@makechapterhead{#2}%
+%  \@afterheading
+%  \fi}
 
 % PDF文档超链接及书签标记，具体选项意义参考hyperref说明文档
 % hyperref包要2011年版的才行
@@ -232,7 +240,7 @@
 
 % 定理，假设，定义，证明
 \newtheoremstyle{ZJUtheorem}
-   {9pt}{9pt}{\ttfamily}{0pt}{\lishu}{：}{0pt}{}
+   {9pt}{9pt}{}{0pt}{\lishu}{：}{0pt}{}
 \theoremstyle{ZJUtheorem}
 \newtheorem{hypo}{假设~}[chapter]
 \newtheorem{defin}{定义~}[chapter]
@@ -861,6 +869,7 @@
   \renewcommand{\cfttabdotsep}{\cftdotsep}
   \renewcommand{\cfttabpagefont}{\rm\zihao{-4}}
   \renewcommand{\cfttabpresnum}{\lotlabel\hspace*{0.4em}}
+  \renewcommand{\cfttabaftersnum}{ }
   \setlength{\cfttabnumwidth}{3.0em}
   \setlength{\cftbeforetabskip}{-2pt}
   \setlength{\cfttabindent}{0pt}
@@ -879,12 +888,12 @@
      \NAT@citexnum[][]}
 
 \newcommand\ZJUthesisbib[1]{%
-  \setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
+  %\setcitestyle{numbers, round, comma, aysep={}, yysep={,}, notesep={,}}
   \setlength{\bibsep}{0.5ex}
   \setlength{\bibhang}{2em}
   \renewcommand{\bibfont}{\songti\zihao{-4}}
 
-  \bibliographystyle{ZJUthesis}
+  \bibliographystyle{gbt7714-2005-numerical}
   \bibliography{#1}
 }
 

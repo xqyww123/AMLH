@@ -4,60 +4,22 @@
 % 论文默认为单面模式，需单面模式请将第一行换为如下所示：
 %\documentclass[twoside]{ZJUthesis}
 
-\input{ctex-xecjk-winfonts.def}
-\usepackage{tikz-network}
-\usepackage{bussproofs}
-\usepackage{listings}
-\usepackage{tikz}
-
-%\usepackage[english]{babel}
-\usepackage{newunicodechar}
-\newfontfamily\miscsymfont{DejaVu Sans}
-\newunicodechar{λ}{{\miscsymfont\symbol{"03BB}}}
-%\newunicodechar{⏀}{{\miscsymfont\symbol{"23C0}}}
-
-\allowdisplaybreaks
-%\usepackage[mathscr]{euscript}
-%\let\euscr\mathscr \let\mathscr\relax% just so we can load this and rsfs
-\usepackage{amssymb}
-\let\oldemptyset\emptyset
-\let\emptyset\varnothing
-\newcommand{\powerset}{\raisebox{.05\baselineskip}{\Large\ensuremath{\wp}}}
-\newcommand{\lamst}[0]{\ensuremath{\lambda{\rightarrow}}}
-\newcommand{\lamcr}[0]{\ensuremath{\lambda{\rightarrow}}}
-\newcommand{\HOL}[0]{\ensuremath{\mathrm{HOL}}}
-\newcommand{\aml}[0]{\ensuremath{\mathrm{A}^{\lamst}}}
-\newcommand{\amlh}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}}}
-\newcommand{\amlhF}[0]{\ensuremath{\mathrm{\d{A}}_{\HOL}^{\lamcr}}}
-\newcommand{\amlhC}[0]{\ensuremath{\dot{\mathrm{A}}_{\HOL}^{\lamcr}}}
-\newcommand{\amlN}[0]{\ensuremath{\mathrm{A}_0^{\lamcr}}}
-\newcommand{\amlhWASM}[0]{\ensuremath{\mathrm{A}_{\HOL}^{\lamcr}{-}\mathrm{WASM}}}
-\newcommand{\mbar}[0]{\ensuremath{\ |\ }}
-\newcommand{\phety}[0]{\ensuremath{\mathrm{ph}}}
-\newcommand{\natn}[0]{\ensuremath{\mathrm{number}}}
-\newcommand{\bnf}[1]{\ensuremath{\langle\ #1\ \rangle}}
-\newcommand{\itp}[1]{\ensuremath{#1\ \mathrm{interpretation}}}
-\newcommand{\phenomenon}{\ensuremath{\mathrm{phenomenon}}}
-\newcommand{\widesqa}[2][1.5]{
-  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\rightsquigarrow$}}}
+\input{macros.tex}
+\newunicodechar{。}{{\watermark.\ }}
+\newcommand\watermark[1]{%
+    #1%
+    \sbox0{#1}%
+    \llap{%
+    \makebox[\wd0][c]{%  hor. centering
+    \raisebox{.5\ht0}{%  approx. vert. centering
+    \csname Gin@isotrue\endcsname% = "keepaspectratio"
+    \resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
+    \parbox{10em}{% Allow line breaks
+            \color{black!90}%  
+            毕设草案-给蔡老师 \today
+        }%
+    }}}}%
 }
-\newcommand{\widesim}[2][1.5]{
-  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
-}
-\newcommand{\widesims}[3][1.5]{
-  \mathrel{\underset{#3}{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}}
-}
-\renewcommand{\qedsymbol}{$\blacksquare$}
-\newcommand{\proctr}[2]{\ensuremath{\ {\prec}\frac{#1}{#2}{\succ}\ }}
-\newcommand{\vdashv}{\ensuremath{\ {\dashv}{\vdash}\ }}
-\newcommand{\abs}[1]{\ensuremath{\ {|}#1{|}\ }}
-\DeclareMathOperator{\K}{K}
-\DeclareMathOperator{\I}{I}
-\DeclareMathOperator{\T}{T}
-\DeclareMathOperator{\Ima}{Ima}
-\DeclareMathOperator{\Dom}{Dom}
-\DeclareMathOperator{\EVERY}{EVERY}
-\DeclareMathOperator{\Suc}{Suc}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
@@ -86,14 +48,14 @@
 	% 学号
 	\PersonalID{21721306}
 	
-	\title[]{基于经典逻辑上抽象机器的形式化方法}
+  \title[]{一种类型系统的扩广}
 	% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
-    %\titletl{第二行}
+  \titletl{与基于其的形式化方法}
 	
 	%英文题目
-	\Etitle{A formal method via abstract machine}
+	\Etitle{An extension of type system}
 	% 如果一行写不下，同中文题目设定，一行写不下则写两行，不需要就注释掉
-	\Etitletl{on classical logic}
+	\Etitletl{and a new formal method based on it}
 	%\Etitletll{An Oriental View}s
 	
 	% 作者
@@ -104,14 +66,14 @@
 	\Edegree{Master of Engineering}
 	
 	% 导师
-	\supervisor{张\ \ 三\ \ 教授} \Esupervisor{Prof. San Zhang}
+	\supervisor{蔡\ \ 亮\ \ 教授} \Esupervisor{Prof. Liang Cai}
 	
 	% 合作导师，如果有的话，去掉注释，
-	\cpsupervisor{刘长发\ \ 教授}
-	\Ecpsupervisor{Prof. Changfa Liu}
+	%\cpsupervisor{刘长发\ \ 教授}
+	%\Ecpsupervisor{Prof. Changfa Liu}
 	
 	% 专业名称
-	\major{计算机应用技术} \Emajor{Computer Application Technology}
+	\major{网络空间安全} \Emajor{Cyberspace Security}
 	
 	% 研究方向
 	\researchdm{形式化方法} \Eresearchdm{Formal Method}
@@ -144,12 +106,12 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 摘要
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/abstractC}
+	\input{./chapters/abstractC.tex}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 英文摘要
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/abstractE}
+	%\input{./chapters/abstractE}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 目录页
@@ -165,7 +127,7 @@
 	%% 表格列表
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\ZJUListofTables
-	
+	\input{./chapters/terminology.tex}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 正文内容部分开始
@@ -176,6 +138,12 @@
 	\input{./chapters/Content_Point.tex}
 	\input{./chapters/RequiredTheory.tex}
 	\input{./chapters/AmLH.tex}
+	\input{./chapters/Implementation.tex}
+	\input{./chapters/conclusion.tex}
+  \appendix
+  %\input{./chapters/RequiredTheory/lambda.tex}
+	\input{./chapters/EditorShell.tex}
+  \input{chapters/implementation/exam_transfer.tex}
 	
 	\ZJUbackmatter
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -186,12 +154,12 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 发表论文目录
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/publications}
+	%\input{./chapters/publications}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 致谢页
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/thanks}
+	%\input{./chapters/thanks}
 	
 	
 \end{document}

@@ -1,23 +1,34 @@
 \begin{englishabstract}
 
-	recen
-	
-	\begin{enumerate}
-		\item
-		1 
-		
-		\item
-		2
-		
-		\item
-		3
-		
-		\item
-		4
-		
-		\item
-		5
-	\end{enumerate}
+Correctness of software consists of correctness of the design and correctness of the
+implementation.
+While correctness of design maybe hard to judge, attemption for proof of the implementation 
+correctness has begun from 1940s, focusing on formal method and formal verification especially.
+Almost one hundred years past, with a great lot of achievements and numerous ways to 
+prove the implementation correctness, 
+
+软件的正确性由其设计的正确性与其程序实现的正确性组成。
+软件设计的正确与否也许是难以评判的。
+而对程序实现正确性验证的探索，围绕着形式化方法特别是其中的形式化验证，
+自计算机科学伊始的1940年代就开始了。
+近百年过去了，大量的成果涌现，已经有很多方法能够证明程序实现的正确性，
+并构造这些正确性被证明的程序。
+然而，因为实践上的困难，特别是对于复杂软件过于高昂的证明成本，
+这些方法并未普遍地用于普通软件工业领域。
+程序实现上的缺陷始终存在，且一直在造成各种严重的损失。
+本文提出一种新的形式方法，试图完整地证明程序实现的正确性，并保持合理的成本。
+
+著名的 Curry-Howard 同构揭示了程序与证明之间的内在联系，定理的演绎对应于程序的构建。
+本文的思想基于此，
+    \begin{center} \it 演绎定理以构建程序。 \end{center}
+本文先提出了一种类型关系的扩广——Noesis 对应，一种三元关系将程序与不同理解下的抽象意义
+联系起来，围绕此构建的形式系统成为类型系统的扩广。进而可以在一个成熟的定理证明器
+上演绎 Noesis 对应关系的定理，以构建程序，并在定理证明器的保障下得到程序的抽象意义对应。
+且此抽象意义是数学友好的数学对象，易于形式分析与证明。
+于是对程序性质的证明可以转化为对数学友好的抽象意义的证明，进而有效简化了形式化验证。
+且若在定理证明器上以该定理证明器的形式语言同样抽象地描述程序的设计，就可以
+证明程序的抽象意义与程序设计的相等性，进而彻底而严谨地证明程序实现对此设计的正确性。
+  最后本文以智能合约为应用场景实验性地实现了此方案，作为对其可行性的证明。
 	
 	\englishkeywords{1, 2, 3, 4}
 
