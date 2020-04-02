@@ -152,7 +152,7 @@ L_c \cap L_v &=\emptyset& L_c^2 &\subseteq \LE^2
 \end{multicols}
 \end{algorithm}
 
-非量化值集 $\LE$ 上也具有 β 规约，与定义 \ref{D.breduce} 是一样的。
+非量化值集 $\LE$ 上也具有 β 规约，与 β 规约的定义是一样的。
 
 \begin{lemma} \label{L.Le.expand}
 \[ \begin{array}{lcc}
@@ -174,11 +174,11 @@ x \in \LE \]
 \begin{lemma} \label{L.breduce.in3}
 \[ a \in \LE,\ a \bbreduce b \vdash b \in \LE \]
 \begin{proof} 由引理 \ref{L.breduce.in2} 以及 $\bbreduce$ 的定义
-\ref{D.breduce} 证得。 \end{proof}
+证得。 \end{proof}
 \end{lemma}
 
 \begin{defin}[\LE 上的 β 规约函数]
-由β规约的唯一性定理 \ref{T.bbreduce.11} 和显然的存在性定理，
+由β规约的唯一性定理和显然的存在性定理，
 以及引理 \ref{L.breduce.in3} 证明的闭包性，允许
 定义进行 β 规约的函数 $\B : \LE \rightarrow \LE$
 \[ \forall x \in \LE.\ x \bbreduce \B x \]
@@ -208,7 +208,7 @@ x \in \LE \]
 \begin{lemma}[$\LE$上多步β规约类型不变] \label{L.bbreduce.type.consist}
 \[x,y \in \LE,\ x \bbreduce y \vdash \type x = \type y \]
 \begin{proof} 由引理 \ref{L.breduce.type.consist}
-以及多步 β 规约的定义 \ref{D.breduce} 证得。
+以及多步 β 规约的定义证得。
 \end{proof}
 \end{lemma}
 \begin{theo}[B规约函数类型不变]

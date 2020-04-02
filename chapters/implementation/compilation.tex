@@ -1,4 +1,4 @@
-\section{抽象机器 \amlhS 的编译} \label{Sec.compile}
+\section{到智能合约的编译} \label{Sec.compile}
 
 抽象机器 \amlh 的编译分为两步，首先程序被其定义展开成基元函数的组合，
 成为一种中间表达（IR）。IR 由 HOL 作为文本输出而交给外部程序，外部程序
@@ -14,8 +14,8 @@ WASM 的特点，只有 \Wi{32}，\Wi{64}，\Wf{32}，\Wf{64}
 四种类型，分别表示 32位整数、64位整数、32位浮点数、64位浮点数。本工作的
 \amlhS 尚不支持浮点数，故只考虑 \Wi{32} 与 \Wi{64}。
 
-\amlhS 中每一个理解都具有确定的字节数，理解的现象以此字节数排布在内存中
-。计算时，所有小于等于4字节的现象以 WASM 的 \Wi{32} 表示，大于4字节但
+\amlhS 中每一个理解都具有确定的字节数，理解的值以此字节数排布在内存中
+。计算时，所有小于等于4字节的{\phew}以 WASM 的 \Wi{32} 表示，大于4字节但
 小于等于8字节的以 \Wi{64} 表示，大于8字节的以指针表示。
 本工作的实现中指针以32位整数 \Wi{32} 表示，但这是可变的。
  $\mathcal{T}_b$ 表示 $b$ 个字节的值的 WASM 类型
@@ -94,9 +94,9 @@ $\mathbf{Read0}\ t$ & $\T$ & \Winst{call $\texttt{read0}_t$}
 $\mathbf{Write}\ t$ & $\T$ & \Winst{call $\texttt{write}_t$}
 & 生成表 $t$ 版本的区块链数据写入命令构造函数并调用。\\ \hline
 $\mathbf{Cart}\ n\ m$ & $\T$ & \Winst{call $\texttt{cart}_{n,m}$}
-& 生成表 $n,m$ 版本的内存拼接函数并调用。\\ \hline
+& 生成 $n,m$ 版本的内存拼接函数并调用。\\ \hline
 $\mathbf{Seg}\ n\ m$ & $\T$ & \Winst{call $\texttt{seg}_{n,m}$}
-& 生成表 $n,m$ 版本的内存部分读取函数并调用。\\ \hline
+& 生成 $n,m$ 版本的内存部分读取函数并调用。\\ \hline
 $\mathbf{If}$ & $\T$ & \Winst{if} & 见正文的论述 \\ \hline
 \end{tabularx}\end{threeparttable}\end{table}
 
@@ -154,7 +154,7 @@ $n$ 个字节的数据。若 $l > 8$ 则 $v$ 为指针，将指针位移 $m$ 并
 常量。
 \end{description}
 
-\begin{algorithm}[b]
+\begin{algorithm}[t]
 \caption{用户程序的包装算法} \label{alg:package}
 \begin{algorithmic}[1]
 \Statex 对编译好的用户程序 user\_func

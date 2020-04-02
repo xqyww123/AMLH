@@ -118,10 +118,10 @@ $\mathbf{Rsp}$ 并不是什么新鲜事物，仅仅是将定义\ref{Def.I*}中�
 
 系统状态问题就被有效解决。
 
-\subsection{状态纳入现象}
+\subsection{状态纳入{\phew}}
 
 也可以不将计算与状态转移分离，而是用一种基于单源单汇有向无环网络流的
-结构将状态数值化而纳入现象中，即令现象包含状态，那么现象上的函数或者说
+结构将状态数值化而纳入{\phew}中，即令{\phew}包含状态，那么{\phew}上的函数或者说
 $\amlh$ 上的过程就可以进行状态转移的计算。
 
 这一模型中状态被抽象为各个分立无关的资源，状态是各资源到其当前状态的映射。
@@ -351,7 +351,7 @@ $h_1$与$h_2$使用不同的标号$l_1$与$l_2$区分开来，若$l_1=l_2$则$h_
 \begin{defin}[历史流的状态]
 $\mathbf{HIS\_STAT} : \mathrm{history} \rightarrow \mathrm{status}$
 其中 $\mathrm{status} \Coloneqq \mathrm{history} \mapsto \mathrm{number}$
-是有限映射（finite map）类型。有关有限映射的论述参见定义 \ref{Def.FM}。
+是有限映射（finite map）类型。
 \begin{align*} 
     &\mathbf{HIS\_STAT}\ \mathbf{HGenerator} &&\coloneqq&& \mathbf{FEmpty} \\
     &\mathbf{HIS\_STAT}\ (\mathbf{HSpend}\ l\ h) &&\coloneqq&&
@@ -391,18 +391,18 @@ $\mathrm{status} \Coloneqq \mathrm{history} \mapsto \mathrm{number}$，
 而费用的具体定义是框架性的，允许根据实现定制，可以包括时间、空间等。
 \end{defin}
 
-最后历史流是可以自然地纳入现象的，一个例子是
+最后历史流是可以自然地纳入{\phew}的，一个例子是
 
-\begin{example}[历史流纳入现象]
-    令类型 phenoval 表示原本的现象类型 phenomenon，而定义新的现象
+\begin{example}[历史流纳入{\phew}]
+    令类型 phenoval 表示原本的{\phew}类型 phenomenon，而定义新的{\phew}
     phenomenon 如下
     \[ \mathrm{phenomenon} \Coloneqq \mathbf{Phenomenon}\ 
     \mathrm{phenoval}\ \mathrm{history} \]
 \end{example}
 
-历史流融入现象的方式并非必须按这个例子来，但一定拥有函数
-$\mathbf{P_H}$ 以得到现象中的历史流，
-$\mathbf{P_V}$ 得到现象中的数值部分。
+历史流融入{\phew}的方式并非必须按这个例子来，但一定拥有函数
+$\mathbf{P_H}$ 以得到{\phew}中的历史流，
+$\mathbf{P_V}$ 得到{\phew}中的数值部分。
 \begin{align*}
     &\mathbf{PHE\_VAL}\ (\mathbf{Phenomenon}\ v\ h) \coloneqq v&
     &\mathbf{P_V} \coloneqq \mathbf{PHE\_VAL} \\
@@ -420,10 +420,10 @@ $\mathbf{P_V}$ 得到现象中的数值部分。
 
 对于状态依赖就只讨论历史流的情形，一个操作只能访问其历史节点的状态，
 若对状态的某次操作要想影响到后续就必须将其历史融入到后续历史中，
-而历史是现象的一部分，历史融入后历史就被改变进而现象也被改变，
-于是对状态的修改就会影响之后的现象，之后的现象也就依赖于这次状态的修改，
+而历史是{\phew}的一部分，历史融入后历史就被改变进而{\phew}也被改变，
+于是对状态的修改就会影响之后的{\phew}，之后的{\phew}也就依赖于这次状态的修改，
 这样这状态修改就被依赖地存在而不能被优化。
-亦即，在历史流的情形下，状态被纳入现象于是状态依赖就会产生计算依赖。
+亦即，在历史流的情形下，状态被纳入{\phew}于是状态依赖就会产生计算依赖。
 
 一个操作可以由$\mathbf{Then}$ 运算影响到后续操作的历史：
 \begin{defin}[$\mathbf{Then}$操作]

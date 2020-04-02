@@ -1,12 +1,22 @@
-%\section{Noesis 系统}
-\section{朴素 Noesis 系统}
+\chapter{Noesis 系统} \label{Ch.Noesis}
+
+首先从本文的理论基础开始讨论，
+这一章论述本文提出的 Noesis 系统，这是一种形式系统，也可以被叫做一种公理系统。
+\ref{Sec.naive.noesis} 节先论述纯粹的也是最简单形式的 Noesis 系统，已经能
+体现 Noesis 系统是如何连结起程序与抽象语义，并允许在演绎 Noesis 定理的同时
+构造具有明确抽象语义的程序。
+\ref{Sec.noesishol} 节论述 Noesis 系统在 HOL 逻辑上的实现，允许使用 HOL
+定理证明器具体应用 Noesis 理论。为论述方便，HOL 逻辑上实现的 Noesis 系统
+被叫做 \noesishol。
+
+\section{朴素 Noesis 系统} \label{Sec.naive.noesis}
 
 \begin{defin}[朴素 Noesis 系统]
 朴素 Noesis 系统是一个形式系统，基于无类型 λ 演算。
 
 无穷的字符串集合 $\hat{\mathcal{P}},\ \hat{\mathcal{E}} \subseteq 
-\Words$ 分别表示现象、本体的字母集。
-其上的 λ 表达式 $\mathcal{P},\ \mathcal{E}$ 分别为现象集、本体集。
+\Words$ 分别表示{\phew}、抽象语义的字母集。
+其上的 λ 表达式 $\mathcal{P},\ \mathcal{E}$ 分别为{\phew}集、抽象语义集。
   \[ \begin{array}{lcrcccccccl}
   \mathcal{P} &=& \bnf{&\hat{\mathcal{P}}&\mbar&
     (\mathcal{P}\ \mathcal{P})&
@@ -114,7 +124,7 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
 构成的形式系统。
 \end{defin}
 
-\section{HOL 逻辑上的 Noesis 系统 \noesishol}
+\section{HOL 逻辑上的 Noesis 系统 \noesishol} \label{Sec.noesishol}
 
 形式系统 \noesishol 构建在 HOL 逻辑的基础上，使用 HOL 形式语言作为
 \noesishol 的形式语言，而构建兼容 HOL 逻辑的 Noesis 形式系统的规则。
@@ -124,21 +134,21 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
 Noesis 系统的主要扩广，例如那些产生理解的 HOL 函数，
 诸如理解的并、序列的理解等。
 
-接下来将逐步在 HOL 逻辑上定义现象与理解，而本体是
-任意 HOL 逻辑上的数学对象，甚至包括定义在 HOL 逻辑上的现象与理解本身。
+接下来将逐步在 HOL 逻辑上定义{\phew}与理解，而抽象语义是
+任意 HOL 逻辑上的数学对象，甚至包括定义在 HOL 逻辑上的{\phew}与理解本身。
 
-\begin{defin}[现象类型] \label{Def.phenomenon}
-HOL 逻辑上的类型 phenomenon 表示 \noesishol 的现象，
+\begin{defin}[{\phew}类型] \label{Def.phenomenon}
+HOL 逻辑上的类型 phenomenon 表示 \noesishol 的{\phew}，
 根据不同的具体实现可以不同方式具体定义，不同的具体定义不影响本章理论。
 
 唯独特别的，phenomenon 类型中需要包含一个零元素$\mathrm{p}_0$，
-表示计算客体中不需要被任何实在的现象表示而自然地于背景中存在，
+表示计算客体中不需要被任何实在的{\phew}表示而自然地于背景中存在，
 例如0个二进制位或者C语言的void类型。
 \end{defin}
 
 \begin{defin}[到$\alpha$的理解] \label{Def.itp} 
-类型 $\itp{\alpha}$ 是现象到类型为 $\alpha$ 的本体的理解，
-包含可以构建现象与本体间联系的映射。
+类型 $\itp{\alpha}$ 是{\phew}到类型为 $\alpha$ 的抽象语义的理解，
+包含可以构建{\phew}与抽象语义间联系的映射。
     \[ \begin{split}
         \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
         \ (\phenomenon \rightarrow \alpha)\\
@@ -152,12 +162,12 @@ HOL 逻辑上的类型 phenomenon 表示 \noesishol 的现象，
     \end{align*}
 \end{defin}
 
-$\itp{\alpha}$ 表示一个将现象对应为某种 $\alpha$ 类型的本体的理解。
-例如现象到布尔值间的 Noesis 对应就要届由到 bool 类型的理解来完成。
-$\mathbf{Noesis}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定本体到
-现象的映射；$tr$ 是超越函数，确定现象到本体的映射；$s$ 是本体集合，
+$\itp{\alpha}$ 表示一个将{\phew}对应为某种 $\alpha$ 类型的抽象语义的理解。
+例如{\phew}到布尔值间的 Noesis 对应就要届由到 bool 类型的理解来完成。
+$\mathbf{Noesis}\ l\ tr\ s\ s_p$ 构建了这样一个理解，$l$是投影函数，确定抽象语义到
+{\phew}的映射；$tr$ 是超越函数，确定{\phew}到抽象语义的映射；$s$ 是抽象语义集合，
 有 $s \subseteq \mathrm{dom}\ l \land s \subseteq \mathrm{rng}\ tr$；
-$s_p$ 是现象集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq \mathrm{rng}\ l$
+$s_p$ 是{\phew}集合，有 $s_p \subseteq \mathrm{dom}\ tr \land s_p \subseteq \mathrm{rng}\ l$
 ，一个理解即是上述的四元组。
 
 
@@ -198,7 +208,7 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \end{example}
 
 \begin{defin}[ Noesis 对应关系] \label{Def.TR}
-定义三元关系 $ p \widesim{i} e$ 表示现象与本体在某种理解下的的对应关系。
+定义三元关系 $ p \widesim{i} e$ 表示{\phew}与抽象语义在某种理解下的的对应关系。
 \[ p \widesim{i} e \coloneqq \mathbf{V}_i \land p \in \mathbf{Sp}_i \land
     (\mathbf{Tr}_i\ p = e)\]
 \end{defin}
@@ -215,8 +225,8 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 由此构建了程序的语义感知（Semantic Reasoning）的基础，即在理解方式$i$下可以将
 计算客体$p$解释成$e$，而$e$即$p$在理解方式$i$下的语义。
 
-一个现象对于一个理解只有确定的一个本体，但一个现象可以同时具有多种理解，
-而现象上的一次计算可以同时带有多个含义。例如现象1可以在布尔理解下对应真，
+一个{\phew}对于一个理解只有确定的一个抽象语义，但一个{\phew}可以同时具有多种理解，
+而{\phew}上的一次计算可以同时带有多个含义。例如{\phew}1可以在布尔理解下对应真，
 也可以在自然数理解下对应自然数1，也可以是某种有序集的理解下的第一个元素。
 
 %\begin{theo}[Noesis 对应的一些性质]
@@ -357,14 +367,14 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 $f_p,f_e$ 间也具有 Noesis 同构。
 
 \begin{defin}[Noesis 同构] 这里给出 Noesis 同构的严谨定义。
-  $f_p$ 是现象的函数或者是现象的函数的函数以及各种高阶函数的函数，即
+  $f_p$ 是{\phew}的函数或者是{\phew}的函数的函数以及各种高阶函数的函数，即
   $f_p$ 可以具有类型 $\mathrm{phenomenon} \rightarrow \mathrm{\phenomenon}$
   或 $\mathrm{phenomenon} \rightarrow \mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$
   或 $(\mathrm{phenomenon} \rightarrow \mathrm{phenomenon})
-\rightarrow \mathrm{phenomenon}$ 等等。当 $f_p$ 与本体 $f_e$ 间的二元关系 $H$
+\rightarrow \mathrm{phenomenon}$ 等等。当 $f_p$ 与抽象语义 $f_e$ 间的二元关系 $H$
 具有如下形式，则是一种 $f_p,f_e$ 间的 Noesis 同构。
   \[ \forall p\ e.\ p\ R\ e \Rightarrow f_p\ p\ H'\ f_e\ e\]
-其中 $p$ 是现象或者现象的各种高阶函数，$e$ 是作为本体的任意对象，$R$ 是任意某种二元关系，
+其中 $p$ 是{\phew}或者{\phew}的各种高阶函数，$e$ 是作为抽象语义的任意对象，$R$ 是任意某种二元关系，
 多数情况下是某种理解 $i$ 的 Noesis 对应 $\widesim{i}$，$H'$ 是某种理解 $l$ 的 Noesis
 对应 $\widesim{i}$ 或者另一个不等于 $H$ 的 Noesis 同构。
 $f_p,f_e$ 间的所有的 Noesis 同构均是具有上述形式满足上述要求的二元关系。
@@ -408,7 +418,7 @@ $f_p \proctr{e_1 \sim i_1 | \cdots | e_n \sim i_n|j}{cond} f_e$ 表示一种有 
     对于$\proctr{a \sim i | \cdots | c \sim k | l}{cond}$ 若理解
     $i, \cdots, k$ 的类型分别为 \[\itp{\alpha},\ \cdots,\ \itp{\gamma}\]
     那么 $cond$ 的类型为 $\alpha \rightarrow \cdots \rightarrow \gamma \rightarrow 
-    \mathrm{bool}$，即 $cond$ 是在本体层面上描述执行条件。
+    \mathrm{bool}$，即 $cond$ 是在抽象语义层面上描述执行条件。
 
     此处的记号仅是 Noesis 同构的一种表达记号，仅用于易于理解与增加可读性，
     只能表达一部分 Noesis 同构，一些复杂的 Noesis 同构例如
@@ -420,8 +430,8 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 
     过程的 Noesis 对应同构构成了一种契约，
     当输入参数可以被约定的理解$i,\cdots,k$解释，
-    且解释后的意义也即本体$a_e,\cdots,c_e$满足给定的条件时，
-那么此过程可以正确执行，并返回以约定的理解$l$的解释下对应本体$f\ a_e\ \cdots\ c_e$ 的现象。
+    且解释后的意义也即抽象语义$a_e,\cdots,c_e$满足给定的条件时，
+那么此过程可以正确执行，并返回以约定的理解$l$的解释下对应抽象语义$f\ a_e\ \cdots\ c_e$ 的{\phew}。
 
 
 上述记号具有如下的递归形式。
@@ -431,8 +441,8 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
     \proctr{b_e \sim j|\cdots|l}{cond\ a_e} f_e\ a_e)
 \end{split} \end{equation}
 
-Noesis 同构中的理解 $i \cdots k$ 与本体 $a \cdots c$ 可以相互依赖。
-首先本体可以依赖于本体，这是显然的。
+Noesis 同构中的理解 $i \cdots k$ 与抽象语义 $a \cdots c$ 可以相互依赖。
+首先抽象语义可以依赖于抽象语义，这是显然的。
 其次理解可以依赖于理解，可以由一个理解计算得出。序列的增加是一个例子
 \[ \mathbf{Append} \proctr{x \sim i | l \sim \ListI\ i | 
 \ListI i}{\lambda x\ l.\ \T} (::) \]
@@ -441,15 +451,15 @@ Noesis 同构中的理解 $i \cdots k$ 与本体 $a \cdots c$ 可以相互依赖
   l_p \widesim[2]{\ListI\ i} l \Rightarrow \mathbf{Append}\ x_p\ l_p
   \widesim[2]{\ListI\ i} x::l \]
 是合理合法的 HOL 逻辑表达式。
-第三，理解可以依赖于本体，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
-数的本体集的理解，自然数减法 $\mathbf{NSub}$ 的 Noesis 同构可以表达为
+第三，理解可以依赖于抽象语义，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
+数的抽象语义集的理解，自然数减法 $\mathbf{NSub}$ 的 Noesis 同构可以表达为
 \[ \mathbf{NSub} \proctr{a \sim \mathcal{N}^{\leq}_n|b \sim
 \mathcal{N}^{\leq}_a|\mathcal{N}^{\leq}_a}{\lambda a\ b.\ \T} (-) \]
 记号展开后是
 \[ \forall n\ a_p\ a.\ a_p \widesim[2]{\mathcal{N}^\leq_n} a
 \Rightarrow \forall b_p\ b.\ b_p \widesim[2]{\mathcal{N}^\leq_a} b \Rightarrow
 \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_a} a - b \]
-也是合法的。最后本体可以依赖于理解，
+也是合法的。最后抽象语义可以依赖于理解，
 \[ f_p \proctr{a\sim \mathcal{N}^\leq_n|\mathcal{N}^\leq_n}
 {\K \T} (\lambda a.\ n - a) f_e \]
 展开后是
@@ -457,16 +467,16 @@ Noesis 同构中的理解 $i \cdots k$ 与本体 $a \cdots c$ 可以相互依赖
 \Rightarrow f_p\ a_p \widesim[2]{\mathcal{N}^\leq_n} (\lambda a.\ 
 n - a) \]
 
-因为理解与本体以及现象均是 HOL 逻辑上普通的数理对象，所以自然可以
+因为理解与抽象语义以及{\phew}均是 HOL 逻辑上普通的数理对象，所以自然可以
 相互依赖。这一点揭示出类似依赖类型（Dependent Type）的性质，但一切都
-更加自然。而在实际使用中，一般很少会本体依赖理解或理解依赖本体
-，一般都只是理解依赖理解。在最后一章的结论中会指出，理解承载现象的
-共性，而本体承载现象的共性在内的全部特性，所以理解是不需要非常精细的，
-并不像依赖类型系统的语言使用类型描述值的性质，Noesis 系统中是现象由理解
-对应到本体而本体体现现象的性质，所以 Noesis 系统中并不特别需要理解与
-本体互相依赖，尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
-本体的部分，一般将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
-简写为 $\proctr{i|j|k}{cond}$。而将一些必要的本体限制放在 $cond$ 中，
+更加自然。而在实际使用中，一般很少会抽象语义依赖理解或理解依赖抽象语义
+，一般都只是理解依赖理解。在最后一章的结论中会指出，理解承载{\phew}的
+共性，而抽象语义承载{\phew}的共性在内的全部特性，所以理解是不需要非常精细的，
+并不像依赖类型系统的语言使用类型描述值的性质，Noesis 系统中是{\phew}由理解
+对应到抽象语义而抽象语义体现{\phew}的性质，所以 Noesis 系统中并不特别需要理解与
+抽象语义互相依赖，尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
+抽象语义的部分，一般将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
+简写为 $\proctr{i|j|k}{cond}$。而将一些必要的抽象语义限制放在 $cond$ 中，
 上述的 $\mathbf{NSub}$ 更常用的 Noesis 同构是
 \[ \mathbf{NSub} \proctr{\mathcal{N}^\leq_n|\mathcal{N}^\leq_n|
 \mathcal{N}^\leq_n}{\lambda a\ b.\ a \geq b} (-) \]
@@ -475,7 +485,7 @@ n - a) \]
  a_e \Rightarrow \forall b_p\ b_e.\ b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
  a_e \geq b_e \Rightarrow
  \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_n} a_e - b_e\]
-充分利用调用条件 $cond$ 就不怎么需要本体与理解互相依赖。
+充分利用调用条件 $cond$ 就不怎么需要抽象语义与理解互相依赖。
 
 接下来论述 \noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
 记号律、记号削除律。这些演绎律可以易于理解地写成下面的形式，尽管这些形式并不完整。
@@ -621,8 +631,8 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
   (e = e')) \Rightarrow p\ R\ e) \\&\Rightarrow
 (\mathrm{let}\ p = p';\ e = e'\ \mathrm{in}\ p\ R\ e)) \end{split} \]
 
-%又也许理解可以尝试地作为这样一种类型，但问题在于，任何一个现象都可以被应用于大量的理解
-%——只要现象在理解的现象集内就行，若尝试将理解作为类型，就意味着每一个现象都可以属于大量的类型，
+%又也许理解可以尝试地作为这样一种类型，但问题在于，任何一个{\phew}都可以被应用于大量的理解
+%——只要{\phew}在理解的{\phew}集内就行，若尝试将理解作为类型，就意味着每一个{\phew}都可以属于大量的类型，
 %这显然是荒谬的。
 
 %本文对所有将 Noesis 对应描述成某种类型系统的尝试都失败了。根本在于，类型是一种对值的分类，
@@ -638,4 +648,3 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 %是在？？？节将看到递归与归纳（Induction）间的内在联系。
 %指称语义与 Noesis 对应尝试实现类似的目标，但解决思路与方式完全不同。
 
-\input{./chapters/noesis/machine.tex}

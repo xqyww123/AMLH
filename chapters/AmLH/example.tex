@@ -1,9 +1,11 @@
 \section{案例分析}
 
-一个优秀的理论，定义下少数几个简单的公理与规则，各种丰富的重要而富有
-意义的定理引理可以由此推出。本节介绍的内容不属于 \noesishol 与
-\amlh 理论的定义，而是对 \noesishol 与 \amlh 的应用。
-这些应用体现了 \noesishol 与 \amlh 的灵活与魅力。
+这一节介绍一些常用的程序设计结构可以如何在抽象机器 \amlh 上实现。
+
+%一个优秀的理论，定义下少数几个简单的公理与规则，各种丰富的重要而富有
+%意义的定理引理可以由此推出。本节介绍的内容不属于 \noesishol 与
+%\amlh 理论的定义，而是对 \noesishol 与 \amlh 的应用。
+%这些应用体现了 \noesishol 与 \amlh 的灵活与魅力。
 
 \subsection{列表的理解}
 
@@ -50,7 +52,7 @@
 
 \begin{example}[以虚构方式引入列表理解] \label{exam.LI}
 现在假设 $\abs{\mathrm{phenomenon}} = \aleph_1$，
-即现象集同构于自然数集。先如下递归定义集合$S$上的列表$\mathbf{List}_S$集
+即{\phew}集同构于自然数集。先如下递归定义集合$S$上的列表$\mathbf{List}_S$集
 \[ \begin{split} \mathbf{List}_S\ [\ ]\ & = T \\
 \mathbf{List}_S\ [x_1,x_2,\cdots,x_n]\ & = x_1 \in S \land \mathbf{List}_S\ [x_2,\cdots,x_n] \end{split} \]
 通过列表的可数性可以证明如下定理
@@ -108,7 +110,7 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
     \[ \mathbf{I1}\ e = \mathbf{Interpretation}\ (\K \mathrm{p}_0)\ (\K e)\ 
     \{e\}\ \{\mathrm{p}_0\} \]
 最主要的特点是，$\mathbf{I1}\ e$ 不需要实际地表达，因为本质集中只有一个元素，
-于是表示这一个元素不需要使用任何实质的现象除了独特的零现象$\mathrm{p}_0$，
+于是表示这一个元素不需要使用任何实质的{\phew}除了独特的零{\phew}$\mathrm{p}_0$，
 不占用任何二进制位，而在最后编译出的
 目标程序中不需要也不会被表达，一如C语言的void。但却是一种合理合法的理解，可以参与
 整个 $\amlh$ 的方方面面。
@@ -141,10 +143,10 @@ AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函
 \subsection{有限个本质的理解}
 
 同样可以引入对一个有限序列（Finite Sequence）的理解，
-现象记录编号而其本质即是序列中编号上的元素。
+{\phew}记录编号而其本质即是序列中编号上的元素。
 
-至今尚未明确地具体定义现象，而是留作为可定制的框架，令 $\rho(i)$ 表示用以表示数字i
-的现象，此外有简写$\rho_i = \rho(i)$
+至今尚未明确地具体定义{\phew}，而是留作为可定制的框架，令 $\rho(i)$ 表示用以表示数字i
+的{\phew}，此外有简写$\rho_i = \rho(i)$
 
 \begin{defin}[有限本质序列的理解]
     \[ \mathbf{SI} (l:\mathrm{\alpha\ list}) \coloneqq \mathbf{Interpretation}\ 
@@ -172,8 +174,8 @@ AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函
 更高元类似。
 
 重点在于$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \cdots \rightarrow \mathrm{phenomenon}}$
-仅仅将现象 Noesis 对应到现象过程，本体只是现象过程，而很多时候期望对函数参数的本体约束更多，
-诸如这种现象过程具在某些特定理解下 Noesis 对应到一个本质上的函数。
+仅仅将{\phew} Noesis 对应到{\phew}过程，抽象语义只是{\phew}过程，而很多时候期望对函数参数的抽象语义约束更多，
+诸如这种{\phew}过程具在某些特定理解下 Noesis 对应到一个本质上的函数。
 例如一个过程可能期望一个具有本质 $f_e : num \rightarrow num$ 的函数参数，而
 $\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$ 给出的本质仅仅是
 $f_p:\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$ 的。
@@ -200,7 +202,7 @@ $\mathrm{Do2N}$ 具有类似 $\lambda f\ x.\ f (x+x)$ 的功能，$\mathrm{Do2N}
 \[ f_p^0 \widesim[3]{\mathbf{I1}(f_p^0)} f_p,\ x_p \widesim{i} x_e,\ 
     f_p \proctr{i|l}{cond} f_e,\ cond\ x_e \vdash \mathbf{V}_l \ \land\ 
     f_e\ x_e \in \mathbf{Se}_l \tag{1} \]
-其中$f_p^0$ 表示$f_p$的伪现象，实际占用0个二进制位而实际不存在于编译结果中。
+其中$f_p^0$ 表示$f_p$的伪{\phew}，实际占用0个二进制位而实际不存在于编译结果中。
 由 Noesis 对应同构的充分性定理 \ref{T.ptr.enough}
 \[ f_p \proctr{i|l}{cond} f_e \vdash \mathbf{V}_i \land x_e \in \mathbf{Se}_i \land
     cond\ x_e \Rightarrow \mathbf{V}_l\ \land\ f_e\ x_e \in \mathbf{Se}_l \tag{2} \]
@@ -249,12 +251,12 @@ $\amlh$ 上的动态函数必须只能在确定的范围内的动态。与诸多
 $\mathbf{SI}^{\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}}$，二元是
 $\mathbf{SI}^{\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}}$，
 更高元类推。
-而$\mathbf{SI}$的现象所表达的序列中的序号实质是虚函数表的索引，在编译实现中将根据此索引查
+而$\mathbf{SI}$的{\phew}所表达的序列中的序号实质是虚函数表的索引，在编译实现中将根据此索引查
 虚函数表得到函数指针而动态地调用。
 
 关键难点与静态函数参数时一样，
-也是在于$\mathbf{SI}$的本质是现象过程而需要有对此现象过程的超越对应。
-而解决方法也是与静态函数类似的，通过在条件中加入对现象过程的超越对应的约束。
+也是在于$\mathbf{SI}$的本质是{\phew}过程而需要有对此{\phew}过程的超越对应。
+而解决方法也是与静态函数类似的，通过在条件中加入对{\phew}过程的超越对应的约束。
 
 同样先给出一个样例以利于读者理解。
 
@@ -352,7 +354,7 @@ P\ r^{n}_{p_{n}} \Rightarrow P\ (C_{n}\ a^{n}_1\ \cdots\ a^{n}_{o_n}))) \\
     \forall n.\ P\ n\]
 \end{example}
 
-现在回到$\amlh$上递归函数的构建，讨论本质对应具有如下形式的现象过程的递归构建。
+现在回到$\amlh$上递归函数的构建，讨论本质对应具有如下形式的{\phew}过程的递归构建。
 \[ \begin{split}
     f\ x^1_1\ \cdots\ x^1_{q_1}\ & = body\ without\ recursion \\
     & \cdots \\
@@ -362,7 +364,7 @@ P\ r^{n}_{p_{n}} \Rightarrow P\ (C_{n}\ a^{n}_1\ \cdots\ a^{n}_{o_n}))) \\
 例如斐波那契函数
 \[ \begin{split} \mathrm{fib}\ 0 = 1\quad\quad&\quad\quad\quad\mathrm{fib}\ (\Suc 0) = 1\\
 \mathrm{fib}\ (\Suc(\Suc n)) &= \mathrm{fib}(\Suc n) + \mathrm{fib}(n)\end{split} \]
-假设中引入递归函数参数$g$，逐个对应本质的递归式得到递归现象过程$F\ g$的超越对应
+假设中引入递归函数参数$g$，逐个对应本质的递归式得到递归{\phew}过程$F\ g$的超越对应
 \[ \begin{split}
     p_1 \widesim{i_1} x^1_1,\ \cdots,\ p_{q_1} \widesim{i_{q_1}} x^1_{q_1}
     &\vdash F\ g\ p_1\ \cdots\ p_{q_1} \widesim{l} f\ x^1_1\ \cdots\ x^1_{q_1} \\

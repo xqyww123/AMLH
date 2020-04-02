@@ -5,21 +5,21 @@
 %\documentclass[twoside]{ZJUthesis}
 
 \input{macros.tex}
-\newunicodechar{。}{{\watermark.\ }}
-\newcommand\watermark[1]{%
-    #1%
-    \sbox0{#1}%
-    \llap{%
-    \makebox[\wd0][c]{%  hor. centering
-    \raisebox{.5\ht0}{%  approx. vert. centering
-    \csname Gin@isotrue\endcsname% = "keepaspectratio"
-    \resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
-    \parbox{10em}{% Allow line breaks
-            \color{black!90}%  
-            毕设草案-给蔡老师 \today
-        }%
-    }}}}%
-}
+%\newunicodechar{。}{{\watermark。}}
+%\newcommand\watermark[1]{%
+%    #1%
+%    \sbox0{#1}%
+%    \llap{%
+%    \makebox[\wd0][c]{%  hor. centering
+%    \raisebox{.5\ht0}{%  approx. vert. centering
+%    \csname Gin@isotrue\endcsname% = "keepaspectratio"
+%    \resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
+%    \parbox{10em}{% Allow line breaks
+%            \color{black!10}%  
+%            毕设草案-给蔡老师 \today
+%        }%
+%    }}}}%
+%}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
@@ -46,27 +46,28 @@
 	%\SecretLevel{}
 	
 	% 学号
-	\PersonalID{21721306}
+	%\PersonalID{21721306}
 	
-  \title[]{使用抽象语义简化形式化验证}
+  \title[]{一种基于抽象语义的区块链}
 	% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
-  %\titletl{与基于其的形式化方法}
+  \titletl{智能合约的形式化验证方法及实现}
 	
 	%英文题目
-	\Etitle{Simplify formal verfication via abstract semantic}
+	\Etitle{A formal verification method based on}
 	% 如果一行写不下，同中文题目设定，一行写不下则写两行，不需要就注释掉
-	%\Etitletl{and a new formal method based on it}
+	\Etitletl{abstract semantic for smart contract}
+  \Etitletll{and its implementation}
 	%\Etitletll{An Oriental View}s
 	
 	% 作者
-	\author{徐启源}
-	\Eauthor{Qiyuan Xu}
+	%\author{徐启源}
+	%\Eauthor{Qiyuan Xu}
 	
 	\degree{硕士}
 	\Edegree{Master of Engineering}
 	
 	% 导师
-	\supervisor{蔡\ \ 亮\ \ 教授} \Esupervisor{Prof. Liang Cai}
+	%\supervisor{蔡\ \ 亮\ \ 教授} \Esupervisor{Prof. Liang Cai}
 	
 	% 合作导师，如果有的话，去掉注释，
 	%\cpsupervisor{刘长发\ \ 教授}
@@ -76,7 +77,8 @@
 	\major{网络空间安全} \Emajor{Cyberspace Security}
 	
 	% 研究方向
-	\researchdm{逻辑与验证} \Eresearchdm{Logic and verfication}
+	\researchdm{区块链智能合约、逻辑与形式化验证}
+  \Eresearchdm{smart contract on blockchain, logic and formal verification}
 	
 	% 所属学院
 	\institute{计算机科学与技术学院} \Einstitute{College of Computer Science and Techonology}
@@ -111,7 +113,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 英文摘要
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%\input{./chapters/abstractE}
+	\input{./chapters/abstractE}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 目录页
@@ -137,6 +139,7 @@
 	\input{./chapters/Ch.Background.tex}
 	\input{./chapters/Content_Point.tex}
 	\input{./chapters/RequiredTheory.tex}
+  \input{./chapters/noesis.tex}
 	\input{./chapters/AmLH.tex}
 	\input{./chapters/Implementation.tex}
 	\input{./chapters/conclusion.tex}

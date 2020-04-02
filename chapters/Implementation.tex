@@ -1,13 +1,23 @@
-\chapter{用于智能合约的 \Eamlh 的实现}\label{Ch.Implementation}
+\chapter{基于 Noesis 系统的智能合约生成工具 \Eamlh }\label{Ch.Implementation}
 
-\section{用于智能合约的抽象机器 \amlhS 在 HOL 上的实现}
+工具 \Eamlh 是第 \ref{Ch.AmLH} 章的程序开发技术在智能合约场景的实现，能够生产
+较高执行性能的易于被形式化分析与验证的智能合约。且 \Eamlh 使用 HOL 定理证明器
+作为证明引擎，允许用户使用 HOL 定理证明器完成对抽象语义的证明，进而完成最终
+对智能合约的证明。
+
+工具 \Eamlh 的架构已在图 \ref{fig:total-frame} 中指出，其中 \Eamlh 使用的用于智能合约场景
+的 Noesis 理论版本在 \ref{Sec.amlhS} 节论述；\Eamlh 的编译后端在 \ref{Sec.compile} 节
+论述；编辑壳层因为内容过多且与 Noesis 理论联系较弱放在附录 \ref{Ch.ES}；最后的
+编辑前端目前的实现非常简陋，仅支持命令行交互，且代码量很少约400行不去详细论述。
+
+\section{抽象机 \amlh 的智能合约版本 \amlhS } \label{Sec.amlhS}
 
 首先论述 HOL 交互式定理证明器上用于智能合约的抽象机器 \amlhS 的实现，
 这一实现通过 HOL 定理证明器上4867行的 SML 语言完成。
 状态方面采用计算与状态分离的方案，将所有状态转移以指令的方式记录而在
 智能合约所有计算完成后的最后写入区块链，这样更安全。
 
-\begin{defin}[现象的定义] 类型 phenomenon 表示现象
+\begin{defin}[{\phew}的定义] 类型 phenomenon 表示{\phew}
 \[ \begin{split}
 \mathrm{phenomenon} \Coloneqq & \PhV\ \mathrm{num}\ 
 \mathrm{num} \mbar \PhS\ \mathrm{phenomenon}\ 
@@ -15,7 +25,7 @@
 \mbar & \PhP \mathrm{phenomenon}
 \end{split} \]
 $\PhV x\ b$ 表示 $b$ 个二进制表示的数字 $x$。$\PhS p_1\ p_2$ 表示两个值
-在内存上的直接拼接构成的现象。$\PhP p$ 表示对现象 $p$ 的指针。
+在内存上的直接拼接构成的{\phew}。$\PhP p$ 表示对{\phew} $p$ 的指针。
 \[ \begin{array}{lcllcl}
 \PB\ (\PhV x\ b) &\coloneqq& b&
 \PX\ (\PhV x\ b) &\coloneqq& x\\
@@ -25,23 +35,23 @@ $\PhV x\ b$ 表示 $b$ 个二进制表示的数字 $x$。$\PhS p_1\ p_2$ 表示�
 \end{array} \]
 $\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合约执行环境
 的位数，一般为32。
-现象的分割工具，函数 $\PL,\ \PU$
+{\phew}的分割工具，函数 $\PL,\ \PU$
     \begin{align*} \PL n\ p &= \PhV\ (\PX p \Mod 256^n)\ n&
         \PU n\ p &= \PhV\ (\PX p \Div 256^n)\ (\PB p \dotminus n)&
     \end{align*}
-合法的现象
+合法的{\phew}
 \begin{gather*} \begin{align*}
 \VP\ (\PhV\ x\ b) &\coloneqq (x < 256^b)&
 \VP\ (\PhP\ p) &\coloneqq \VP p&
 \end{align*}\\
 \VP\ (\PhS\ p_1\ p_2) \coloneqq \VP p_1 \ \land\ \VP p_2
 \end{gather*}
-现象集的 0 元素是 $\mathbf{PhV}\ 0\ 0$，
+{\phew}集的 0 元素是 $\mathbf{PhV}\ 0\ 0$，
 占用0个比特位的值，且其是合法的。
 \end{defin}
 
 \begin{defin}[\amlhS 上的理解]
-\amlhS 上理解的定义基本基于定义 \ref{Def.itp} ，只是固定了理解的现象集
+\amlhS 上理解的定义基本基于定义 \ref{Def.itp} ，只是固定了理解的{\phew}集
 的位数目。
     \[ \begin{split}
         \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
@@ -68,11 +78,11 @@ $\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合�
     \mathbf{Si}_i\ & \coloneqq \mathbf{NOE\_SIZE}\ i&
     \mathbf{Se}_i\ & \coloneqq \mathbf{NOE\_SET}\ i&
 \end{align*} \end{gather*}
-$\mathbf{Si}_i$ 表示理解 $i$ 的现象集的比特数。
+$\mathbf{Si}_i$ 表示理解 $i$ 的{\phew}集的比特数。
 \end{defin}
 
 \begin{defin}[\amlhS 的 Noesis 对应] 在定义 \ref{Def.TR} 的基础上
-加入现象合法性。
+加入{\phew}合法性。
 \[ p \widesim{i} e \coloneqq \mathbf{V}_i\ \land\ \VP\ p\ \land\ 
 p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 \end{defin}
@@ -84,7 +94,7 @@ p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 类型 chain 为此别名 
 \[ \mathrm{chain} \Coloneqq (\mathrm{string},\ \mathrm{phenomenon})
 \mapsto \mathrm{phenomenon} \]
-链数据是作为字符串的表标识与作为现象的键的元组到作为现象的值的有限映射。
+链数据是作为字符串的表标识与作为{\phew}的键的元组到作为{\phew}的值的有限映射。
 $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
 的所有键与值
   \[ \begin{array}{lcl}
@@ -101,7 +111,7 @@ $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
     (\mathbf{TC}\ c\ i\ j)_\mathrm{j} &\coloneqq j&
   \end{align*} \end{gather*}
 记号 $\phi^{(\mathbf{TC}\ c\ i\ j)}$ 表示链数据 $\phi$ 的标识为 $c$ 的表
-在键理解 $i$ 与值理解 $j$ 的作用下的本体对应
+在键理解 $i$ 与值理解 $j$ 的作用下的抽象语义对应
 \[ \begin{array}{lrcl}
   &\phi^{(\mathbf{TC}\ c\ i\ j)} &=& \Tr_j \ccirc\ \phi \ccirc \Li_i\\
     \Dom&\phi^{(\mathbf{TC}\ c\ i\ j)} &=& \{\epsilon\mbar (c,\Li_i 
@@ -183,7 +193,7 @@ $(l,\ x)$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的智�
 \begin{threeparttable}
 \centering \caption{ \amlhS 中实现的理解} \label{tab.IC.noesis}
 \begin{tabularx}{\linewidth}{ |c|c|c|c|X|p{2cm}| } \hline
-\textbf{理解} & \textbf{本体集} & \textbf{现象集} & 
+\textbf{理解} & \textbf{抽象语义集} & \textbf{{\phew}集} & 
 $\mathbf{Si}$ \textbf{值} & $\mathbf{Li}$ \textbf{映射} & 
 $\mathbf{Tr}$ \textbf{映射} \\ \hline
 $\NatSegI\ n$ & $\{x\mbar x < n\}$ & $\mathbb{U}_\mathrm{pv}$ &
@@ -209,14 +219,14 @@ $i \times j$ & $\mathbf{Se}_i \times \mathbf{Se}_j$ &
 \end{tabularx}
 \begin{tablenotes} \small 
 \item $\mathbb{U}_\mathrm{pv}$ 是 $\{ \PhV x\ b \}$ 的简写，
-表示现象类型的所有元素中由 $\PhV$ 构造的。
+表示{\phew}类型的所有元素中由 $\PhV$ 构造的。
 $\mathbb{U}_\mathrm{ph}$ 是 $\univ{phenomenon}$ 的简写，
-表示现象类型中所有的元素。
+表示{\phew}类型中所有的元素。
 $\mathbb{U}_\mathrm{str}$ 是 $\univ{string}$ 的简写。
 $\mathrm{Ps}$ 是 PointerSize 的简写。
  EVERY 是 HOL 系统库中的函数，$\mathrm{EVERY}\ s$ 
 表示所有元素都属于 $s$ 集的所有列表构成的集合。
-\item[注1] 理解 $i \times j$ 的现象集是 $\{\PhS p_1\ p_2
+\item[注1] 理解 $i \times j$ 的{\phew}集是 $\{\PhS p_1\ p_2
 \mbar p_1\in \Sp_i\land p_2 \in \Sp_j\}$，表格空间有限故列于此。
 \item[注2] 理解 $i \times j$ 的\textbf{Tr}映射是 
     $\lambda p.\ (\Tr_i(\PL\ \Si_i\ p),\ \Tr_j(\PU\ \Si_i\ p))$，
@@ -327,7 +337,7 @@ $\mathbf{IEq}\ \mathrm{AdrSize}$ & $\mathbf{IEq}\ \mathrm{AdrSize}
 $\B_n$ 字节整数等于判断的账户标识对应 \\ \hline
 $\mathbf{IConv}\ \Si_i\ \Si_j$ & $\mathbf{IConv}\ \Si_i\ \Si_j \proctr
     {\NatSegI\ \Si_i|\NatSegI\ \Si_j}{\lambda x.\ x < 256^{\Si_j}}\I$
-    & 表示自然数的现象的等值范围变换 \\ \hline
+    & 表示自然数的{\phew}的等值范围变换 \\ \hline
 $\mathbf{INot}$ & $\mathbf{INot} \proctr{\BoolI|\BoolI}
 {\lambda x.\ \T} (\lnot)$ & bool 值取反 \\ \hline
 $\mathbf{Append}\ i$ & $\mathbf{Append}\ i \proctr{i|\ListI\ i|\ListI\ 
@@ -396,7 +406,7 @@ $\mathbf{Seg}_{\Si_i+\Si_j,0,\Si_i}$ & $\mathbf{Seg}_
 \begin{defin}[智能合约的外部接口] \label{D.contract.interface}
 定义理解 $\RsI\ i$ 表示以 $i$ 理解为返回内容的智能合约调用响应
   \[ \RsI\ i \coloneqq i \times (\ListI\ \CWI) \]
-所有 \amlhS 的智能合约所暴露的可供外部调用的接口应是一种现象函数，
+所有 \amlhS 的智能合约所暴露的可供外部调用的接口应是一种{\phew}函数，
 且其具有至少一种 Noesis 同构，此同构满足第一个参数的理解必为 
 $\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即
 函数 $f$ 应满足如下形式的 Noesis 同构
