@@ -1,0 +1,315 @@
+\section{课题的研究内容}
+\begin{itemize}
+\item 课题理论方面主要研究三点：
+\begin{enumerate}
+  \item 用于承载开发者逻辑信息与意图的{\it 抽象语义}。
+  \item 抽象语义的公理化程序构造逻辑 {\it Noesis 逻辑}。
+  \item 构建具有显示抽象语义的智能合约的方法。
+\end{enumerate}
+\item 课题在工程实践方面计划实现智能合约开发工具 \Eamlh，作为课题理论的实现，它允许
+  并要求开发者开发智能合约的同时完整地表达逻辑信息与意图于抽象语义中，并允许开发者
+  在 HOL 交互式定理证明器上使用抽象语义简化并完成对智能合约的分析与形式化验证，
+  最后可以生成 EOS.IO 平台上可执行的智能合约。
+    \Eamlh 使用 HOL 证明器为证明引擎，并将 Noesis 逻辑实现在其上，\Eamlh 得出的所有
+    结论包括程序与抽象语义的关联均是 HOL 证明器上被验证的定理，具有非常强的可信与严谨性。
+\end{itemize}
+
+\subsection{课题理论方面的工作} \label{Sec.works.theoritical}
+
+一个值或一段过程的
+抽象语义是一个易于分析的数学对象，且具有所关切的此值或此过程
+所有的性质。
+
+同一个值或过程在不同理解下可以具有不同抽象语义。例如
+数值 2 在自然数理解下的抽象语义是自然数 2 而在布尔理解下
+的抽象语义是{\it 真}。
+值 1 与 2 在布尔理解下的抽象语义均是{\it 真}，
+{\it 真}包含了这些值的所有关切的性质，
+而数值 1 与 2 间的差异均被忽略。
+
+继而可以构造一种新的公理系统，{\it Noesis 逻辑}，
+主要包含描述值与其抽象语义间关联的
+{\it Noesis 定理}，以及其他描述过程的抽象语义的定理。
+Noesis 定理具有形式
+%在课题，演绎以构建程序的定理，是程序到其抽象语义的对应关系，具有形式
+$x \widesim{i} \epsilon$，
+其中 $\widesim{\cdot}$ 是一个三元关系，$x$ 表示值%，名叫 {\it 现象}
+，%({\it phenomenon, φαινόμενον})，
+$i$ 表示理解方式叫做 {\it 理解}({\it understanding, nóēsis})，%, νόησῐς})，
+$\epsilon$ 表示值 $x$ 在理解 $i$ 下的抽象语义，
+%名叫 {\it 本体}({\it noumenon, νoούμενον})，
+$\widesim{\cdot}$ 关系叫做{\it Noesis 对应}({\it Noesis correspondence})。
+Noesis 对应替换传统编程语言中的类型关系；Noesis 逻辑替换类型系统；
+Noesis 定理描述了值在某理解下具有某抽象语义，
+类型定理（Typing）描述值具有某类型；
+在 Noesis 逻辑中演绎 Noesis 定理得到新的 Noesis 对应关系，
+在类型系统中演绎类型定理得到新的类型关系。
+类型系统的演绎律决定了类型定理的推导与程序的组织方式，并允许
+演绎类型定理以构建程序，图 \ref{fig:lambda-st-rule} 是简单类型 λ
+演算的演绎律；Noesis 逻辑同样如此，图 \ref{fig:noesis-main-rule}
+是 Noesis 逻辑的演绎律，同样决定了抽象语义的推导与程序的组织
+方式，并同样允许演绎 Noesis 定理以构建程序。
+
+\begin{figure}[t] \centering \renewcommand{\arraystretch}{2}
+\begin{tabular}{c c}\multicolumn{2}{c}{
+\AxiomC{$\ $} \RightLabel{(公理)}
+\UnaryInfC{$\Gamma, x : \tau \vdash x : \tau$}
+    \DisplayProof} \\
+\AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
+\AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(调用)}
+  \BinaryInfC{$\Gamma \vdash M N : \tau$} \DisplayProof &
+\AxiomC{$\Gamma, x : \sigma \vdash M : \tau$}\RightLabel{(抽象)}
+\UnaryInfC{$\Gamma \vdash \lambda x. M : \sigma \rightarrow \tau$}
+    \DisplayProof 
+  \end{tabular}
+    \caption{简单类型 λ 演算的演绎律} \label{fig:lambda-st-rule}
+    \vspace{5mm}
+ \renewcommand{\arraystretch}{2}
+\begin{tabular}{c c}
+  \multicolumn{2}{c}{
+\AxiomC{} \RightLabel{(参数)} \UnaryInfC{
+  $p \widesim{i} \epsilon \vdash p \widesim{i} \epsilon$}
+\DisplayProof}\\
+\AxiomC{$\Gamma,\ cond \vdash x \widesim{i} \epsilon $}
+\RightLabel{(条件引入)} \UnaryInfC{$\Gamma \vdash 
+x \proctr{i}{cond} \phi$} \DisplayProof &
+\AxiomC{$\Gamma_1 \vdash cond$} 
+\AxiomC{$\Gamma_2 \vdash x \proctr{i}{cond} \phi $}
+\RightLabel{(条件削除)} \BinaryInfC{$\Gamma_1 \cup \Gamma_2
+  \vdash x \widesim{i} \phi$} \DisplayProof\\
+\AxiomC{$\Gamma_1 \vdash a \widesim{i} \epsilon$}
+\AxiomC{$\Gamma_2 \vdash
+  f \proctr{i|j|\cdots|k}{cond} \psi $} \RightLabel{(调用)}
+\BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash
+  f\ a \proctr{j|\cdots|k}{cond\ \epsilon} \psi\ \epsilon$}
+    \DisplayProof &
+\AxiomC{$\Gamma, a \widesim{i} \epsilon \vdash f \proctr{j|\cdots|k}
+  {cond} \phi $} \RightLabel{(抽象)}
+\UnaryInfC{$\Gamma \vdash \lambda a.\ f \proctr{i|j|\cdots|k}{\lambda
+  \epsilon.\ cond} \lambda\epsilon.\ \psi$}
+  \DisplayProof
+\end{tabular}
+  %\vspace{2mm}
+\caption{ Noesis 逻辑主要的演绎律} \label{fig:noesis-main-rule}
+\end{figure}
+
+%若将传统编程语言与课题对比，
+%类型关系对应 Noesis 对应，类型系统对应 Noesis 逻辑。
+%
+%课题不再关注类型关系而是围绕 Noesis 对应，
+%通过构造具有形式 $x \widesim{i} \epsilon$ 的定理以构建程序，
+%无论是通过对已有定理的演绎还是从头证明。
+%当然 $x$ 要有些别的要求，它们必须是一些可以
+%看作是计算机处理器指令的特定函数的组合，以允许编译到这些指令上。
+
+一个程序在不同的理解下可以有不同的抽象语义。
+$\widesim{\cdot}$ 是一个三元关系，可以允许 $x$ 在 $i$ 解释下 
+$x \widesim{i} \epsilon$ 的同时又在 $j$ 解释下 $x \widesim{j} \phi$。
+这也意味着 Noesis 对应根本不是某种类型关系的变形，而是根本地对
+类型关系的扩展。
+
+抽象语义是定理证明器上任意的数学对象，是数学友好的并易于分析与证明的，
+比如集合与数学映射。
+Noesis 定理保障了程序实现与其抽象语义的对应，
+而后用户只需证明抽象语义的性质以证明程序的性质，比如证明作为一个值的抽象语义的
+自然数 $7$ 是质数以证明这个值表达一个质数，或者关于参数 $n$ 的程序的抽象语义
+$2^n + 1$ 不总是质数以证明此程序并不总是输出质数。
+去分析抽象的数学对象，而不是面对一段具象的复杂的程序。
+
+若将程序的设计也由此定理证明器上的形式语言描述为一种抽象的数学对象，
+就与程序的抽象语义位于同一个形式语言的空间中，
+那么证明程序的抽象语义与此设计的抽象表达的相等性，就能完整证明程序实现对于此设计的正确性。
+而这种证明是相对容易的，因为程序的抽象语义是数学友好的，易于分析的。
+
+最初的抽象语义是基元指令与常量的，最初的 Noesis 定理是 Noesis 逻辑的公理。
+基元指令与常量的 Noesis 定理作为公理被引入，它们的抽象语义被设定以
+定义并限制指令与常量的语义与用途，
+并提供最初的可供用户组织以表达逻辑信息与意图的元语。
+一切程序都是基元指令与常量的递归组合，一切抽象语义都是基元指令与常量的抽象语义的
+递归组合。
+基元指令与常量的抽象语义定义了基元指令与常量的语义与用途，
+因此一切开发者通过递归组合基元指令与常量实现的程序逻辑与意图，都可以用
+抽象语义表达，即抽象语义有能力表达一切可由程序实现的逻辑信息与意图。
+基元指令与常量的 Noesis 定理作为公理被引入，它们的抽象语义被设定以
+定义并限制指令与常量的语义与用途，
+并提供最初的可供用户组织以表达逻辑信息与意图的元语。
+一切程序都是基元指令与常量的递归组合，一切抽象语义都是基元指令与常量的抽象语义的
+递归组合。
+基元指令与常量的抽象语义定义了基元指令与常量的语义与用途，
+因此一切开发者通过递归组合基元指令与常量实现的程序逻辑与意图，都可以用
+抽象语义表达，即抽象语义有能力表达一切可由程序实现的逻辑信息与意图。
+
+一个形式系统的所有定理都来自于其公理按其定义的演绎律的演绎。
+而同样是一种形式系统的 Neosis 系统，在通过演绎律由公理构造定理的同时也
+由常量集和指令集构造了程序，这些程序就是指令集和常量集的组合.
+组合方式被 Noesis 逻辑中的演绎律确定，
+调用律描述函数调用，而抽象律描述与函数构建。
+
+于是 Noesis 逻辑的公理中的基元指令与常量构建了一台抽象机器，
+而 Noesis 逻辑构建的程序就是此抽象机器上的程序。
+对程序等价变化展开成基元指令与常量的表达就成为了编译。
+令抽象机器的基元指令与常量的设定尽可能接近某个目标执行环境，
+以至于这些基元指令与常量可以实现在此目标执行环境上，
+于是程序的基元指令与常量表达就成为了一种中间表达
+（Intermediate Representation, IR）。由基元指令与常量到目标指令集的
+映射，就能将中间表达编译到目标执行环境。
+
+Agda、Idris 等具有依赖类型系统的语言使用类型表述程序的性质，
+即 $x : P$，$P$ 即是类型又是性质，而程序得兼任证明，必须一人分饰两角，
+这些批评前面已经讨论了。
+
+而课题的情况是，先在某种解释或某种解释的同构下证明程序$x$对应于
+抽象$\epsilon$，再证明抽象 $\epsilon$ 满足某个性质 $Q$ 
+以证明程序 $x$ 具有此性质 $Q$。例如上文的 Add 函数的例子，可以轻易地证明
+$(+)$ 属于 $\mathrm{Even} \rightarrow \mathrm{Even} \rightarrow 
+\mathrm{Even}$ 或者 
+$\mathrm{Odd} \rightarrow \mathrm{Odd} \rightarrow \mathrm{Odd}$
+而由此证明 Add 也有此性质。
+于是 Add 的实现，只要专注于工程性能就可以，任意性质的证明只发生在其
+抽象对应上，是在抽象的领域内完成的，抽象和工程的两个世界不会相互干扰。
+于是在得到很好执行性能的编译结果的同时，对其性质的证明依旧容易。
+
+
+\subsection{实践课题理论的软件工具 \Eamlh} \label{Sec.works.eng}
+
+课题计划实现工具 \Eamlh 以允许用户
+在实际的工业生产中使用上一节介绍的 Noesis 理论，通过演绎 Noesis 定理
+来构建具有明确抽象语义的智能合约。
+\Eamlh 构建在 HOL 定理证明器上，并提供给用户接口，允许用户输入 HOL 证明器的
+证明策略完成对程序的抽象语义的最终证明。
+图 \ref{fig:total-frame} 是软件 \Eamlh 的架构，由4部分组成：HOL 定理证明器上的 Noesis
+理论、生产目标执行环境机器代码的编译后端、连接编译后端与定理证明器的中间层编辑壳层、
+最终与用户交互的编辑前端。
+
+\begin{figure}[h] 
+  \centering \begin{tikzpicture}\useasboundingbox (-5,-5) rectangle (5,5);
+\baselineskip=0.5cm
+    \draw (0,0) node (O) {编辑壳层} circle [radius=1.2];
+  \path[name path=vCbarD] (60:3.3) -- ([turn]-90:1.5);
+  \path[name path=vCbarU] (60:3.3) -- ([turn]90:1.5);
+  \path[name path=hCbarD] (15:1.5) -- ([turn]45:4);
+  \path[name path=hCbarU] (105:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vCbarD and hCbarD, by=x}] 
+  (60:1.5) arc [start angle=60, end angle=15, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vCbarU and hCbarU, by=x}]
+  (60:1.5) arc [start angle=60, end angle=105, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (60:2.4) node {编译\\后端};
+  \draw (60:4) node[dart,draw,minimum size=1cm, shape border rotate=60,
+    shape border uses incircle,fill=white] (B) {编译};
+  \draw [->] (65:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (55:0.9) -- ([turn]5:0.8);
+
+  \path[name path=vbarD] (-60:3.7) -- ([turn]-90:1.5);
+  \path[name path=vbarU] (-60:3.7) -- ([turn]90:1.5);
+  \path[name path=hbarD] (-105:1.5) -- ([turn]45:4);
+  \path[name path=hbarU] (-15:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vbarD and hbarD, by=x}] 
+  (-60:1.5) arc [start angle=-60, end angle=-105, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vbarU and hbarU, by=x}]
+  (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (-60:2.5) node {HOL\\证明器};
+  \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
+  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw [->] (-55:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (-65:0.9) -- ([turn]5:0.8);
+  \path[name path=Vbar] (-4,1.2) -- (-4,-1.2);
+  \path[name path=Dhbar] (-135:1.5) -- +(-3,0);
+  \path[name path=Uhbar] (135:1.5) -- +(-3,0);
+  \draw [name intersections={of=Vbar and Uhbar, by=x}] 
+  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+  \draw [name intersections={of=Vbar and Dhbar, by=x}]
+  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+  \draw [<-] (175:1) -- +(-0.8,0);
+  \draw [->] (-175:1) -- +(-0.8,0);
+  \draw (-4.4,0) node[left] {用户};
+  \draw [<-] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \draw [->] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  %\path (B) ([turn]-90:2) node (BX) {};
+  %\draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
+\end{tikzpicture}
+\caption{工具 \Eamlh 的整体框架} \label{fig:total-frame}
+\end{figure}
+
+首先在 HOL 定理证明工具上构造一系列定义、谓词、定理以及证明策略，将
+Noesis 逻辑实现在 HOL 交互式定理证明器的证明系统中，进而可以使用 HOL 逻辑
+表述值、理解、抽象语义。其中值与理解将被特别地定义，而
+抽象语义就是 HOL 逻辑中任意的数学对象(mathematical object)，
+例如数学映射、集合、有限域。于是可以有效且自然地证明抽象语义的任意性质，
+因为这抽象语义就是 HOL 逻辑上自然存在的数理对象。
+
+Noesis 对应成为 HOL 定理证明工具上的定理，演绎 Noesis 定理就是演绎 HOL 的定理。
+关于定理演绎的一切数学操作都由 HOL 定理证明器完成，这些演绎的正确性，即定理推导的正确性，
+就都由 HOL 定理证明器保障。
+
+%实现在 HOL 证明器上的 Noesis 逻辑叫做 \noesishol，结合常量与基元指令设定后构成的
+%抽象机器叫做 \amlh。
+%\lamcr 是 Noesis 的古希腊文词源 νόησις 的动词原型，意为去理解、去思考。
+%图 \ref{fig:noe-sys-relas} 比较了 Noesis 逻辑、\noesishol、\amlh 与
+%\amlh 上的程序。
+
+用户不需要直接操作定理证明器，交互式的编辑器前端与编辑壳层将定理证明器封装，并提供用户
+统一的易于使用的接口。
+
+最后编译方面，分为两步。首先操纵 HOL 证明器对 \amlh 上的程序等价变换展开成基元指令与常量
+的表达，注意这种变换是由 HOL 证明器保障的，故至此的编译是被形式化验证的。
+而后程序的基元指令与常量表达作为一种中间表达（Intermediate Representation, IR），
+以文本的形式由 HOL 证明器输出，编辑壳层将其输入编译后端，并最终生成目标执行平台上的可执行
+智能合约。编译后端最后的编译加工是没有保障的，在形式化验证之外的，可能有错误的。
+但如前所述，\amlh 的基元指令集与常量被设定的如此接近目标执行环境，以至于编译后端的工作
+尽可能的简单，几乎就只是 IR 文本到机器代码的映射，以至于潜在编译缺陷尽可能的非常少。
+且编译后端作为一个程序是固定的，可以后续对其形式化验证以将形式化验证的范围扩展。
+总之，本工作的形式化验证的保障范围是 IR 级别的，可以保障智能合约到 IR 级别的正确性。
+
+\begin{figure}[h] 
+  \centering \begin{tikzpicture} \baselineskip=0.5cm
+    \draw (0,0) node (O) {编辑壳层} circle [radius=1.2];
+  \path[name path=vCbarXD] (60:3.3) -- ([turn]-90:1.5);
+  \path[name path=vCbarXU] (60:3.3) -- ([turn]90:1.5);
+  \path[name path=hCbarXD] (15:1.5) -- ([turn]45:4);
+  \path[name path=hCbarXU] (105:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vCbarXD and hCbarXD, by=x}] 
+  (60:1.5) arc [start angle=60, end angle=15, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vCbarXU and hCbarXU, by=x}]
+  (60:1.5) arc [start angle=60, end angle=105, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (60:2.4) node {编译\\后端};
+  \draw (60:4) node[dart,draw,minimum size=1cm, shape border rotate=60,
+    shape border uses incircle,fill=white] (B) {编译};
+  \draw [->] (65:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (55:0.9) -- ([turn]5:0.8);
+
+  \path[name path=vbarXD] (-60:3.7) -- ([turn]-90:1.5);
+  \path[name path=vbarXU] (-60:3.7) -- ([turn]90:1.5);
+  \path[name path=hbarXD] (-105:1.5) -- ([turn]45:4);
+  \path[name path=hbarXU] (-15:1.5) -- ([turn]-45:4);
+  \draw [name intersections={of=vbarXD and hbarXD, by=x}] 
+  (-60:1.5) arc [start angle=-60, end angle=-105, radius=1.5] -- (x) -- ([turn]90:1.5);
+  \draw [name intersections={of=vbarXU and hbarXU, by=x}]
+  (-60:1.5) arc [start angle=-60, end angle=-15, radius=1.5] -- (x) -- ([turn]-90:1.5);
+  \draw [align=center] (-60:2.5) node {HOL\\证明器};
+  \draw [fill=white] (-60:4.6) +(-60:1.3) -- +(-150:1.3) -- +(120:1.3) -- + (30:1.3) -- +(-60:1.3);
+  \draw (-60:4.6) node [align=center] (A) {Noesis\\理论};
+  \draw [->] (-55:0.9) -- ([turn]-5:0.8);
+  \draw [<-] (-65:0.9) -- ([turn]5:0.8);
+  \path[name path=VbarX] (-4,1.2) -- (-4,-1.2);
+  \path[name path=DhbarX] (-135:1.5) -- +(-3,0);
+  \path[name path=UhbarX] (135:1.5) -- +(-3,0);
+  \draw [name intersections={of=VbarX and UhbarX, by=x}] 
+  (-1.5,0) arc [start angle=180, end angle=135, radius=1.5] -- (x) -- (-4,0);
+  \draw [name intersections={of=VbarX and DhbarX, by=x}]
+  (-1.5,0) arc [start angle=180, end angle=225, radius=1.5] -- (x) -- (-4,0);
+  \draw [align=center] (-2.8,0) node {编辑器\\前端};
+  \draw [<-] (175:1) -- +(-0.8,0);
+  \draw [->] (-175:1) -- +(-0.8,0);
+  \draw (-4.4,0) node[left] {用户};
+  \draw [<-] (175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \draw [->] (-175:1) ++ (-2.7cm,0) -- +(-0.6,0);
+  \path (B) ([turn]-90:2) node (BX) {};
+  \draw [->,thick,rounded corners=1cm] (A) ([turn]90:1.8) -- (0:1.8) -- (BX);
+\draw [align=center] (A) ([turn]90:2) node[right]{等价变换\\展开成基元指令\\与常量的表达};
+    \draw [align=center] (2.7,0) node[right] {得到中间表达};
+    \draw [align=center] (BX) node[right] {编译中间表达\\至目标执行环境};
+\end{tikzpicture}
+\caption{编译流程示意} \label{fig:compilation}
+\end{figure}
+

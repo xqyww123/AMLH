@@ -6,6 +6,10 @@ all-zju0:
 	rsync . $(BUILD_DIR) --exclude=.git -r
 	(cd $(BUILD_DIR) && make zju0)
 
+all-open-report:
+	rsync . $(BUILD_DIR) --exclude=.git -r
+	(cd $(BUILD_DIR) && make open-report)
+
 all-patent_noesis:
 	rsync . $(BUILD_DIR) --exclude=.git -r
 	(cd $(BUILD_DIR) && make patent_noesis)
@@ -23,6 +27,13 @@ patent_noesis:
 	bibtex patent_noesis || true
 	xelatex -shell-escape patent_noesis
 	xelatex -shell-escape patent_noesis
+
+open-report:
+	xelatex -shell-escape opening-report
+	makeindex opening-report.idx
+	bibtex opening-report || true
+	xelatex -shell-escape opening-report
+	xelatex -shell-escape opening-report
 
 zju0:
 	xelatex -shell-escape zju0

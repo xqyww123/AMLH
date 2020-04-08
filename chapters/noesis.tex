@@ -1,18 +1,18 @@
-\chapter{Noesis 系统} \label{Ch.Noesis}
+\chapter{Noesis 逻辑} \label{Ch.Noesis}
 
 首先从本文的理论基础开始讨论，
-这一章论述本文提出的 Noesis 系统，这是一种形式系统，也可以被叫做一种公理系统。
-\ref{Sec.naive.noesis} 节先论述纯粹的也是最简单形式的 Noesis 系统，已经能
-体现 Noesis 系统是如何连结起程序与抽象语义，并允许在演绎 Noesis 定理的同时
+这一章论述本文提出的 Noesis 逻辑，这是一种公理系统。
+\ref{Sec.naive.noesis} 节先论述纯粹的也是最简单形式的 Noesis 逻辑，已经能
+体现 Noesis 逻辑是如何连结起程序与抽象语义，并允许在演绎 Noesis 定理的同时
 构造具有明确抽象语义的程序。
-\ref{Sec.noesishol} 节论述 Noesis 系统在 HOL 逻辑上的实现，允许使用 HOL
-定理证明器具体应用 Noesis 理论。为论述方便，HOL 逻辑上实现的 Noesis 系统
+\ref{Sec.noesishol} 节论述 Noesis 逻辑在 HOL 逻辑上的实现，允许使用 HOL
+定理证明器具体应用 Noesis 理论。为论述方便，HOL 逻辑上实现的 Noesis 逻辑
 被叫做 \noesishol。
 
-\section{朴素 Noesis 系统} \label{Sec.naive.noesis}
+\section{朴素 Noesis 逻辑} \label{Sec.naive.noesis}
 
-\begin{defin}[朴素 Noesis 系统]
-朴素 Noesis 系统是一个形式系统，基于无类型 λ 演算。
+\begin{defin}[朴素 Noesis 逻辑]
+朴素 Noesis 逻辑是一个形式系统，基于无类型 λ 演算。
 
 无穷的字符串集合 $\hat{\mathcal{P}},\ \hat{\mathcal{E}} \subseteq 
 \Words$ 分别表示{\phew}、抽象语义的字母集。
@@ -27,7 +27,7 @@
     \mbar&(\lambda\ \hat{\mathcal{E}}\ \mathcal{E})&\mbar&
     (\mathrm{Let}\ \hat{\mathcal{E}}\ \mathcal{E}\ \mathcal{E})&}
   \end{array} \]
-朴素的 Noesis 系统不支持对理解的演算，理解是原子的，理解集 
+朴素的 Noesis 逻辑不支持对理解的演算，理解是原子的，理解集 
 $\mathcal{I} \subseteq \Words$ 是单词集。
 
 \noindent Noesis 对应集 $N_1$
@@ -124,24 +124,57 @@ Noesis 形式系统的形式语言 $L_\mathrm{N}$ 由语法
 构成的形式系统。
 \end{defin}
 
-\section{HOL 逻辑上的 Noesis 系统 \noesishol} \label{Sec.noesishol}
+单独的对应并没有任何意义，理解可以任意地构造以将任何程序对应到
+任何抽象语义。
+%单独的指称并没有任何意义，理解可以肆意捏造以将任意的现象对应到
+%任何本体，例如一些诡异的理解可以将黑指代为白，而将鹿指代为马。
+意义体现在同构(Homomorphism)，任意设定的{\it 理解} $i$，当其确定
+，若能证明程序过程$p$ 输入理解$i$下对应到抽象语义$\epsilon$的值，
+会输出在理解$j$下对应到抽象语义 $f(\epsilon)$ 的值，则此函数的抽象语义
+就被理解 $i,\ j$ 确定，即 $f$。
+例如某个定理表明名程序 Add 当输入理解 $\mathcal{N}$ 下
+对应 $x$ 和 $y$ 的值时，其中$x, y$ 是自然数，
+就能输出在解释 $\mathcal{N}$ 下对应 $x + y$ 的值，
+程序 Add 满足了 Noesis 对应的同构，
+该情形下对应着自然数加法。
+%那么不需要讨论理解 $\mathcal{N}$ 的本质为
+%何没有任何意义，不需要纠结它的本体论问题，只要某段程序过程
+%满足某几个解释的 Noesis 对应的同构，就足够表明这段过程的抽象语义。
+这种同构叫做 {\it Noesis 同构}，在朴素 Noesis 逻辑中使用记号 
+$\proctr{i|j|\cdots|k}{}$ 表达，
+例如$\mathrm{Add} \proctr{\mathcal{N}|\mathcal{N}|\mathcal{N}}{} (+)$。
 
-形式系统 \noesishol 构建在 HOL 逻辑的基础上，使用 HOL 形式语言作为
-\noesishol 的形式语言，而构建兼容 HOL 逻辑的 Noesis 形式系统的规则。
-或者说，形式系统 \noesishol 是朴素 Noesis 形式系统在 HOL 逻辑上的实现
-与适当扩广。这种实现通过在 HOL 逻辑上定义表示理解的类型与表示 Noesis
-对应及 Noesis 同构的谓词完成。于是可以允许理解的运算，作为对朴素
-Noesis 系统的主要扩广，例如那些产生理解的 HOL 函数，
+
+
+%其中 $cond$ 表示过程 Add 执行的条件。
+%
+%
+%部分简单形式能用记号 
+%$\proctr{i|j|\cdots|k}{cond}$ 表达，
+%例如$\mathrm{Add} \proctr{\mathcal{N}|\mathcal{N}|\mathcal{N}}{cond} (+)$，
+%其中 $cond$ 表示过程 Add 执行的条件。更通用的
+%\[ f \proctr{i|j|\cdots|k}{cond} \psi \]
+%表示程序过程 $f$ 拥有参数的理解为 $i,j,\cdots$ 返回值的理解为 $k$ 
+%的 Noesis 对应的同构并同构于抽象的 $\psi$ ，且执行条件为 $cond$。
+
+
+\section{HOL 逻辑上的 Noesis 逻辑 \noesishol} \label{Sec.noesishol}
+
+形式系统 \noesishol 构建在 HOL 逻辑的基础上，
+是朴素 Noesis 形式系统在 HOL 逻辑上的实现。
+该实现通过在 HOL 逻辑上定义表示理解的类型与表示 Noesis
+对应及 Noesis 同构的谓词完成。\noesishol 允许理解的运算，这点是朴素
+Noesis 逻辑的扩广，例如那些产生理解的 HOL 函数，
 诸如理解的并、序列的理解等。
 
-接下来将逐步在 HOL 逻辑上定义{\phew}与理解，而抽象语义是
-任意 HOL 逻辑上的数学对象，甚至包括定义在 HOL 逻辑上的{\phew}与理解本身。
+下面将逐步在 HOL 逻辑上定义{\phew}与理解，而抽象语义是
+任意 HOL 逻辑上的数学对象，包括定义在 HOL 逻辑上的{\phew}与理解本身。
 
 \begin{defin}[{\phew}类型] \label{Def.phenomenon}
 HOL 逻辑上的类型 phenomenon 表示 \noesishol 的{\phew}，
 根据不同的具体实现可以不同方式具体定义，不同的具体定义不影响本章理论。
 
-唯独特别的，phenomenon 类型中需要包含一个零元素$\mathrm{p}_0$，
+特别的，phenomenon 类型中需要包含一个零元素$\mathrm{p}_0$，
 表示计算客体中不需要被任何实在的{\phew}表示而自然地于背景中存在，
 例如0个二进制位或者C语言的void类型。
 \end{defin}
@@ -213,8 +246,7 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
     (\mathbf{Tr}_i\ p = e)\]
 \end{defin}
 
-某个成立的 Noesis 对应关系可以用 HOL 逻辑证明，或者以形式系统的角度去说，
-可以用HOL逻辑的一系列规则得到某个成立的Noesis 对应。
+某个成立的 Noesis 对应关系可以用 HOL 逻辑证明。
 
 \begin{prooftree}
     \AxiomC{$\cdots$} 
@@ -350,21 +382,24 @@ $\mathbf{Tr}_i$ 是 $\mathbf{Li}_i$ 的逆函数。
 \begin{proof} 显然，略
 \end{proof}
 
-接下来论述 Noesis 同构，Noesis 同构描述函数映射的原像与像具有某种可能不同的 Noesis 对应
-或与 Noesis 对应相关的性质。注意 Noesis 同构是一个宽泛的概念。对于
+下面论述 Noesis 同构，其描述函数映射的原像与像具有某种可能不同的 Noesis 对应
+或与 Noesis 对应相关的性质。
+\noesishol 上的 Noesis 同构相比朴素 Noesis 逻辑的
+有所扩广，是一个宽泛的概念。如下是 Noesis 同构最简单的形式，
+其中 $f_p$ 同构于 $f_e$，
 \[ \forall p\ e.\ p \widesim{i} e \Rightarrow f_p\ p \widesim{j} f_e\ e \]
-$f_p$ 是 Noesis 同构于 $f_e$，
+Noesis 同构还可以具有条件 $cond$，
 \[ \forall p\ e.\ p \widesim{i} e \Rightarrow f_p\ p \Rightarrow cond\ e
 \widesim{j} f_e\ e \]
-还可以具有条件 $cond$，也是 Noesis 同构，
+可以是高阶形式，
 \[ \forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow \forall y_p\ y_e.\ 
 y_p \widesim{i} y_e \Rightarrow cond\ x_e\ y_e \Rightarrow f_p\ x_p\ y_p \widesim{j} 
 f_e\ x_e\ y_e \]
-高阶函数也可以有 Noesis 同构。而更宽泛地
+以及一个更复杂的，
 \[ \forall g_p\ g_e.\ (\forall x_p\ x_e.\ x_p \widesim{i} x_e \Rightarrow 
 g_p\ x_p \widesim{j} g_e\ x_e) \Rightarrow cond\ g_e \Rightarrow
 f_p\ g_p \widesim{k} f_e\ g_e \]
-$f_p,f_e$ 间也具有 Noesis 同构。
+以上 $f_p$ 均同构于 $f_e$ 。
 
 \begin{defin}[Noesis 同构] 这里给出 Noesis 同构的严谨定义。
   $f_p$ 是{\phew}的函数或者是{\phew}的函数的函数以及各种高阶函数的函数，即
@@ -442,7 +477,7 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 \end{split} \end{equation}
 
 Noesis 同构中的理解 $i \cdots k$ 与抽象语义 $a \cdots c$ 可以相互依赖。
-首先抽象语义可以依赖于抽象语义，这是显然的。
+首先抽象语义可以依赖于抽象语义。
 其次理解可以依赖于理解，可以由一个理解计算得出。序列的增加是一个例子
 \[ \mathbf{Append} \proctr{x \sim i | l \sim \ListI\ i | 
 \ListI i}{\lambda x\ l.\ \T} (::) \]
@@ -450,7 +485,7 @@ Noesis 同构中的理解 $i \cdots k$ 与抽象语义 $a \cdots c$ 可以相互
 \[ \forall i\ x_p\ x.\ x_p \widesim{i} x \Rightarrow \forall l_p\ l.\ 
   l_p \widesim[2]{\ListI\ i} l \Rightarrow \mathbf{Append}\ x_p\ l_p
   \widesim[2]{\ListI\ i} x::l \]
-是合理合法的 HOL 逻辑表达式。
+是合法的 HOL 逻辑表达式。
 第三，理解可以依赖于抽象语义，若 $\mathcal{N}^{\leq}_n$ 表示所有不超过 $n$ 的自然
 数的抽象语义集的理解，自然数减法 $\mathbf{NSub}$ 的 Noesis 同构可以表达为
 \[ \mathbf{NSub} \proctr{a \sim \mathcal{N}^{\leq}_n|b \sim
@@ -467,15 +502,15 @@ Noesis 同构中的理解 $i \cdots k$ 与抽象语义 $a \cdots c$ 可以相互
 \Rightarrow f_p\ a_p \widesim[2]{\mathcal{N}^\leq_n} (\lambda a.\ 
 n - a) \]
 
-因为理解与抽象语义以及{\phew}均是 HOL 逻辑上普通的数理对象，所以自然可以
-相互依赖。这一点揭示出类似依赖类型（Dependent Type）的性质，但一切都
-更加自然。而在实际使用中，一般很少会抽象语义依赖理解或理解依赖抽象语义
-，一般都只是理解依赖理解。在最后一章的结论中会指出，理解承载{\phew}的
+因为理解与抽象语义以及{\phew}均是 HOL 逻辑上普通的数理对象，所以可以
+相互依赖。这一点揭示出类似依赖类型（Dependent Type）的性质。
+而在实际使用中，一般很少会抽象语义依赖理解或理解依赖抽象语义
+，一般只是理解依赖理解。在最后一章的结论中会指出，理解承载{\phew}的
 共性，而抽象语义承载{\phew}的共性在内的全部特性，所以理解是不需要非常精细的，
-并不像依赖类型系统的语言使用类型描述值的性质，Noesis 系统中是{\phew}由理解
-对应到抽象语义而抽象语义体现{\phew}的性质，所以 Noesis 系统中并不特别需要理解与
-抽象语义互相依赖，尽管这是可以做到的。于是一般在 Noesis 同构的记号中省略
-抽象语义的部分，一般将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
+并不像依赖类型系统的语言使用类型描述值的性质，Noesis 逻辑中是{\phew}由理解
+对应到抽象语义而抽象语义体现{\phew}的性质，所以 Noesis 逻辑中不是特别需要理解与
+抽象语义互相依赖，尽管这是可以做到的。一般在 Noesis 同构的记号中省略
+抽象语义的部分，将 $\proctr{a \sim i|b \sim j|\cdots|k}{cond}$
 简写为 $\proctr{i|j|k}{cond}$。而将一些必要的抽象语义限制放在 $cond$ 中，
 上述的 $\mathbf{NSub}$ 更常用的 Noesis 同构是
 \[ \mathbf{NSub} \proctr{\mathcal{N}^\leq_n|\mathcal{N}^\leq_n|
@@ -485,10 +520,10 @@ n - a) \]
  a_e \Rightarrow \forall b_p\ b_e.\ b_p \widesim[2]{\mathcal{N}^\leq_n} b_e \Rightarrow
  a_e \geq b_e \Rightarrow
  \mathbf{NSub}\ a_p\ b_p \widesim[2]{\mathcal{N}^\leq_n} a_e - b_e\]
-充分利用调用条件 $cond$ 就不怎么需要抽象语义与理解互相依赖。
+充分利用调用条件 $cond$ 就基本不需要抽象语义与理解互相依赖。
 
-接下来论述 \noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
-记号律、记号削除律。这些演绎律可以易于理解地写成下面的形式，尽管这些形式并不完整。
+下面论述 \noesishol 上的调用律、抽象律、一阶同构引入律、一阶同构削除律、
+记号律、记号削除律。这些演绎律可以易于理解地表达如下，尽管这些表达并不完整。
 \footnotetext[1]{准确地说 \noesishol 上的调用律就是 HOL 逻辑的 MATCH\_MP
     律，此处的形式是 MATCH\_MP 的应用，更具有可读性，但并非所有的调用律的应用都具有
     这种形式。MATCH\_MP 律才是完整的 \noesishol 上的调用律。}
@@ -555,13 +590,13 @@ n - a) \]
 
 \vspace{6mm}
 
-\noindent 其中 Let 就是 HOL 上定义的 Let。
+\noindent 其中 Let 是 HOL 上定义的 Let。
 
 这些演绎律全部是 HOL 逻辑中已有演绎律的复合，\noesishol 本身不引入
 新的演绎律，所以 \noesishol 作为一个形式系统其实是 HOL 逻辑的一种应用。
-接下来将论述如何由已有的 HOL 逻辑的演绎律复合出上述 \noesishol 的规则。
 
-\noesishol 调用律就是 HOL 逻辑中的 MATCH\_MP 律，MATCH\_MP 的意味是自动匹配全称量化
+下面将论述如何由已有的 HOL 逻辑的演绎律复合出上述 \noesishol 的规则。
+\noesishol 调用律是 HOL 逻辑中的 MATCH\_MP 律，MATCH\_MP 的意味是自动匹配全称量化
 的肯定前件（Modus Ponens with quantification matching）。
 将 \[\Gamma_1 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e \]
 的同构记号展开，注意 $a_p',b_p'$ 上的撇号与接下来的 $a_p,b_p$ 区分
@@ -574,7 +609,7 @@ n - a) \]
   b_e \Rightarrow
     \cdots \Rightarrow\\ &cond\ a_e\ b_e\ \cdots \Rightarrow f_p\ a_p\ b_p\ \cdots
 \widesim{l} f_e\ a_e\ b_e\ \cdots \end{split}\]
-就是同构记号下的
+即同构记号下的
 \[\Gamma_1 \cup \Gamma_2 \vdash f_p \proctr{i|j|\cdots|l}{cond} f_e \]
 MATCH\_MP 是 \noesishol 上的调用律，却并不局限于这种形式，
 \begin{sprooftree}
@@ -592,7 +627,8 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 由 MATCH\_MP 律实现的 \noesishol 的调用律以 $g_p' \proctr{i|j}{cond_g} g_e'$ 作为参数
 调用可以得到
 \[ f_p\ g_p \proctr{k}{cond_g\ g_e} f_e\ g_e \]
-非常有趣。如果非要用某个记号表达的话，$f_p,f_e$ 间的同构也许适合表达为
+%非常有趣。如果非要用
+必须用某个记号表达的话，$f_p,f_e$ 间的同构也许适合表达为
 \[ f_p \proctr{\proctr{i|j}{cond_g}|k}{cond} f_e \]
 
 \noesishol 上的抽象律就是 HOL 逻辑的 DISCH 律
@@ -637,7 +673,7 @@ f_p\ g_p \widesim{k} f_e\ g_e \]
 
 %本文对所有将 Noesis 对应描述成某种类型系统的尝试都失败了。根本在于，类型是一种对值的分类，
 %以良好地提取维护值的部分性质；
-%但本文的思路， Noesis 对应根本不尝试对值分类，而是尝试显示地确定理解方式而找到值对应的以某种
+%但本文的思路， Noesis 对应根本不尝试对值分类，而是尝试显式地确定理解方式而找到值对应的以某种
 %数理对象表示的意义，进而提取出值在该理解下的全部性质。
 %这与与指称语义（Denotational semantics）非常相似。
 

@@ -1,25 +1,25 @@
 \section{记号与混淆区分}
 
-本工作一贯地使用符号逻辑（Symbolic Logic）领域通用的记号，来自计算机科学或其他学科的读者
+本工作使用符号逻辑（Symbolic Logic）领域通用的记号，具体
 可以参考 Restall 在 \textit{An introduction to substructural logics} 
 第二章前几节形式定义的表达方式\cite{restall2002introduction}。
 
-首先是证明系统（Proof System）的区分，
+对于证明系统（Proof System），
 一些计算机领域的读者可能将其与证明用的软件系统混淆。
-证明系统是逻辑学下证明理论中清晰而确定的概念。
-本文不尝试定义基础的理论概念而仅留下参考文献\cite{restall2002introductionP31}。
-简单来说，证明系统是一种证明理论（Proof Theory）领域的形式系统，
+证明系统是逻辑学下证明理论中清晰而确定的概念，可以参考
+Restall 的文献\cite{restall2002introductionP31}。
+简单来说，证明系统是证明理论（Proof Theory）领域的形式系统，
 由一组公理与一组用于推理定理的演绎规则构成。
 
 缩写 HOL 既代表高阶逻辑（High Order Logic）也代表 HOL交互式定理证明器
 （Higher Order Logic Interactive Theorem Prover），
 同时也表示HOL证明器上所使用的HOL逻辑（HOL Logic），
 一种类似高阶逻辑的公理系统（Axiomatic System）。
-而公理系统是形式系统专用于数理逻辑领域时的别称，所以HOL逻辑亦是形式系统。
+公理系统是形式系统专用于数理逻辑领域时的别称，所以HOL逻辑亦是形式系统。
 必须区分HOL逻辑与高阶逻辑，HOL逻辑是HOL定理证明器上所使用的证明系统，
 这一证明系统非常类似高阶逻辑，但绝不等同，
-是仅仅相似但完全不同的两个形式系统。
-而HOL定理证明器上的证明亦仅是HOL逻辑上的形式证明，HOL定理证明器
+是相似但不同的两个形式系统。
+HOL定理证明器上的证明亦仅是HOL逻辑上的形式证明，HOL定理证明器
 从来无法证明高阶逻辑上的任何命题。
 %例如 HOL逻辑上无法良好地定义 NaN ，以至可以证明 $0 \div 0 = 0$，
 %参见 Harrison 的文章 \cite{harrison1993constructing}。

@@ -1,0 +1,173 @@
+\chapter{演绎定理以构造程序或智能合约的具体方法} \label{Ch.htDTtCP}
+
+这一章介绍演绎式的程序构建方法。大多数具有公理化类型系统的编程语言，均可以通过
+演绎公理化的类型系统，来构建程序。\ref{Sec:dedect-program-on-lambda-st} 节
+介绍简单类型λ演算（\lamst 演算）上具体如何演绎 \lamst 演算以构建程序。
+
+\section{简单类型λ演算上演绎式的程序构建方法} \label{Sec:dedect-program-on-lambda-st}
+
+\lamst 演算上的程序构建是通过演绎完成的。\lamst 演算的演绎律如下
+\begin{center}\renewcommand{\arraystretch}{2}
+\begin{tabular}{c c}\multicolumn{2}{c}{
+\AxiomC{$\ $} \RightLabel{(公理)}
+\UnaryInfC{$\Gamma, x : \tau \vdash x : \tau$}
+    \DisplayProof} \\
+\AxiomC{$\Gamma \vdash M : \sigma \rightarrow \tau$}
+\AxiomC{$\Gamma \vdash N : \sigma$} \RightLabel{(应用)}
+  \BinaryInfC{$\Gamma \vdash M N : \tau$} \DisplayProof &
+\AxiomC{$\Gamma, x : \sigma \vdash M : \tau$}\RightLabel{(抽象)}
+\UnaryInfC{$\Gamma \vdash \lambda x. M : \sigma \rightarrow \tau$}
+    \DisplayProof 
+  \end{tabular}
+\end{center}
+
+变量上下文 $\Gamma$ 下一个值 $x$ 具有类型 $\tau$ 构成了类型定理(Typing) 
+$\Gamma \vdash x : \tau$，其中 $\Gamma = {v_1 : \sigma_1,\ \cdots\ ,\ v_n : \sigma_n}$
+表示$n$个类型分别为 $\sigma_i$ 的值 $x_i$ 构成的上下文。
+
+\lamst 的公理可以引入变量，例如
+\begin{center}\begin{tabular}{c c}
+  \AxiomC{} \RightLabel{(公理)}
+  \UnaryInfC{$x : \tau\vdash x : \tau$} \DisplayProof &
+  \AxiomC{} \RightLabel{(公理)}
+  \UnaryInfC{$y : \tau \rightarrow \sigma\vdash y : \tau \rightarrow \sigma$}
+  \DisplayProof
+\end{tabular}\end{center}
+分别引入了类型为 $\tau$ 的变量 $x$ 与类型为 $\tau \rightarrow \sigma$ 的变量 $y$。
+\lamst 的调用律可以构造调用，例如以 $x$ 调用 $y$ 即是应用律的应用
+\begin{sprooftree}
+  \AxiomC{} \RightLabel{(公理)} \UnaryInfC{$x : \tau\vdash x : \tau$}
+  \AxiomC{} \RightLabel{(公理)}
+  \UnaryInfC{$y : \tau \rightarrow \sigma\vdash y : \tau \rightarrow \sigma$}
+  \RightLabel{(应用)}
+  \BinaryInfC{$x : \tau,\ y : \tau \rightarrow \sigma\vdash y(x) : \sigma$}
+\end{sprooftree}
+于是得到了上下文 $x,\ y$ 下具有类型 $\sigma$ 的值 $y(x)$。可以进一步
+由抽象律构造函数
+\begin{sprooftree}
+  \AxiomC{} \RightLabel{(公理)} \UnaryInfC{$x : \tau\vdash x : \tau$}
+  \AxiomC{} \RightLabel{(公理)}
+  \UnaryInfC{$y : \tau \rightarrow \sigma\vdash y : \tau \rightarrow \sigma$}
+  \RightLabel{(应用)}
+  \BinaryInfC{$x : \tau,\ y : \tau \rightarrow \sigma\vdash y(x) : \sigma$}
+  \RightLabel{(抽象)}
+  \UnaryInfC{$x : \tau\vdash
+  \lambda y.\ y(x) : (\tau \rightarrow \sigma) \rightarrow \sigma$}
+  \RightLabel{(抽象)}
+  \UnaryInfC{$\vdash \lambda x\ y.\ y(x) : \tau \rightarrow (\tau \rightarrow \sigma)
+    \rightarrow \sigma$}
+\end{sprooftree}
+于是最终构建了具有类型$\tau \rightarrow (\tau \rightarrow \sigma)
+    \rightarrow \sigma$的函数$\lambda x\ y.\ y(x)$。
+
+\subsection{Noesis 逻辑上演绎式的程序构建方法}
+
+Noesis 逻辑的演绎式程序构建方法完全跟传统类型系统的演绎式构建方法相同，即跟
+上一节的 \lamst 的例子相同，亦是通过应用律、抽象律等构建程序。
+朴素 Noesis 逻辑的演绎律如下
+
+\vspace{5mm}
+
+\hspace{-8mm}%
+\begin{minipage}{0.25\linewidth} \begin{prooftree} \centering
+    \AxiomC{\hfill}
+    \RightLabel{(参数)}
+    \UnaryInfC{$p \widesim{i} e \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}{0.4\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(一阶同构引入)}
+    \UnaryInfC{$\Gamma \vdash p \proctr{i}{} e$}
+\end{prooftree}\end{minipage}%
+\begin{minipage}{0.3\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \proctr{i}{} e$}
+    \RightLabel{(一阶同构削除)}
+    \UnaryInfC{$\Gamma \vdash p \widesim{i} e$}
+\end{prooftree}\end{minipage}%}
+
+\vspace{3mm}
+
+\begin{minipage}{0.45\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma_1 \vdash p \widesim{i} e$}
+    \AxiomC{$\Gamma_2 \vdash f \proctr{i|j|\cdots|k}{} \phi$}
+    \RightLabel{(应用)}
+    \BinaryInfC{$\Gamma_1 \cup \Gamma_2 \vdash
+    f\ p \proctr{j|\cdots|k}{} \phi\ e$}
+\end{prooftree}\end{minipage}
+\begin{minipage}{0.5\linewidth} \begin{prooftree}
+    \AxiomC{$\Gamma,\ p \widesim{i} e \vdash 
+    f \proctr{j|\cdots|k}{} \phi$}
+    \RightLabel{(抽象)}
+    \UnaryInfC{$\Gamma \vdash \lambda p.\ f \proctr{i|j|\cdots|k}{}
+    \lambda e.\ \phi$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+    \AxiomC{$\Gamma \vdash p \widesim{i} e$}
+    \RightLabel{(对应记号 $x$)}
+  \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+  x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \widesim{i}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth} \begin{prooftree}
+  \AxiomC{$\Gamma \vdash p \proctr{i|\cdots|k}{cond} e$}
+    \RightLabel{(同构记号 $x$)}
+  \UnaryInfC{$\Gamma,\ ((x_\mathrm{p} = p)\ \land\ (
+  x_\mathrm{e} = e)) \vdash
+     x_\mathrm{p} \proctr{i|\cdots|k}{cond}  x_\mathrm{e}$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+    \AxiomC{$\Gamma,\ x_\mathrm{p} = p,\ x_\mathrm{e} = e \vdash
+     p' \widesim{i}  e'$}
+    \RightLabel{(对应记号 $x$ 削除)}
+    \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ x_\mathrm{p}\ p\ p'
+    \widesim{i} \mathrm{Let}\ x_\mathrm{e}\ e\ e'$}
+\end{prooftree}\end{minipage}
+
+\vspace{3mm}
+
+\begin{minipage}{\linewidth}\begin{prooftree}
+  \AxiomC{$\Gamma,\ x_\mathrm{p} = p,\ x_\mathrm{e} = e \vdash
+   p' \proctr{i|\cdots|k}{cond}  e'$}
+  \RightLabel{(同构记号 $x$ 削除)}
+  \UnaryInfC{$\Gamma \vdash \mathrm{Let}\ x_\mathrm{p}\ p\ p'
+  \proctr{i|\cdots|k}{cond} \mathrm{Let}\ x_\mathrm{e}\ e\ e'$}
+\end{prooftree}\end{minipage}
+
+\vspace{6mm}
+
+其中参数律对应 \lamst 的公理用于引入参数，应用律与抽象律分别构建函数调用与新的函数，
+一阶同构引入与削除没有实际的含义仅是技术性的作用，对应记号、同构记号、对应记号削除、
+同构记号削除用于临时变量的引入与封装。而 Noesis 逻辑上的公理是预定义的基元指令与常量。
+
+例如若有关于自然数加法的公理
+\[ \mathbf{Add} \proctr{\mathcal{N}|\mathcal{N}|\mathcal{N}}{} (+)
+\tag{公理 $\mathbf{Add}$} \label{1.AAdd}\]
+则可有如下示例
+\begin{sprooftree}
+\AxiomC{} \RightLabel{(参数)} \UnaryInfC{$x \widesim{\mathcal{N}} \epsilon \vdash
+x \widesim{\mathcal{N}}$}
+\AxiomC{} \RightLabel{(\ref{1.AAdd})} \UnaryInfC{$\vdash \mathbf{Add}
+\proctr{\mathcal{N}|\mathcal{N}|\mathcal{N}}{} (+)$}
+\RightLabel{(应用)}
+\BinaryInfC{$x \widesim{\mathcal{N}} \epsilon \vdash \mathbf{Add}\ x 
+\proctr{\mathcal{N}|\mathcal{N}}{} (+)\ \epsilon$}
+\RightLabel{(应用)}
+\UnaryInfC{$x \widesim{\mathcal{N}} \epsilon \vdash \mathbf{Add}\ x\ x
+\proctr{\mathcal{N}}{} \epsilon + \epsilon$}
+\RightLabel{(抽象)}
+\UnaryInfC{$\vdash \lambda x.\ \mathbf{Add}\ x\ x
+\proctr{\mathcal{N}|\mathcal{N}}{} \lambda \epsilon.\ \epsilon + \epsilon$}
+\end{sprooftree}
+如上便由朴素 Noesis 逻辑的演绎构造了具有 Noesis 同构
+$\proctr{\mathcal{N}|\mathcal{N}}{} \lambda \epsilon.\ \epsilon + \epsilon$ 的
+过程 $\lambda x.\ \mathbf{Add}\ x\ x$。
+

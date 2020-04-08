@@ -1,4 +1,4 @@
-\section{一些需要的理论}
+\section{其他一些需要的理论}
 
 本文是计算机领域的论文，故仅将一些必须的理论列在这里而并不去深究更多。
 
@@ -16,7 +16,7 @@ X \rightarrow&\ Y = \{ s \mbar s \in \powerset(X \times Y) \ \land\\
 函数$f : X \rightarrow Y$的定义域为 $\Dom f = X$，值域为 $\Ima f = Y$。
 \end{defin}
 
-\begin{defin}[有限映射] 一个函数 $f : X \rightarrow Y$ 若其定义域 $X$。
+\begin{defin}[有限映射] 一个函数 $f : X \rightarrow Y$ 若其定义域 $X$
     有限，这种函数也被叫做有限映射，记作 $f : X \mapsto Y$。
     数学上有限映射就是函数是不需要特殊处理的，此处之所以单独地提出是
     因为计算机科学的范畴内，有限映射可以使用哈希表这一数据结构表示，
@@ -54,18 +54,18 @@ X \rightarrow&\ Y = \{ s \mbar s \in \powerset(X \times Y) \ \land\\
 使用下划线记号 $\underline{abcd}$ 表示一个单词。
 一个单词可以是任何的不被空白分割开的文字、符号，所有的单词构成
 无穷集 $\Words$，作为形式语言的字母表。
-本文不更深入地探讨 $\Words$ 的本质，这涉及到更多的形式系统的理论而
-超出了本文的范畴，
-只是简单地举几个例子。
+%本文不更深入地探讨 $\Words$ 的本质，这涉及到更多的形式系统的理论而
+%超出了本文的范畴，
+%只是简单地举几个例子。
 
-\begin{example}[单词的例子]
-\begin{align*}
-\underline{abc} &\in \Words&\underline{\text{单词}} &\in \Words&
-\underline{(} &\in \Words&\underline{)} &\in \Words&\\
-\underline{\forall} &\in \Words&\underline{:} &\in \Words&
-\underline{\quad} &\notin \Words&\underline{\text{这里有\ \ 空格}} &\notin \Words&
-\end{align*}
-\end{example}
+%\begin{example}[单词的例子]
+%\begin{align*}
+%\underline{abc} &\in \Words&\underline{\text{单词}} &\in \Words&
+%\underline{(} &\in \Words&\underline{)} &\in \Words&\\
+%\underline{\forall} &\in \Words&\underline{:} &\in \Words&
+%\underline{\quad} &\notin \Words&\underline{\text{这里有\ \ 空格}} &\notin \Words&
+%\end{align*}
+%\end{example}
 
 \begin{defin}[字符串代数] \label{D.StringAlgebra}
 字符串代数（String Algebra）是满足如下条件的

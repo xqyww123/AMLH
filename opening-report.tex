@@ -1,25 +1,10 @@
-\documentclass[oneside]{ZJUthesis}
+\documentclass[oneside]{ZJUthesisOR}
 % 该文档中首字符为“%”的均为注释行，不会在论文中出现
 
 % 论文默认为单面模式，需单面模式请将第一行换为如下所示：
 %\documentclass[twoside]{ZJUthesis}
 
 \input{macros.tex}
-\newunicodechar{。}{{\watermark。}}
-\newcommand\watermark[1]{%
-    #1%
-    \sbox0{#1}%
-    \llap{%
-    \makebox[\wd0][c]{%  hor. centering
-    \raisebox{.5\ht0}{%  approx. vert. centering
-    \csname Gin@isotrue\endcsname% = "keepaspectratio"
-    \resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
-    \parbox{10em}{% Allow line breaks
-            \color{black!10}%  
-            毕设草案-给蔡老师 \today
-        }%
-    }}}}%
-}
 
 % 取消目录中链接的颜色，方便打印
 % 如需颜色，请将“false”改为“true”
@@ -46,8 +31,8 @@
 	%\SecretLevel{}
 	
 	% 学号
-	%\PersonalID{21721306}
-	
+	\PersonalID{21721306}
+	\titletype{开题报告}
   \title[]{一种基于抽象语义的区块链}
 	% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
   \titletl{智能合约的形式化验证方法及实现}
@@ -60,14 +45,14 @@
 	%\Etitletll{An Oriental View}s
 	
 	% 作者
-	%\author{徐启源}
-	%\Eauthor{Qiyuan Xu}
+	\author{徐启源}
+	\Eauthor{Qiyuan Xu}
 	
 	\degree{硕士}
 	\Edegree{Master of Engineering}
 	
 	% 导师
-	%\supervisor{蔡\ \ 亮\ \ 教授} \Esupervisor{Prof. Liang Cai}
+	\supervisor{蔡\ \ 亮\ \ 教授} \Esupervisor{Prof. Liang Cai}
 	
 	% 合作导师，如果有的话，去掉注释，
 	%\cpsupervisor{刘长发\ \ 教授}
@@ -90,7 +75,7 @@
 	\makeCoverPage
 	
 	% 生成英文封面
-	\makeECoverPage
+	%\makeECoverPage
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 原创声明与版权协议页
@@ -103,66 +88,25 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% 论文部分开始
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUfrontmatter
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 摘要
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/abstractC.tex}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 英文摘要
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\input{./chapters/abstractE}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 目录页
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUcontents
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 插图列表
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUListofFigures
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 表格列表
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUListofTables
-	\input{./chapters/terminology.tex}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 正文内容部分开始
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUmainmatter
-	
-	\input{./chapters/Ch.Background.tex}
-	\input{./chapters/Content_Point.tex}
-	\input{./chapters/RequiredTheory.tex}
-  \input{./chapters/noesis.tex}
-	\input{./chapters/AmLH.tex}
-	\input{./chapters/Implementation.tex}
-	\input{./chapters/conclusion.tex}
-  \appendix
-  %\input{./chapters/RequiredTheory/lambda.tex}
-	\input{./chapters/how-to-deduct-theorem-to-construct-program.tex}
-	\input{./chapters/EditorShell.tex}
-	
-	\ZJUbackmatter
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 参考文献
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\ZJUthesisbib{bib}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 发表论文目录
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%\input{./chapters/publications}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% 致谢页
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%\input{./chapters/thanks}
-	
+	%\ZJUcontents
+  \frontmatter
+  \vspace{6mm}
+  \tableofcontents
+  \mainmatter
+	\input{./opening-report/课题来源.tex}
+	\input{./opening-report/Ch.Background.tex}
+	\input{./opening-report/t.tex}
+  \section{课题计划进度}
+  \begin{center}
+  \begin{tabularx}{\linewidth}{|c|c|X|}
+  \hline {\bf 开始时间} & {\bf 结束时间} & {\bf 工作内容} \\\hline
+  2019 年 3 月 & 2019 年 6 月 & 初步查阅文献资料，编写开题报告 \\\hline
+  2019 年 7 月 & 2019 年 8 月 & 研究学习 HOL 定理证明器相关理论 \\\hline
+  2019 年 9 月 & 2019 年 11 月 & 具体设计并在 HOL 逻辑上实现 Noesis 理论 \\\hline
+  2019 年 11 月 & 2020 年 1 月 & 具体设计并实现工具 \Eamlh \\\hline
+  2020 年 2 月 & 2020 年 3 月 & 编写并完成论文 \\\hline
+  \end{tabularx}
+  \end{center}
 	
 \end{document}
+

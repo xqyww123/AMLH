@@ -1,0 +1,94 @@
+\section{智能合约的安全分析手段与工具} \label{Sec.contract-tools}
+
+目前智能合约的安全分析手段与工具可分为两类，以检查与证明为目的的形式化验证，
+以及旨在提升安全性的智能合约构建方案与工具。
+
+\subsection{验证方案与工具}
+
+这一节将现有的智能合约验证方案与工具从5个维度分类：
+\begin{itemize}
+\item 根据验证方法的类目分为二类，基于 model check 、基于演绎式证明，
+其中演绎式的又可分为基于定理证明器与基于依赖类型系统两个小类。
+\item 根据自动化程度可以分为三类，全自动、交互式半自动、手动。
+\item 根据分析的目标语言分为三类，分析低级字节码、分析高级语言、两者同时分析。
+\item 根据检查性质的范围分为三类，检查预先定义的固定性质、检查可定制但限于合约泛有的性质、检查可定制且
+可以是合约泛有与特有性质。
+\item 根据保障的级别分为三类，只能寻找缺陷但无法证明没有缺陷而不具有可靠性，可以在高级语言级别证明指定性质的可靠性，
+可以在低级别字节码上证明指定性质的可靠性。
+\end{itemize}
+
+\begin{table}[t] \centering
+\caption{部分已发表的智能合约分析与验证工具的比较}
+\begin{tabular}{|c|c|c|c|c|c|c|} \hline
+工具或作者 & 技术基础 & 自动化程度 & 分析级别 & 支持分析的性质 & 保障级别 \\\hline
+\textsc{Oyente}\cite{luu2016making} & model check & 全自动 & 低级 & 预定义 & 不可靠 \\\hline
+\textsc{Sasc}\cite{zhou2018security} & model check & 全自动 & 低级 & 预定义 & 不可靠 \\\hline
+\textsc{Maian}\cite{nikolic2018finding} & model check & 全自动 & 低级 & 预定义 & 不可靠 \\\hline
+\textsc{Zeus}\cite{kalra2018zeus} & model check & 全自动 & 中间表达 & 泛有性质 & 中间表达级 \\\hline
+Hirai\cite{hirai2017defining} & 定理证明器 & 手动 & 低级 & 泛有与特有性质 & 字节码级 \\\hline
+Amani\cite{amani2018towards} & 定理证明器 & 半自动 & 低级与高级 & 泛有与特有性质 & 字节码级 \\\hline
+KEVM\cite{hildenbrandt2018kevm} & $\mathbb{K}$ Framework & 半自动 & 低级与高级 & 泛有与特有性质 & 字节码级 \\\hline
+Bhargavan\cite{bhargavan2016short} & 依赖类型系统 & 半自动 & 低级 & 泛有与特有性质 & 字节码级 \\\hline
+\end{tabular}
+\end{table}
+
+\textsc{Oyente} 及其改进工作均属于 model check 式、全自动、分析低级字节码、检查预定义固定性质、不保证可靠性的。
+\textsc{Oyente} 是一种静态分析工具，可以分析诸如交易顺序依赖、时间戳依赖、调用重入等预定义的性质\cite{luu2016making}。
+然而，因为 \textsc{Oyente} 用于分析基础的语义是被简化的，它基于语法与代码特征分析并缺乏语义分析，
+既可能错误地报告实际正确的代码，也可能漏过实际错误的代码，因此
+既不具有可靠性也不具有完备性，而 \textsc{Oyente} 也仅将此工具称作缺陷寻找工具。
+基于 \textsc{Oyente} 的相关工作中，
+Zhou 提出的 \textsc{Sasc} 工具是对 \textsc{Oyente} 分析特征的扩展\cite{zhou2018security}。
+Nikoli{\'c} 实现了工具 \textsc{Maian}， 
+在 \textsc{Oyente} 的方案中引入对单个智能合约的多次调用的分析，进而能够分析贪婪的、故意丢损资金的、或者故意自杀的
+恶意智能合约\cite{nikolic2018finding}。
+
+\textsc{Zeus} 是另一个 model check 式、全自动、分析中间语言、检查可定制但限于泛有性质的、
+可在中间语言级别证明指定性质可靠性的验证工具，它通过将高级的 Solidity 语言编译到 LLVM 中间表达，进而
+使用 LLVM 平台上已有的众多静态分析工具分析与验证\cite{kalra2018zeus}。它的问题在于，从 Solidity 到 LLVM 中间表达的翻译是
+未经验证的，且同样从 LLVM 中间表达到 EVM 字节码的编译也是。EVM 指令的语义与 LLVM 的并不相同，
+两者语义的混淆会引入潜在的缺陷，一个重要的实例是，LLVM 中间表达在设计上就不允许调用失败时全局状态的回退，
+而这是 EVM 中的一个重要特性。
+
+Hirai 以及后续的 Amani 的工作提供一种基于定理证明器、交互式半自动、同时分析低级语言与高级语言、
+可以检查合约泛有与特有性质、可在低级语言级别证明指定性质可靠性的方案。Hirai 将 EVM 的语义形式化地表述在
+Isabelle/HOL 上，进而允许手动证明具体合约的安全性质。然而 Hirai 在 EVM 上实现的语义是原本 EVM 语义
+的过度模拟，引入了原本 EVM 语义中没有的约束\cite{hirai2017defining}。
+Amani 进一步使用分割逻辑（Separation Logic）构造了一种
+EVM 字节码的可靠编程逻辑，允许半自动地推理 EVM 字节码的正确性质\cite{amani2018towards}。
+
+Hildebrandt 将 EVM 语义定义在 $\mathbb{K}$ Framework 中，利用 $\mathbb{K}$ Framework 的能力自动构建了
+EVM 的分析与验证工具，这是一种基于定理证明器、半自动、同时分析低级字节码与高级语言、可以检查合约泛有与特有性质、
+可在低级语言级别证明指定性质可靠性的方案\cite{hildenbrandt2018kevm}。
+Hildebrandt 的工作具体包括一个 gas 分析工具，一个基于语义的调试器，与基于可达性逻辑（Reachability Logics）
+的验证器。此生成的验证器依然需要用户在字节码层面手动证明循环不变性。
+
+Bhargavan 将以太坊智能合约翻译到 \Fsharp  语言，并使用 \Fsharp  的依赖类型系统进行手动的验证，这是一种
+基于依赖类型系统、手动、分析低级字节码、可以检查合约泛有与特有性质、可在低级语言级别证明指定性质可靠性的
+方案\cite{bhargavan2016short}。但这一方案的严重缺陷是只能分析部分 EVM 字节码。
+
+
+\subsection{旨在提升安全性的语言设计与工具}
+
+目前旨在提升智能合约安全性的设计主要集中在四个方面，高级语言、中间语言、已有语言的安全特征、用于设计智能合约
+的可视化工具。
+
+高级语言方面，主要通过限制智能合约的表达能力并强制使用一个强的静态类型系统来保障。
+O'Connor 开发了用于智能合约的函数式编程语言 Simplicity，禁止了循环与递归功能，使用 Coq 上表述的指称语义（Denotational 
+Semantics）去形式地分析智能合约 \cite{o2017simplicity}。
+Pettersson 构建了依赖类型语言 Idris 到以太坊智能合约的编译后端，但也不支持递归等复杂设计\cite{pettersson2016safer}。
+Coblenz 设计了面向对象的编程语言 Obsidian 旨在削除一些常见的智能合约缺陷例如调用重入，并且显式地使用线性类型维护
+资源与系统状态，特别是智能合约中的资金。但 Obsidian 无法提供对预定义性质之外的特定性质的验证\cite{coblenz2017obsidian}。
+
+中间语言 Scilla 使用在定理证明器 Coq 上形式表述的语义进而允许使用 Coq 证明器机械地完成对 Scilla 的智能合约的证明
+\cite{sergey2019scilla}。
+
+Wohrer 描述了 Solidity 中的一些安全特征，智能合约应当具有这些特征来避免常见的缺陷。这些特征构成了一种最佳实践
+直到开发者构建安全的智能合约\cite{wohrer2018smart}。
+
+Mavridou 与 Laszka 介绍了一种基于有限状态自动机设计智能合约的技术\cite{mavridou2018designing}。
+他们提供一个图形化的工具来将智能合约的描述构建成
+自动机，并将此自动机翻译到 Solidity。他们还提供了额外的安全扩展以提供现成的阻止调用重入等常见安全缺陷的解决方案。
+只可惜这种方案缺乏形式分析的基础，因此编译的正确性既无法被证明，也无法证明自动机模型确实满足了用户输入的描述。
+
+

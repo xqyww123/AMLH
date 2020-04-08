@@ -1,4 +1,4 @@
-\chapter{基于 Noesis 系统的智能合约生成工具 \Eamlh }\label{Ch.Implementation}
+\chapter{基于 Noesis 逻辑的智能合约生成工具 \Eamlh }\label{Ch.Implementation}
 
 工具 \Eamlh 是第 \ref{Ch.AmLH} 章的程序开发技术在智能合约场景的实现，能够生产
 较高执行性能的易于被形式化分析与验证的智能合约。且 \Eamlh 使用 HOL 定理证明器
@@ -235,7 +235,7 @@ $\mathrm{Ps}$ 是 PointerSize 的简写。
 \end{threeparttable}
 \newline \newline
 \begin{threeparttable}
-\centering \caption{ \amlhS 中实现的理解（绪）} \label{tab.IC.noesis2}
+\centering \caption{ \amlhS 中实现的理解（续）} \label{tab.IC.noesis2}
 \begin{tabular}{ |c|p{14.8cm}| } \hline
 \textbf{理解} & \textbf{描述} \\ \hline
 $\NatSegI\ n$ & 不超过 $n$ 的自然数 \\ \hline
@@ -415,7 +415,7 @@ $\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即
 
 表 \ref{tab.IC.primop2} 定义的基元指令可以直接应用但过于基层，
 诸如$\mathbf{IAdd}\ n$ 操作要求给定运算的位宽，显然并不适宜要求用户
-每次都显示地给出位宽。\amlhS 提供基于这些基元函数构建的高层函数库。
+每次都显式地给出位宽。\amlhS 提供基于这些基元函数构建的高层函数库。
 
 $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\ 
 \mathbf{LeN_S},\ \mathbf{LtN_S},\ \mathbf{EqN_S}$ 

@@ -13,10 +13,10 @@
 % 版本说明
 \ProvidesClass{ZJUthesis}[2011/10/01 v1.0 ZJUthesis document class]
 % 基于ctexbook模版，增加专有内容
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexbook}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexart}}
 \ProcessOptions
 % 2009/09/13的v0.94及之后版本提供了hyperref的支持，直接写入选项即可
-\LoadClass[cs4size,a4paper,fancyhdr,hyperref]{ctexbook}[2009/09/13]
+\LoadClass[cs4size,a4paper,fancyhdr,hyperref]{ctexart}[2009/09/13]
 %% math packages 数学公式包，非数学系可无视之
 \RequirePackage{amsmath,amsthm,amsfonts,amssymb,bm,mathtools}
 % 更好的支持分段函数的宏包，可以对每个情况编号
@@ -32,8 +32,7 @@
 % 需要tocloft包，调整目录显示格式时使用，LaTeX2e默认的格式不符合模版要求
 % 加上subfigure选项以避免和subfig包的冲突
 \RequirePackage[titles, subfigure]{tocloft}
-% tocloft包需要tocbibind包来配合，同时tocloft包需要titles参数来将其置为chapter title
-\RequirePackage[chapter]{tocbibind}
+\RequirePackage[section]{tocbibind}
 % 需要索引功能，加入索引包
 \RequirePackage{makeidx}
 % 参考文献格式调整需要natbib包
@@ -89,28 +88,6 @@
   \hb@xt@\@tempdima{\@cftbsnum #1\@cftasnum\hfil}\@cftasnumb}
 
 
-%% 重新定义chapter属性，使图表目中中章与章之间没有空行
-%\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
-%  \if@mainmatter
-%  \refstepcounter{chapter}%
-%  \typeout{\@chapapp\space\thechapter.}%
-%  \addcontentsline{toc}{chapter}%
-%  {\protect\numberline{第 \chaptername 章}\hspace{0.5em}#1}
-%  %    {\protect\numberline{\chaptername}\hspace{4em}#1}
-%  \else
-%  \addcontentsline{toc}{chapter}{#1}%
-%  \fi
-%  \else
-%  \addcontentsline{toc}{chapter}{#1}%
-%  \fi
-%  \chaptermark{#1}%
-%  \if@twocolumn
-%  \@topnewpage[\@makechapterhead{#2}]%
-%  \else
-%  \@makechapterhead{#2}%
-%  \@afterheading
-%  \fi}
-
 % PDF文档超链接及书签标记，具体选项意义参考hyperref说明文档
 % hyperref包要2011年版的才行
 \hypersetup{CJKbookmarks=true,%
@@ -121,7 +98,7 @@
                hidelinks
          }
 % 文档开始导入默认配置
-\AtBeginDocument{\makeatletter\input{ZJUthesis.cfg}\makeatother}
+\AtBeginDocument{\makeatletter\input{ZJUthesisOr.cfg}\makeatother}
 % 奇数页左边边距是1.5cm
 \oddsidemargin -0.14 true cm  %orignal
 % 偶数页的左边距设置则分双面模式与单面模式两种情况
@@ -160,23 +137,43 @@
 \renewcommand{\bottomfraction}{0.65}
 \renewcommand{\floatpagefraction}{0.60}
 
+\newcommand\frontmatter{%
+    \cleardoublepage
+  %\@mainmatterfalse
+  \pagenumbering{Roman}}
+  \vspace{1cm}
+
+\newcommand\mainmatter{%
+    \cleardoublepage
+ % \@mainmattertrue
+  \pagenumbering{arabic}}
+
+\newcommand\backmatter{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+ % \@mainmatterfalse
+   }
+
 \newcommand\ZJUspace{\protect\CTEX@spaceChar\protect\CTEX@spaceChar}
 \def\reserved@a#1 #2 #3\@nil{%
   \def\ZJUfiledate{#1}%
   \def\ZJUfileversion{#2}%
   \def\ZJUfileinfo{#3}}%
-\edef\reserved@b{\csname ver@ZJUthesis.cls\endcsname}
+\edef\reserved@b{\csname ver@ZJUthesisOR.cls\endcsname}
 \expandafter\reserved@a\reserved@b\@nil\relax
 
-% 新命令Nchapter的定义
+% 新命令Nsection的定义
 % 这里的mainmatter对应于tex文档中的定义
-\newcommand\Nchapter[1]{%
+\newcommand\Nsection[1]{%
   \if@mainmatter%
     \@mainmatterfalse%
-    \chapter{#1}%
+    \section{#1}%
     \@mainmattertrue%
   \else
-    \chapter{#1}%
+    \section{#1}%
   \fi}
 
 % 下划线的一个定义
@@ -243,13 +240,13 @@
 \newtheoremstyle{ZJUtheorem}
    {9pt}{9pt}{}{0pt}{\lishu}{：}{0pt}{}
 \theoremstyle{ZJUtheorem}
-\newtheorem{hypo}{假设~}[chapter]
-\newtheorem{defin}{定义~}[chapter]
-\newtheorem{notation}{记号~}[chapter]
-\newtheorem{theo}{定理~}[chapter]
-\newtheorem{prove}{证明~}[chapter]
-\newtheorem{example}{样例~}[chapter]
-\newtheorem{lemma}{引理~}[chapter]
+\newtheorem{hypo}{假设~}[section]
+\newtheorem{defin}{定义~}[section]
+\newtheorem{notation}{记号~}[section]
+\newtheorem{theo}{定理~}[section]
+\newtheorem{prove}{证明~}[section]
+\newtheorem{example}{样例~}[section]
+\newtheorem{lemma}{引理~}[section]
 \renewenvironment{proof}[1][]{{\noindent {\lishu 证明\ #1}}}{\hfill$\square$}
 
 % 制作封面的命令
@@ -291,7 +288,7 @@
       \vspace{4mm}
       %% \ZJU@value@school \\  \zihao{-1}
       % 这个博士学位论文在def文件中已有，当然在tex文件中还可以更改
-      \centerline{\songti \zihao{-1}{\ZJU@value@degree\ZJU@label@thesis} }
+      \centerline{\songti \zihao{-1}{\ZJU@label@thesis} }
       % 这个尺寸可以更改
       \vspace{4mm}
       % 这个地方调入浙大徽标
@@ -353,9 +350,6 @@
     \end{center}
     % 插入适当的空白
     \vfill
-    % 最后一项 论文提交日期
-    \hfil{\bfseries\songti\zihao{-3}\hspace{4em}\ZJU@label@submitdate%
-    \ZJUunderline[150pt]{\ZJU@value@submitdate}}\hfil
   }
 }
 
@@ -646,22 +640,14 @@
   }
 }
 
-\newcommand\ZJUfrontmatter{%
-  \frontmatter
-  % 正文内容前的部分页码格式为大写罗马数字
-  \pagenumbering{Roman}
-}
 
-\newcommand\ZJUmainmatter{%
-  \mainmatter
-}
 
 \newcommand\ZJUbackmatter{%
   \backmatter
 }
 
 % 空页眉页的格式定义
-% 每一个chapter开始的第一页的页眉页脚样式为plain样式
+% 每一个section开始的第一页的页眉页脚样式为plain样式
 \fancypagestyle{plain}{%
   \fancyhf{}% 先清除当前页面的页眉页脚定义，是fancyhdr包中的定义
   \if@twoside
@@ -699,23 +685,18 @@
   \fi
 
 % 设置章节标题格式
-%\CTEXsetup[name={第\hspace{0.2em},\hspace{0.2em}章},beforeskip={0.5em plus .1em minus .1em},afterskip={1em plus .2em minus .2em}]{chapter}
-\CTEXsetup[name={第\hspace{0.2em},\hspace{0.2em}章},beforeskip={0.4em plus .05em minus .05em},afterskip={1em plus .2em minus .2em}]{chapter}
+%\CTEXsetup[name={第\hspace{0.2em},\hspace{0.2em}章},beforeskip={0.5em plus .1em minus .1em},afterskip={1em plus .2em minus .2em}]{section}
 
-\CTEXsetup[number={\arabic{chapter}}]{chapter}
-\CTEXsetup[format={\centering}]{chapter}
-
-%\CTEXsetup[nameformat={\bfseries\heiti\zihao{3}}]{chapter}
-%\CTEXsetup[titleformat={\bfseries\heiti\zihao{3}}]{chapter}
-\CTEXsetup[nameformat={\bfseries\songti\zihao{-2}}]{chapter}
-\CTEXsetup[titleformat={\bfseries\songti\zihao{-2}}]{chapter}
-
-\CTEXsetup[format={\noindent}]{section}
+%\CTEXsetup[format={\noindent}]{section}
 
 %\CTEXsetup[nameformat={\bfseries\zihao{4}}]{section}
 %\CTEXsetup[titleformat={\bfseries\songti\zihao{4}}]{section}
-\CTEXsetup[nameformat={\bfseries\zihao{-3}}]{section}
-\CTEXsetup[titleformat={\bfseries\songti\zihao{-3}}]{section}
+\CTEXsetup[nameformat={\bfseries\zihao{-2}}]{section}
+\CTEXsetup[titleformat={\bfseries\songti\zihao{-2}}]{section}
+\CTEXsetup[name={第\hspace{0.2em},\hspace{0.2em}节},
+beforeskip={0.5em plus .05em minus .05em},afterskip={1em plus .2em minus .2em}]{section}
+\CTEXsetup[format={\noindent}]{section}
+
 
 \CTEXsetup[format={\noindent}]{subsection}
 %\CTEXsetup[nameformat={\zihao{-4}}]{subsection}
@@ -736,25 +717,6 @@
 % 去掉目录中的空格字符
 \addtocontents{toc}{\let\string\CTEX@spaceChar\relax}
 
-% 勘误表
-\newenvironment{corrigenda}
-  {\Nchapter{\ZJU@label@corrigenda}}
-  {}
-
-% 致谢
-\renewenvironment{thanks}
-  {\Nchapter{\ZJU@label@thanks}}
-  {}
-
-% 序言
-\newenvironment{preface}
-  {\Nchapter{\ZJU@label@preface}}
-  {}
-
-% 摘要
-\newenvironment{abstract}
-  {\Nchapter{\ZJU@label@abstract}}
-  {}
 
 %关键字
 \newcommand\keywords[1]{%
@@ -762,7 +724,7 @@
 
 %英文摘要
 \newenvironment{englishabstract}
-  {\Nchapter{\ZJU@label@englishabstract}}
+  {\Nsection{\ZJU@label@englishabstract}}
   {}
 
 %英文关键字
@@ -777,7 +739,7 @@
 \else
   \@restonecolfalse
 \fi
-\chapter*{\contentsname}%
+\section*{\contentsname}%
 \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
 \@starttoc{toc}%
 \if@restonecol\twocolumn\fi
@@ -789,7 +751,7 @@
 \else
   \@restonecolfalse
 \fi
-\chapter*{\listfigurename}%
+\section*{\listfigurename}%
 \@mkboth{\MakeUppercase\listfigurename}{\MakeUppercase\listfigurename}%
 \@starttoc{lof}%
 \if@restonecol\twocolumn\fi
@@ -801,7 +763,7 @@
 \else
   \@restonecolfalse
 \fi
-\chapter*{\listtablename}%
+\section*{\listtablename}%
 \@mkboth{\MakeUppercase\listtablename}{\MakeUppercase\listtablename}%
 \@starttoc{lot}%
 \if@restonecol\twocolumn\fi
@@ -811,31 +773,31 @@
 % 生成目录（论文中称目次）
 \newcommand\ZJUcontents{%
   % 修改目录的格式
-  \frontmatter
-  \pagenumbering{Roman}
-  \renewcommand{\cftchapfont}{\heiti\zihao{-4}}
-  \renewcommand{\cftchapleader}{\cftdotfill{\cftdot}}
-  \renewcommand{\cftchapdotsep}{\cftdotsep}
-  \renewcommand{\cftchappagefont}{\rm\zihao{-4}}
+  %\frontmatter
+  %\pagenumbering{Roman}
+  %\renewcommand{\cftsecfont}{\heiti\zihao{-4}}
+  %\renewcommand{\cftsecleader}{\cftdotfill{\cftdot}}
+  %\renewcommand{\cftsecdotsep}{\cftdotsep}
+  %\renewcommand{\cftsecpagefont}{\rm\zihao{-4}}
 
-  \renewcommand{\cftsecleader}{\cftdotfill{\cftdot}}
-  \renewcommand{\cftsecdotsep}{\cftdotsep}
-  \renewcommand{\cftsecfont}{\songti\zihao{-4}}  
-  \renewcommand{\cftsecpagefont}{\rm\zihao{-4}}
+  %\renewcommand{\cftsecleader}{\cftdotfill{\cftdot}}
+  %\renewcommand{\cftsecdotsep}{\cftdotsep}
+  %\renewcommand{\cftsecfont}{\songti\zihao{-4}}  
+  %\renewcommand{\cftsecpagefont}{\rm\zihao{-4}}
 
-  \renewcommand{\cftsubsecleader}{\cftdotfill{\cftdot}}
-  \renewcommand{\cftsubsecdotsep}{\cftdotsep}
-  \renewcommand{\cftsubsecfont}{\songti\zihao{-4}}  
-  \renewcommand{\cftsubsecpagefont}{\rm\zihao{-4}}
+  %\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdot}}
+  %\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+  %\renewcommand{\cftsubsecfont}{\songti\zihao{-4}}  
+  %\renewcommand{\cftsubsecpagefont}{\rm\zihao{-4}}
 
-  \setlength{\cftbeforechapskip}{-2pt}
-  \setlength{\cftbeforesecskip}{-2pt}
-  %\setlength{\cftsecindent}{0pt}
-  
-  \setcounter{tocdepth}{2}
-  \addtocontents{toc}{\cftpagenumbersoff{chapter}}
+  %%\setlength{\cftbeforechapskip}{-2pt}
+  %\setlength{\cftbeforesecskip}{-2pt}
+  %%\setlength{\cftsecindent}{0pt}
+  %
+  %\setcounter{tocdepth}{2}
+  %\addtocontents{toc}{\cftpagenumbersoff{section}}
   \tableofcontents
-  \addtocontents{toc}{\cftpagenumberson{chapter}}
+  %\addtocontents{toc}{\cftpagenumberson{section}}
 }
 
 % 插图目录
@@ -879,7 +841,7 @@
 
 % 缩写、符号清单、术语表
 \newenvironment{ListofSymbol}
-{\Nchapter{\ZJU@label@symbol}}
+{\Nsection{\ZJU@label@symbol}}
 {}
 
 % 参考文献部分
@@ -910,12 +872,12 @@
 
 % 作者简历
 \newenvironment{resume}
-  {\Nchapter{\ZJU@label@resume}}
+  {\Nsection{\ZJU@label@resume}}
   {}
 
 % 发表文章目录
 \newenvironment{publications}
-  {\Nchapter{\ZJU@label@publications}}
+  {\Nsection{\ZJU@label@publications}}
   {}
 
 
@@ -936,7 +898,7 @@
    \item\relax}
   {\endlist}
 
-% 设置显示到4级标题 chapter section subsection subsubsection，可适当减小
+% 设置显示到4级标题 section section subsection subsubsection，可适当减小
 \setcounter{secnumdepth}{4}
 \newtheoremstyle{break}% name
   {}%      Space above, empty = `usual value'

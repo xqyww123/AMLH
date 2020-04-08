@@ -1,14 +1,17 @@
-\chapter{示例：\amlhS 上的转账合约} \label{Ch.example.transfer}
+\section{实验：转账合约} \label{Ch.example.transfer}
 
-这章将详细给出一个转账合约在 \amlhS 上的示例。首先
-定义理解，使用符号 \currency 表示本示例中的货币理解
+这节实验并分析使用 \Eamlh 构造、验证并编译一个代币合约的转账函数。
+
+%将详细给出一个转账合约在 \amlhS 上的示例。
+首先定义代币的理解，使用符号 \currency 表示此理解。
 \begin{align*} 
-  \currency &\coloneqq \NatSegI\ \mathrm{TS}&
-  \B_\currency &\coloneqq \lceil \log_{256} \mathrm{TS}
+  \currency &\coloneqq \NatSegI(\mathrm{TS} + 1)&
+  \B_\currency &\coloneqq \lceil \log_{256}(\mathrm{TS} + 1)
   \rceil&
 \end{align*}
-TS 表示该货币的总供应量，于是理解 \currency 保证了其
-抽象语义一定在总供应量内。
+TS 表示该货币的总供应量，$\NatSegI(\mathrm{TS} + 1)$ 表示所有小于 $\mathrm{TS} + 1$ 的自然数，
+于是理解 \currency 保证了其所表示的货币一定不超过总供应量；$\B_\currency$ 表示理解 \currency 
+的大小，以字节为单位。
 
 先由公理律得到参数定理
 \begin{flalign}
@@ -23,7 +26,7 @@ B \widesim{\AddressI} b & \label{f.a.b} \\
 $\dot{c}$ 是状态参数，$\phi : \mathrm{chain}$ 是链状态，
 $a : \mathrm{address}$ 是转账方，$b : \mathrm{address}$ 是被转账方，
 $m:\mathrm{num}$ 是转账金额，链数据中的账户表标识为 
-$\mathrm{c_\currency}$，表为
+$\mathrm{c_\currency}$，数据表为
 \[\tcurrency \coloneqq \mathbf{TC}\ \ccurrency\ \AddressI\ \currency \]
 调用条件为 $P_0$
 \[ P_0 \coloneqq (\Sigma\ \Ima \phi^\tcurrency = \mathrm{TS}) \]
@@ -67,7 +70,7 @@ $\mathrm{c_\currency}$，表为
   &\text{常量}& &\vdash \texttt{T} \widesim{\BoolI} \T& \label{f.T} \\
   &\text{常量}& &\vdash \texttt{F} \widesim{\BoolI} \F& \label{f.F} \\
 \end{flalign}
-现在可以演绎定理以构建程序
+通过演绎上述的常量与基元定理，可以如下构建用于转账的合约程序。
 \begin{flalign}
 &\text{\ref{f.Read}\ SPEC $\tcurrency$}&
 &\vdash \mathbf{Read0}\ \tcurrency \proctr{\OneI\ x|\AddressI|\currency}
@@ -130,7 +133,7 @@ $\mathrm{c_\currency}$，表为
   & \widesim[3]{\ListI\ \CWI} [\Write\ \tcurrency\ a\ (\letve{a} - m)]
   \end{split} & \label{f.LWcaSRcam} \\
 &\parbox{1.7cm}{\linespread{1}\selectfont 抽象范畴内的证明}&
-P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
+P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS} + 1
 \leq 256^{\B_\currency} & \label{f.P.addOK} \\
   &\text{\ref{f.Rcc} 调用 \ref{f.a.b}}& \tilde{c},\ \tilde{b} &\vdash 
 \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \widesim{\currency}
@@ -280,7 +283,9 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
 \end{split} & \label{f.Final}
 \end{flalign}
 
-式 \ref{f.Final} 是最后得到的定理。式 \ref{f.Final} 的左侧是构建的程序
+式 \ref{f.Final} 是最后得到的定理，虽然上述表述非常冗长，但实际只进行了 35 步定理演绎，
+即在实际的编辑前端上的操作只需要输入35个指令，基本与 Solidity 等传统方案的输入文本量是接近的。
+式 \ref{f.Final} 中左侧是构建所得的目标智能合约，记为 $\mathbf{Transfer}_\mathrm{p}$。
 \[ \begin{split} \lambda \dot{c}\ A\ &B\ M.\ 
 \mathrm{Let}\ \letvp{a} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ A
   ;\ \letvp{b} = \mathbf{Read0}\ \tcurrency\ \dot{c}\ B \ \mathrm{in} \\
@@ -292,7 +297,7 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
   \mathbf{Write}\ \tcurrency\ A\ (\mathbf{ISub}\ \B_\currency\ 
   \letvp{a}\ M))\ \emptylist)\ \texttt{T})
 \end{split} \]
-右将此记为 $\mathbf{Transfer}_\mathrm{p}$。侧是其对应的抽象意义
+右侧是其对应的抽象意义，记为 $\mathrm{Transfer}_\epsilon$。
 \[ \begin{split} \lambda \phi\ a\ &b\ m.\ \mathrm{let}\ 
   \letve{a} = \ReadZ\ \tcurrency\ \phi\ a;\ 
   \letve{b} = \ReadZ\ \tcurrency\ \phi\ b\ 
@@ -300,30 +305,35 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
   \\&\quad\quad\quad([(\Write\ \tcurrency\ b\ (\letve{b} + m)),
   \Write\ \tcurrency\ a\ (\letve{a} - m))],\ \T
 \end{split} \]
-将此记为 $\mathrm{Transfer}_\epsilon$。中间的 Noesis 同构符号
+中间的 Noesis 同构符号
 \[ \proctr{\OneI\ \phi|\AddressI|\AddressI|\currency|\RsI\ \BoolI}
 {\lambda \phi\ a\ b\ m.\ \Sigma\ \Ima \phi^\tcurrency = \mathrm{TS}}\]
 表明了合约的参数与返回的理解，以及调用条件。
-而在 \amlhS 上，理解是固定大小的，
-于是也得到了此合约的各参数与返回的大小。
+而在 \amlhS 上，理解是固定大小的，于是也得到了此合约的各参数与返回的大小，
+即输入参数为 $\phi,\ a,\ b,\ m$ 占用的字节数分别为 $0,\ \mathrm{AdrSize},\ \mathrm{AdrSize},\ \B_\currency$，
+输出结果占用的字节数为 $1 + \mathrm{PointerSize}$。当输入与输出的大小被确定，这一函数的调用接口就被确定。
 
-在以上的程序构建过程中，只有式 \ref{f.P.addOK} 涉及到 Noesis 系统外的
-证明，而式 \ref{f.P.addOK} 的证明完全是在抽象范畴内的，是对抽象的数理
-对象的证明而不是粗鲁地直接对程序证明。这体现了 \amlh 的思想，
-{\bfseries\songti
-从来不限制证明的范围——证明范围是全部的 HOL 逻辑，故而具有完整的 HOL 
-逻辑的表达能力——而是通过 Noesis 对应与同构，将一切对程序的证明转化为
-对抽象的数理对象的证明，以发挥所继承的 HOL 证明器的强大证明能力。}
-这些抽闲的数理对象是直接的数学领域中自然
-数学友好的事物，例如自然数、整数、有限域，是易于证明的。在本例中，
-唯一的证明即式 \ref{f.P.addOK} 的证明是对自然数的，核心是自然数小于
-与小于等于的传递律。
+在以上的程序构建过程中，只有式 \ref{f.P.addOK} 涉及到 Noesis 逻辑外的
+证明，进行简单地化简（展开 $P_0,\ P_1,\ \ReadZ,\ \letve{a},\ \B_\currency$ 的定义）后具有如下形式
+\[ (\Sigma\ \Ima \phi^\tcurrency = \mathrm{TS}),\ m \leq \phi^\tcurrency(a)
+\vdash \phi^\tcurrency(b) + m < \mathrm{TS} + 1
+\leq 256^{\lceil \log_{256}(\mathrm{TS} + 1) \rceil}\]
+这是一个自然数相关的命题，
+是关于抽象的数学理论的而不是关于复杂的具象程序。
+
+这体现了本文的思想，\Eamlh 本身不进行任何的证明也不解决任何具体的证明问题，
+\Eamlh 只是利用抽象语义，在形式化证明的保障下，将对复杂的具象程序的证明转化为对数理领域内的抽象问题的证明，
+而最终抽象命题的证明依旧需要用户解决，但用户在 HOL 证明工具强大而专业的分析能力的帮助下，
+这些抽象命题往往很容易被解决，且至少一定比直接分析复杂具象的现实程序更加容易。
+在本节的实验中，式 \ref{f.P.addOK} 所涉及的抽象命题，就是对自然数小于与小于等于运算的传递律
+的简单应用，可以在 HOL 证明器上用默认策略自动证明。这一实际的实验也反过来佐证了，将
+具象的现实程序的证明问题转化为对抽象语义的证明，确实可以有效地简化形式化验证。
 
 将调用条件记为 $P$
 \[ P\ \phi \coloneqq (\Sigma\ \Ima \phi^\tcurrency = \mathrm{TS}) \]
-现在证明对任意的输入，$\mathbf{Transfer}_\mathrm{p}$ 执行后
-条件 $P$ 不变，即仍然满足。
-为此证明关于 $\mathrm{Transfer}_\epsilon$ 的命题
+接下来将证明转账函数 $\mathbf{Transfer}_\mathrm{p}$ 对调用条件 $P$ 的不变性，即
+$\mathbf{Transfer}_\mathrm{p}$ 执行后链上货币的总量依旧为总供应量，即不会有货币增加或丢失。
+具体这是关于 $\mathrm{Transfer}_\epsilon$ 的命题
 \[ P\ \phi \vdash P\ (\phi \fupdates \fst(\mathrm{Transfer}_\epsilon
 \ \phi\ a\ b\ m)) \]
 \begin{proof} 展开 $\mathrm{Transfer}_\epsilon$，命题等价于
@@ -340,7 +350,7 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
   \end{split} \]
 因为表 $\tcurrency$ 的零元素 $\tcurrency_0 = 0$ 于是
 \[ \begin{split} 
-  \Sigma \Ima (\phi\ &\fupdate (\Write\ \tcurrency\ b\ ((\ReadZ\ 
+  \Sigma \Ima (\phi\ \fupdate &(\Write\ \tcurrency\ b\ ((\ReadZ\ 
   \tcurrency\ \phi\ b) + m))\ \fupdate\\&
   (\Write\ \tcurrency\ a\ ((\ReadZ\ \tcurrency\ \phi\ a) - m))
   )^\tcurrency = \Sigma \Ima \phi^\tcurrency
@@ -348,7 +358,7 @@ P_0,\ &\lnot P_1 \vdash \ReadZ\ \tcurrency\ \phi\ b + m < \mathrm{TS}
 于是命题得证。
 \end{proof}
 
-这一证明再次体现了 \amlh 的思想，不是直接证明程序的性质，而是证明程序
+这一证明再次体现了本文的思想，不是直接证明程序的性质，而是证明程序
 的抽象对应的性质；对抽象的数理对象进行证明，而不是直接证明复杂而具象的
 程序代码。
 

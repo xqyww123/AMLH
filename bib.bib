@@ -421,18 +421,11 @@ Ethereum white paper.
   note={[在线；于2020年2月5日访问的页面]}
 }
 @inproceedings{krupp2018teether,
-  title={teether: Gnawing at ethereum to automatically exploit smart contracts},
+  title={TEETHER: Gnawing at ethereum to automatically exploit smart contracts},
   author={Krupp, Johannes and Rossow, Christian},
   booktitle={27th $\{$USENIX$\}$ Security Symposium ($\{$USENIX$\}$ Security 18)},
   pages={1317--1333},
   year={2018}
-}
-@inproceedings{dhawan2017analyzing,
-  title={Analyzing Safety of Smart Contracts},
-  author={Dhawan, Mohan},
-  booktitle={Proceedings of the Conference: Network and Distributed System Security Symposium, San Diego, CA, USA},
-  pages={16--17},
-  year={2017}
 }
 @inproceedings{luu2016making,
   title={Making smart contracts smarter},
@@ -489,13 +482,6 @@ Ethereum white paper.
   year={2018},
   organization={IEEE}
 }
-@inproceedings{bhargavan2016formal,
-  title={Formal verification of smart contracts: Short paper},
-  author={Bhargavan, Karthikeyan and Delignat-Lavaud, Antoine and Fournet, C{\'e}dric and Gollamudi, Anitha and Gonthier, Georges and Kobeissi, Nadim and Kulatova, Natalia and Rastogi, Aseem and Sibut-Pinote, Thomas and Swamy, Nikhil and others},
-  booktitle={Proceedings of the 2016 ACM Workshop on Programming Languages and Analysis for Security},
-  pages={91--96},
-  year={2016}
-}
 @inproceedings{hirai2017defining,
   title={Defining the ethereum virtual machine for interactive theorem provers},
   author={Hirai, Yoichi},
@@ -515,11 +501,23 @@ Ethereum white paper.
   author={Pettersson, Jack and Edstr{\"o}m, Robert},
   year={2016}
 }
-@article{sergey2018scilla,
-  title={Scilla: a smart contract intermediate-level language},
-  author={Sergey, Ilya and Kumar, Amrit and Hobor, Aquinas},
-  journal={CoRR abs/1801.00687},
-  year={2018}
+@article{sergey2019scilla,
+  title={Safer smart contract programming with Scilla},
+  author={Sergey, Ilya and Nagaraj, Vaivaswatha and Johannsen, Jacob and Kumar, Amrit and Trunov, Anton and Hao, Ken Chan Guan},
+  journal={ACM on Programming Languages},
+  volume={3},
+  number={OOPSLA},
+  pages={1--30},
+  year={2019},
+  publisher={ACM New York, NY, USA}
+}
+@inproceedings{grishchenko2018foundations,
+  title={Foundations and tools for the static analysis of ethereum smart contracts},
+  author={Grishchenko, Ilya and Maffei, Matteo and Schneidewind, Clara},
+  booktitle={International Conference on Computer Aided Verification},
+  pages={51--78},
+  year={2018},
+  organization={Springer}
 }
 @inproceedings{grishchenko2018foundations,
   title={Foundations and tools for the static analysis of ethereum smart contracts},
@@ -541,7 +539,7 @@ Ethereum white paper.
 @inproceedings{kalra2018zeus,
   title={ZEUS: Analyzing Safety of Smart Contracts.},
   author={Kalra, Sukrit and Goel, Seep and Dhawan, Mohan and Sharma, Subodh},
-  year={2018}, organization={NDSS}
+  year={2018}, organization={The Network and Distributed System Security Symposium}
 }
 @inproceedings{nikolic2018finding,
   title={Finding the greedy, prodigal, and suicidal contracts at scale},
@@ -723,9 +721,9 @@ Ethereum white paper.
   publisher={Courier Dover Publications}
 }
 @inproceedings{bhargavan2016short,
-  title={Short paper: Formal verification of smart contracts},
+  title={Formal verification of smart contracts},
   author={Bhargavan, Karthikeyan and Delignat-Lavaud, Antoine and Fournet, C{\'e}dric and Gollamudi, Anitha and Gonthier, Georges and Kobeissi, Nadim and Rastogi, Aseem and Sibut-Pinote, Thomas and Swamy, Nikhil and Zanella-B{\'e}guelin, Santiago},
-  booktitle={Proceedings of the 11th ACM Workshop on Programming Languages and Analysis for Security (PLAS), in conjunction with ACM CCS},
+  booktitle={The 11th ACM Workshop on Programming Languages and Analysis for Security (PLAS), in conjunction with ACM CCS},
   pages={91--96},
   year={2016}
 }
@@ -753,7 +751,7 @@ Ethereum white paper.
   year={2018}
 }
 @inproceedings{hildenbrandt2018kevm,
-  title={Kevm: A complete formal semantics of the ethereum virtual machine},
+  title={KEVM: A complete formal semantics of the ethereum virtual machine},
   author={Hildenbrandt, Everett and Saxena, Manasvi and Rodrigues, Nishant and Zhu, Xiaoran and Daian, Philip and Guth, Dwight and Moore, Brandon and Park, Daejun and Zhang, Yi and Stefanescu, Andrei and others},
   booktitle={2018 IEEE 31st Computer Security Foundations Symposium (CSF)},
   pages={204--217},
@@ -819,4 +817,70 @@ Ethereum white paper.
   author={Coquand, Thierry and Huet, G{\'e}rard},
   year={1986},
   school={INRIA}
+}
+@inproceedings{tsankov2018securify,
+  title={Securify: Practical security analysis of smart contracts},
+  author={Tsankov, Petar and Dan, Andrei and Drachsler-Cohen, Dana and Gervais, Arthur and Buenzli, Florian and Vechev, Martin},
+  booktitle={ACM SIGSAC Conference on Computer and Communications Security},
+  pages={67--82},
+  year={2018}
+}
+@inproceedings{zhou2018security,
+  title={Security assurance for smart contract},
+  author={Zhou, Ence and Hua, Song and Pi, Bingfeng and Sun, Jun and Nomura, Yashihide and Yamashita, Kazuhiro and Kurihara, Hidetoshi},
+  booktitle={9th IFIP International Conference on New Technologies, Mobility and Security},
+  pages={1--5},
+  year={2018},
+  organization={IEEE}
+}
+@software{mythril,
+  title={智能合约安全分析工具 Mythril},
+  url={https://mythx.io/},
+  howpublished="\url{https://mythx.io/}"
+}
+@software{Manticore,
+  title={智能合约符号执行与分析工具 Manticore},
+  utl={https://github.com/trailofbits/manticore},
+  howpublished="\url{https://github.com/trailofbits/manticore}"
+}
+@software{SmartCheck,
+  title={静态分析工具 SmartCheck},
+  utl={https://github.com/smartdec/smartcheck}
+  howpublished="\url{https://github.com/smartdec/smartcheck}"
+}
+@software{solgraph,
+  title={智能合约安全分析工具 solgraph},
+  utl={https://github.com/raineorshine/solgraph},
+  howpublished="\url{https://github.com/raineorshine/solgraph}"
+}
+@inproceedings{o2017simplicity,
+  title={Simplicity: A new language for blockchains},
+  author={O'Connor, Russell},
+  booktitle={Proceedings of the 2017 Workshop on Programming Languages and Analysis for Security},
+  pages={107--120},
+  year={2017}
+}
+@inproceedings{coblenz2017obsidian,
+  title={Obsidian: a safer blockchain programming language},
+  author={Coblenz, Michael},
+  booktitle={2017 IEEE/ACM 39th International Conference on Software Engineering Companion (ICSE-C)},
+  pages={97--99},
+  year={2017},
+  organization={IEEE}
+}
+@inproceedings{mavridou2018designing,
+  title={Designing secure ethereum smart contracts: A finite state machine based approach},
+  author={Mavridou, Anastasia and Laszka, Aron},
+  booktitle={International Conference on Financial Cryptography and Data Security},
+  pages={523--540},
+  year={2018},
+  organization={Springer}
+}
+@inproceedings{wohrer2018smart,
+  title={Smart contracts: security patterns in the ethereum ecosystem and solidity},
+  author={Wohrer, Maximilian and Zdun, Uwe},
+  booktitle={2018 International Workshop on Blockchain Oriented Software Engineering (IWBOSE)},
+  pages={2--8},
+  year={2018},
+  organization={IEEE}
 }
