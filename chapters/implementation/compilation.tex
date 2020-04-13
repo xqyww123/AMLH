@@ -1,10 +1,10 @@
 \section{到智能合约的编译} \label{Sec.compile}
 
 抽象机器 \amlh 的编译分为两步，首先程序被其定义展开成基元函数的组合，
-成为一种中间表达（IR）。IR 由 HOL 作为文本输出而交给外部程序，外部程序
-由基元函数到目标平台指令集的映射，将基元函数的组合翻译至目标平台。
-用户程序到 IR 的编译是在 HOL 内部进行而被保障的，IR 到目标平台的编译
-是在外部进行，是可能有错误的。
+成为一种中间表达（IR）。HOL 以文本格式输出 IR 给外部程序，外部程序
+根据基元函数到目标平台指令集的映射，将 IR 翻译至目标平台。
+用户程序到 IR 的编译是 HOL 上保障的等价变换，IR 到目标平台的编译
+在 HOL 之外进行，是可能有错误的。
 
 本文的 \amlhS 的基元函数存在到 WASM 的映射，其上的程序可以被编译到 WASM
 ，进而在任何 WASM 执行平台上运行。EOS.IO 等智能合约平台支持以 WASM 程序
@@ -23,10 +23,10 @@ WASM 的特点，只有 \Wi{32}，\Wi{64}，\Wf{32}，\Wf{64}
 \Wi{32} &\when& b \leq 4\\\Wi{64} &\when& 4 < b \leq 8\\
    \Wpointer &\when& 8 < b \end{array} \right. \]
 
-WASM 上的指令也为各种类型设计了不同版本。例如整数加法有 \texttt{i32.add}
+WASM 上的指令为各种类型设计了不同版本。例如整数加法有 \texttt{i32.add}
 ，\texttt{i64.add} 两种版本。\amlhS 中的基元运算也根据字节长度有不同
 版本，例如 $\mbar{IAdd}\ n$ 表示 $n$ 个字节的整数加法基元函数，
-具体参见表 \ref{tab.IC.primop2}。$n$ 个字节的基元函数就对应 \Wtyp{n} 
+具体参见表 \ref{tab.IC.primop2}。$n$ 个字节的基元函数对应 \Wtyp{n} 
 类型的版本的指令。基元函数 $\mathbf{IAdd}\ n$ 对应的 WASM 指令是
 \Winst{\Wtyp{n}.add}，这一记号表示类型 \Wtyp{n} 版本的 \texttt{add} 
 指令。
@@ -40,17 +40,17 @@ WASM 采用一种树形结构表达， \amlhS 的 IR 的也同样以树形结构
 
 \amlh 中的 Let 结构表示本地变量，
 \[ \mathrm{Let}\ p\ (\lambda x.\ p') \]
-将被编译为，赋值 $p$ 给名为 $x$ 的本地变量，并在编译 $p'$ 中，所有对
+将编译为，赋值 $p$ 给本地变量 $x$，并在 $p'$ 的编译中，所有对
 $x$ 的引用都编译为读取本地变量 $x$。
 
-\amlhS 的 IR 中分支表达为
+分支表达为
 \[ \mathbf{If}\quad condition\quad branch_A\quad branch_B \]
 对应的 WAST 表达为
 \[ (\texttt{if}\quad (condition)\quad (\texttt{then}\quad branch_A)
 \quad (\texttt{else}\quad branch_B)) \]
-整个 $branch_A$ 与 $branch_B$ 都在分支块中，只有那些重复的计算被重用
-地置于之前的临时变量赋值中。最后循环结构因 \amlhS 目前尚不支持而
-不需要讨论。表 \ref{tab.primop.WASM} 列出了基元函数到 WASM 指令的映射。
+整个 $branch_A$ 与 $branch_B$ 都在分支块中，只有那些重复的计算被
+置于之前的临时变量赋值中以重用。最后循环结构因 \amlhS 目前尚不支持。
+表 \ref{tab.primop.WASM} 列出了基元函数到 WASM 指令的映射。
 
 \begin{table}[hp]
 \begin{threeparttable}
@@ -101,8 +101,9 @@ $\mathbf{If}$ & $\T$ & \Winst{if} & 见正文的论述 \\ \hline
 \end{tabularx}\end{threeparttable}\end{table}
 
 一些基元函数不能直接对应到一个 WASM 上的指令，而是要通过预先构建的
-WASM 上的函数，这些函数可以理解为 \amlhS 运行时的系统库，
+WASM 上的运行时，这些函数可以理解为 \amlhS 运行时的系统库，
 当然这些函数也可以内联地展开在基元函数调用的地方。
+
 现在将论述表 \ref{tab.primop.WASM} 中提及的系统库函数 $\texttt{has}_t$，
 $\texttt{read}_t$，$\texttt{read0}_t$，$\texttt{write}_t$，
 $\texttt{cart}_{n,m}$，$\texttt{seg}_{n,m}$。
@@ -169,14 +170,14 @@ $n$ 个字节的数据。若 $l > 8$ 则 $v$ 为指针，将指针位移 $m$ 并
 
 以上，由表 \ref{tab.primop.WASM} 以及上述的运行时函数，可以将 \amlhS 
 的 IR 翻译成 WASM，进而完成编译。
-而这一编译是非常简洁的，外部编译器所肩负的职责仅仅是对 \amlh 的 IR 进行
-几乎指令对指令的翻译，不需要任何复杂的编排或逻辑。外部编译程序可以
-非常简短，以有效降低缺陷的出现可能，并使对其的形式化验证更加容易。
+这一编译非常简洁，外部编译器所肩负的职责仅仅是对 \amlh 的 IR 进行
+几乎指令对指令的翻译，不需复杂的编排或逻辑。外部编译程序可以
+非常简短，以有效降低缺陷的可能性，并使对其的形式化验证更加容易。
 
-编译好的用户程序会进行最后的包装，在函数执行之前插入处理来自智能合约
-平台的输入的代码，并在函数之后增加对链数据写入指令的执行程序。
-这两部分都是固定的。算法 \ref{alg:package} 描述了这一过程。
-最后包装好的函数就是可以被智能合约执行平台调用并能
+编译好的用户程序需要进行最后的包装，在函数执行前插入处理来自智能合约
+平台的输入的代码，并在函数之后增加对链数据写入指令的执行。
+这两部分都是固定的，由算法 \ref{alg:package} 描述。
+最后包装好的函数就可以被智能合约执行平台调用并能
 有效地计算输出并修改区块链数据的智能合约。
 
 附录 \ref{Ch.example.transfer} 给出了对一段转账示例程序的编译结果，

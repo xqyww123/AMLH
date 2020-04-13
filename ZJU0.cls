@@ -263,14 +263,14 @@
 
       \vspace{10mm}
       \bfseries\fangsong\zihao{2} 
-      一种类型系统的扩广
+      一种用于构建程序的公理化逻辑\\
       与基于其的形式化方法
 
      \vspace{8mm}
 
-      An extension of type system
+      An axiomatic logic for program construction
 
-      and program construction via deducting theorem
+      and formal method based on it
 
       \vfill
       \bfseries\fangsong\zihao{3}徐启源

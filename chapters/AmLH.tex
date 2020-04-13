@@ -1,14 +1,23 @@
 \chapter{Noesis 逻辑上的程序开发技术} \label{Ch.AmLH}
 
-本章讨论具体的在 Noesis 逻辑上进行程序开发的理论，\ref{Sec.Overview} 节将概述这种技术主要通过
-在 Noesis 逻辑中构建名为 \amlh 的抽象机器完成，具体是先开发
-这台抽象机 \amlh 上的程序，再之后将 \amlh 上的程序编译到目标执行环境。
-抽象机 \amlh 的构成基础是基元指令与常量，\ref{Sec.op-const-noesis.def} 节将详细论述常量、基元指令以及理解
-的两种引入方法，给出详细定义的方法与通过存在性定理引入的方法。\ref{Sec.cases} 节介绍编程语言中常见结构在
-\amlh 上的实现方法，包括列表、有限集、函数参数、虚函数表、递归等。最后 \ref{Sec.status} 节介绍
+%本章分4节论述Noesis 逻辑上进行程序开发的技术。 
+%\ref{Sec.Overview} 节概述此构建技术分成3步：
+Noesis 逻辑上进行程序开发的技术分成3步：
+\begin{enumerate}[leftmargin=2em]
+  \item 在 Noesis 逻辑上，设定基元指令与常量，构建一种被命名为 \amlh 的抽象机器。
+  \item 组合抽象机器 \amlh 上的常量、基元指令、已存在的程序，构建 \amlh 上的程序。
+  \item 通过映射常量与基元指令到目标执行环境的指令集，将 \amlh 上的程序编译到目标执行环境。
+\end{enumerate}
+\ref{Sec.Overview} 节总览与概述此技术。
+\ref{Sec.op-const-noesis.def} 节详细论述常量、基元指令以及理解
+的两种引入方法，给出详细定义的方法与通过存在性定理引入的被叫做{\it 虚构定义}的方法。
+\ref{Sec.cases} 节介绍编程语言中常见结构在
+\amlh 上的实现方法，包括列表、有限集、函数参数、虚函数表、递归等。
+\ref{Sec.status} 节介绍
 系统状态与依赖在 \amlh 上的处理方法，其中系统状态有两种方法，第一种方法将计算与状态转移分离进而削除计算过程中的
 状态，第二种方法通过将状态表达为一个网络流结构而将其数值化，进而可以在数值计算中处理状态。
 这一章的讨论均针对 \ref{Sec.noesishol} 节论述过的在 HOL 逻辑上实现的 Noesis 逻辑 \noesishol 。
+
 
 \section{Noesis 逻辑上程序开发原理概览} \label{Sec.Overview}
 
@@ -24,15 +33,15 @@
   \amlh 上的程序是基元指令与常量的组合。}
 \end{figure}
 
-\ref{Sec.works.theoritical} 节已经简单地讨论过 Noesis 逻辑上的程序是常量与基元指令的复合，
-这些常量与基元指令实际构成了一台抽象机器的指令集，而 \noesishol 上的程序是这台
+\ref{Sec.works.theoritical} 节已经概述过 Noesis 逻辑上的程序是常量与基元指令的复合，
+这些常量与基元指令构成了一台抽象机器的指令集，而 \noesishol 上的程序是这台
 抽象机器的程序。
 一些常用的组合可以被保存，作为函数库的形式供之后的用户使用。
 这台抽象机器叫做 \amlh，图 \ref{fig:noe-sys-relas} 比较了朴素 Noesis 逻辑、
 \noesishol、\amlh 以及 \amlh 上的程序，这四者之间的关系。
 
 通过最底层的 HOL 定理证明器可以对 \amlh 上的程序进行各种等价变换，
-这些等价变换可以是对抽象机器的符号运算——就能符号地计算 \amlh 上程序的结果；
+这些等价变换可以是对抽象机器的符号运算——符号地计算 \amlh 上程序的结果；
 也可以按定义展开——得到一段程序的常量与基元指令表达，这种表达可以作为编译过程的
 中间表达（Intermediate Representation, IR）输出，交由外部的编译后端最终生成目标执行环境
 上的程序。即一段程序到中间表达的编译过程，是定理证明器上的等价变换，于是到 IR 的编译

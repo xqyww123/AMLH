@@ -1,16 +1,16 @@
 \chapter{绪论} \label{Ch.intro}
 \section{研究背景与意义}
 
-区块链是一种新兴的去中心化分布式技术\cite{swan2015blockchain}，
+区块链是一种新兴的去中心化分布式技术\cite{沈鑫2016,袁勇2016,zheng2017overview}，
 建立在此技术上的智能合约平台允许分布式地运行一系列被叫做“智能合约”的程序
-\cite{buterin2014next}。
-基于区块链技术与智能合约技术的应用已产生了广泛的影响\cite{casino2019systematic}。
+\cite{buterin2014next,贺海武2018,欧阳丽炜2019}。
+基于区块链技术与智能合约技术的应用已产生了广泛的影响\cite{casino2019systematic,袁勇2016}。
 其中以太坊 \cite{buterin2014next} 与 EOSIO \cite{eos.io} 均是
 目前商业市场上活跃的平台，本文撰写时
 以太坊市场总值为1500亿人民币左右，EOSIO 市场总值为280亿人民币左右
 \cite{coinmarket.cap}。
 
-智能合约往往应用于金融领域，智能合约的
+许多智能合约应用于金融领域\cite{林晓轩2016}，智能合约的
 %程序实现上的
 缺陷将直接影响其业务，并可能造成严重的经济损失，
 且已实际发生多起经济损失事件\cite{vitalik2016think, atzei2016survey}，
@@ -107,7 +107,7 @@ Model check 无法证明程序实现对于形式化描述的相等，
 
 第二种方法使用依赖类型系统（dependent typed system）
 \cite{pierce2005advancedC2} 完成验证。
-基于 Curry-Howard 同构\cite{curry1934functionality,howard1980formulae,curry1958combinatory,sorensen2006lectures}
+基于 Curry-Howard 同构\cite{howard1980formulae,sorensen2006lectures}
 与构造演算（Calculus of Constructions）\cite{coquand1986calculus}
 ，依赖类型系统本身同构与一个完备的数学逻辑，
 于是类型系统本身能够承载几乎全部的用户逻辑信息，开发者能够将程序的设计、以及

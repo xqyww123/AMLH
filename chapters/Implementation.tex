@@ -1,6 +1,6 @@
 \chapter{基于 Noesis 逻辑的智能合约生成工具 \Eamlh }\label{Ch.Implementation}
 
-工具 \Eamlh 是第 \ref{Ch.AmLH} 章的程序开发技术在智能合约场景的实现，能够生产
+工具 \Eamlh 是第 \ref{Ch.AmLH} 章的程序开发技术在智能合约场景的实现，能生产
 较高执行性能的易于被形式化分析与验证的智能合约。且 \Eamlh 使用 HOL 定理证明器
 作为证明引擎，允许用户使用 HOL 定理证明器完成对抽象语义的证明，进而完成最终
 对智能合约的证明。
@@ -8,7 +8,7 @@
 工具 \Eamlh 的架构已在图 \ref{fig:total-frame} 中指出，其中 \Eamlh 使用的用于智能合约场景
 的 Noesis 理论版本在 \ref{Sec.amlhS} 节论述；\Eamlh 的编译后端在 \ref{Sec.compile} 节
 论述；编辑壳层因为内容过多且与 Noesis 理论联系较弱放在附录 \ref{Ch.ES}；最后的
-编辑前端目前的实现非常简陋，仅支持命令行交互，且代码量很少约400行不去详细论述。
+编辑前端目前的实现非常简陋，仅支持命令行交互，且代码量很少约400行本文不详细论述。
 
 \section{抽象机 \amlh 的智能合约版本 \amlhS } \label{Sec.amlhS}
 
@@ -33,8 +33,8 @@ $\PhV x\ b$ 表示 $b$ 个二进制表示的数字 $x$。$\PhS p_1\ p_2$ 表示�
 \PX\ (\PhS p_1\ p_2) &\coloneqq& \PX(p_1) + \PX(p_2) \cdot 256^{\PB(p_1)}\\
 \PB\ (\PhP p) &\coloneqq& \mathrm{PointerSize} &&&
 \end{array} \]
-$\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合约执行环境
-的位数，一般为32。
+$\PX\ (\PhP p)$ 刻意留作未定义。PointerSize 为常量，固定为智能合约执行环境
+的指针位宽，一般为32。
 {\phew}的分割工具，函数 $\PL,\ \PU$
     \begin{align*} \PL n\ p &= \PhV\ (\PX p \Mod 256^n)\ n&
         \PU n\ p &= \PhV\ (\PX p \Div 256^n)\ (\PB p \dotminus n)&
@@ -51,7 +51,7 @@ $\PX\ (\PhP p)$ 故意的不去定义。PointerSize 为常量固定为智能合�
 \end{defin}
 
 \begin{defin}[\amlhS 上的理解]
-\amlhS 上理解的定义基本基于定义 \ref{Def.itp} ，只是固定了理解的{\phew}集
+\amlhS 上理解的定义基于定义 \ref{Def.itp} ，额外固定了理解的{\phew}集
 的位数目。
     \[ \begin{split}
         \itp{\alpha} \Coloneqq \mathbf{Noesis}\ &(\alpha \rightarrow \phenomenon)
@@ -94,7 +94,8 @@ p \in \mathbf{Sp}_i\ \land\ (\mathbf{Tr}_i\ p = e) \]
 类型 chain 为此别名 
 \[ \mathrm{chain} \Coloneqq (\mathrm{string},\ \mathrm{phenomenon})
 \mapsto \mathrm{phenomenon} \]
-链数据是作为字符串的表标识与作为{\phew}的键的元组到作为{\phew}的值的有限映射。
+链数据是表标识与键的元组到值的有限映射，其中表标识以 string 类型表示，键和值均
+以 phenomenon 类型表示。 
 $\Dom_c\ \phi,\ \Ima_c\ \phi$ 表示一个链数据 $\phi$ 的名为 $c$ 的表
 的所有键与值
   \[ \begin{array}{lcl}
@@ -146,7 +147,7 @@ $t_0$ 为表 $t$ 的零元素
   &\quad\quad\quad\xelse \Tr_j(\PhV\ 0\ \Si_j) \end{split} \right. \\
 \Write\ (\TC c\ i\ j)\ k\ v &\coloneqq& ((c,\ \Li_i k),\ \Li_j v)
 \end{array} \end{gather*}
-有一些显然的定理
+有如下性质
   \[ \begin{array}{rclcl}
     &\vdash&\Has\ t\ \phi\ k &=& k \in \phi^t\\
     &\vdash&\Read\ t\ \phi\ k &=& \phi^t\ k\\
@@ -175,8 +176,8 @@ $t_0$ 为表 $t$ 的零元素
 $(l,\ x)$ 表示以 $x$ 为返回值，$l$ 为链数据写入命令序列的智能合约调用
 响应。$l$ 列表中的每一项元素都是 write\_chain 类型描述的链数据的写入命令
 。一个智能合约的作为外部接口的函数必须返回 response 类型，编译时会在
-每个外部接口函数的实现的最后逐一遍历写入命令序列 $l$，逐一将命令执行并
-写入进链中。智能合约调用响应在实现上的内存结构是
+每个外部接口函数的最后插入对写入命令序列 $l$ 的遍历与执行。
+智能合约调用响应在实现上的内存结构是
 \begin{center}
 \begin{tabular}{|c|c|} \hline
 \text{指向写入命令序列 $l$ 的指针}&\text{计算结果 $x$}\\
@@ -219,7 +220,7 @@ $i \times j$ & $\mathbf{Se}_i \times \mathbf{Se}_j$ &
 \end{tabularx}
 \begin{tablenotes} \small 
 \item $\mathbb{U}_\mathrm{pv}$ 是 $\{ \PhV x\ b \}$ 的简写，
-表示{\phew}类型的所有元素中由 $\PhV$ 构造的。
+表示{\phew}类型中由 $\PhV$ 构造的所有元素。
 $\mathbb{U}_\mathrm{ph}$ 是 $\univ{phenomenon}$ 的简写，
 表示{\phew}类型中所有的元素。
 $\mathbb{U}_\mathrm{str}$ 是 $\univ{string}$ 的简写。
@@ -382,8 +383,9 @@ $\mathbf{Seg}_{\Si_i+\Si_j,0,\Si_i}$ & $\mathbf{Seg}_
 \end{table}
 
 \begin{theo}[分支 $\mathbf{If}$ 的性质] \label{T.If.prop}
-值得一提的是分支 $\mathbf{If}$，其定义已在表 \ref{tab.IC.primop2} 中列出
-，其不具有 Noesis 同构形式的性质，而是
+%值得一提的是
+分支 $\mathbf{If}$ 的定义在表 \ref{tab.IC.primop2} 中列出
+，不具有简单形式的 Noesis 同构形式，而是
 \[ \begin{split}
 \forall p_c\ P\ p_a\ i\ \epsilon_a\ p_b\ &\epsilon_b.\ 
   p_c \widesim{\BoolI} P \Rightarrow (P \Rightarrow p_a \widesim{i}
@@ -394,11 +396,11 @@ $\mathbf{Seg}_{\Si_i+\Si_j,0,\Si_i}$ & $\mathbf{Seg}_
 \end{split} \]
   \begin{proof} 若 $\PX p_c = 1$ 则由 $\mathbf{If}$ 定义，有
    $ \mathbf{If}\ p_c\ p_a\ p_b = p_a $，
-  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \T$ 于是
+  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \T$ 进而
     有 $p_a \widesim{i} \epsilon_a$ 于是命题得证。
 若 $\PX p_c \neq 1$ 则由 $\mathbf{If}$ 定义，有
    $ \mathbf{If}\ p_c\ p_a\ p_b = p_b $，
-  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \F$ 于是
+  再由理解 $\BoolI$ 前提 $p_c \widesim {\BoolI} P$ 下 $P = \F$ 进而
     有 $p_b \widesim{i} \epsilon_b$ 于是命题得证。
   \end{proof}
 \end{theo}
@@ -414,8 +416,8 @@ $\OneI\ (x:\mathrm{chain})$，且返回值的理解必为 $\RsI\ k$。即
 \end{defin}
 
 表 \ref{tab.IC.primop2} 定义的基元指令可以直接应用但过于基层，
-诸如$\mathbf{IAdd}\ n$ 操作要求给定运算的位宽，显然并不适宜要求用户
-每次都显式地给出位宽。\amlhS 提供基于这些基元函数构建的高层函数库。
+诸如$\mathbf{IAdd}\ n$ 操作要求给定运算的位宽。
+\amlhS 提供基于这些基元函数构建的高层函数库。
 
 $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\ 
 \mathbf{LeN_S},\ \mathbf{LtN_S},\ \mathbf{EqN_S}$ 
@@ -482,7 +484,7 @@ $\mathbf{AddN_S},\ \mathbf{SubN_S},\ \mathbf{MulN_S},\
     \omega + \upsilon$}
   \end{prooftree}
 \end{center}
-而在编译时，将 $\mathbf{AddN_S}\ 42\ 666\ x\ y$ 根据定义展开
+编译时，$\mathbf{AddN_S}\ 42\ 666\ x\ y$ 根据定义展开
 \[ \begin{split}
 \mathbf{AddN_S}\ 42\ 666\ x\ y =\ & \mathbf{IAdd}\ \max(\B_{42},\B_{666})\ 
   (\xif \B_{42} \geq \B_{666} \xthen x \xelse \mathbf{IConv}\ \B_{42}\ \B_{666}\ x)\\

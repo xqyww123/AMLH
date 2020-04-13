@@ -1,6 +1,6 @@
 \section{案例分析} \label{Sec.cases}
 
-本节介绍一些常用的程序设计结构可以如何在抽象机器 \amlh 上实现。
+本节介绍一些常用的程序设计结构在抽象机器 \amlh 上的实现。
 
 %一个优秀的理论，定义下少数几个简单的公理与规则，各种丰富的重要而富有
 %意义的定理引理可以由此推出。本节介绍的内容不属于 \noesishol 与
@@ -9,7 +9,7 @@
 
 \subsection{列表的理解}
 
-本节给出一个虚构理解与虚构基元的具体案例，列表的理解，具有实际意义。
+本节给出一个虚构理解与虚构基元的具体案例，列表的理解。
 
 \begin{lemma}[单射与子集] \label{L.inj_subset}
     \[ \forall f\ S\ T_1\ T_2.\ T_1 \subseteq T_2 \Rightarrow \mathbf{INJ}\ f\ S\ T_1
@@ -101,7 +101,7 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
 \end{prooftree}
 
 以上，$\mathbf{LI}$，APPEND，GET 均是虚构的，不需要涉及具体的实现，就可以使用这些进行
-列表功能的编程。
+列表功能。
 
 \end{example}
 
@@ -111,13 +111,13 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
     \{e\}\ \{\mathrm{p}_0\} \]
 最主要的特点是，$\mathbf{I1}\ e$ 不需要实际地表达，因为本质集中只有一个元素，
 表示该元素不需要使用任何实质的{\phew}而用零{\phew}$\mathrm{p}_0$即可，
-不占用任何二进制位，而在最后编译出的
-目标程序中不需要也不会被表达，一如C语言的void。但却是一种合理合法的理解，可以参与
-整个 $\amlh$ 的方方面面。
+不占用任何二进制位，在最后编译出的
+目标程序中不需要也不会被表达，例如 C语言的void。
+%却是一种合法的理解，可以参与 整个 $\amlh$ 的方方面面。
 
 类似很多其他编程语言中的常量概念，$\mathbf{I1}\ e$ 也可以作为某个过程的参数，而 $e$ 
 可以在那过程中被全称量化（Universal Quantification），
-下面是如此应用的一个例子。
+下面是一个例子。
 \end{example}
 
 \begin{example} \label{exam.I1}
@@ -126,7 +126,7 @@ $h::l$ 表示 $[h,l_1,\cdots,l_n]$
     (\lambda x\ e.\ x + e) \]
 
 AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函数，
-而编译结果中实际不会出现参数$e$，在 AddN 内部参数$e$被作为常量优化。
+编译结果中实际不会出现参数$e$，在 AddN 内部参数$e$被作为常量优化。
 \end{example}
 
 \begin{notation}
@@ -160,28 +160,30 @@ AddN 实际成为一种模板函数，任意给定常量$e$生成加法$e$的函
 
 \subsection{静态函数参数}
 
-在许多经典编程语言的设计中都有函数参数的概念，它们或被叫做 lambda 函数或叫函数指针。
+许多经典编程语言的设计都有函数参数的概念，它们或被叫做 lambda 函数或叫函数指针。
 接下来的两节重点讨论函数参数在 $\amlh$ 上的实现。
 
 函数参数分为两种，静态参数与动态参数。静态参数指在编译时可以确定函数参数所具体指代的过程，
-更类似于模板的概念可以在编译时进行函数参数的带入；而动态参数则相反，需要在运行时动态
+更类似于模板的概念可以在编译时进行函数参数的带入；动态参数则相反，需要在运行时动态
 调用函数指针。不同语言对此有不同的名称，另一种叫法是静态调用与动态调用。
-本节先论述静态参数，而下一节论述动态参数。
+%本节先论述静态参数，而下一节论述动态参数。
 
 静态参数的理解，是 $\mathbf{I1}$，
 一元过程的是 $\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$
 二元过程是 \[\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}\]
 更高元以此类推。
 
-问题在于$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \cdots \rightarrow \mathrm{phenomenon}}$
-仅仅将{\phew} Noesis 对应到{\phew}过程，抽象语义只是{\phew}过程，而很多时候期望对函数参数的抽象语义约束更多，
-诸如这种{\phew}过程具有在某些特定理解下 Noesis 对应到一个本质上的函数。
-例如一个过程可能期望一个具有本质 $f_e : num \rightarrow num$ 的函数参数，而
-$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$ 给出的本质仅仅是
-$f_p:\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$ 的。
-其实此时我们期望对 $f_p$ 进行更多的约束，约束它具有某个到$f_e$的超越对应，即要求
-$f_p$ 满足性质 $P$，而$P$中包含所期望的到$f_e$的超越对应。
-于是解法就是在条件中加入约束$P$。
+$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \cdots \rightarrow \mathrm{phenomenon}}$
+仅将{\phew} Noesis 对应到{\phew}过程，抽象语义只是{\phew}过程。
+可以在同构条件中加入更多的约束，以进一步抽象。
+%而很多时候期望对函数参数的抽象语义约束更多，
+%诸如这种{\phew}过程具有在某些特定理解下 Noesis 对应到一个本质上的函数。
+%例如一个过程可能期望一个具有本质 $f_e : num \rightarrow num$ 的函数参数，而
+%$\mathbf{I1}^{\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}}$ 给出的本质仅仅是
+%$f_p:\mathrm{phenomenon} \rightarrow \mathrm{phenomenon}$ 的。
+%其实此时我们期望对 $f_p$ 进行更多的约束，约束它具有某个到$f_e$的超越对应，即要求
+%$f_p$ 满足性质 $P$，而$P$中包含所期望的到$f_e$的超越对应。
+%于是解法就是在条件中加入约束$P$。
 %下面的例子有助于理解。
 
 \begin{example}[Do2N] \label{Ex.Do2N}
@@ -202,7 +204,7 @@ $\mathrm{Do2N}$ 具有类似 $\lambda f\ x.\ f (x+x)$ 的功能，$\mathrm{Do2N}
 \[ f_p^0 \widesim[3]{\mathbf{I1}(f_p^0)} f_p,\ x_p \widesim{i} x_e,\ 
     f_p \proctr{i|l}{cond} f_e,\ cond\ x_e \vdash \mathbf{V}_l \ \land\ 
     f_e\ x_e \in \mathbf{Se}_l \tag{1} \]
-其中$f_p^0$ 表示$f_p$的伪{\phew}，实际占用0个二进制位而实际不存在于编译结果中。
+其中$f_p^0$ 表示$f_p$的伪{\phew}，占用0个二进制位而不存在于实际的编译结果中。
 由 Noesis 对应同构的充分性定理 \ref{T.ptr.enough}
 \[ f_p \proctr{i|l}{cond} f_e \vdash \mathbf{V}_i \land x_e \in \mathbf{Se}_i \land
     cond\ x_e \Rightarrow \mathbf{V}_l\ \land\ f_e\ x_e \in \mathbf{Se}_l \tag{2} \]
@@ -214,11 +216,11 @@ f_p \proctr{i|l}{cond} f_e,\ cond\ x_e \vdash \mathbf{V}_l \ \land\
     f_e\ x_e \in \mathbf{Se}_l \]
 于是(1)被证明，而(1)意味着可以对$\mathbf{Call}_1$ 进行虚构基元律以定义。
 
-用同样的手段，可以分别虚构基元引入多元版本的 $\mathbf{Call}_2\ \cdots\ \mathbf{Call}_n$
+同理，可以分别虚构基元引入多元版本的 $\mathbf{Call}_2\ \cdots\ \mathbf{Call}_n$。
 \end{defin}
 
 
-而 $\mathrm{Do2N}$ 可以被如下构建
+$\mathrm{Do2N}$ 可以被如下构建
 
 \begin{prooftree}
 \Axiom$x_p \widesim{\mathcal{N}} x_e,\ f_p \widesim[2]{\mathbf{I1}(f)} f,\ 
@@ -239,26 +241,26 @@ x_p \widesim{\mathcal{N}} x_e,\ f_p \widesim[2]{\mathbf{I1}(f)} f
 \proctr{\mathcal{N}|\mathcal{N}}{\K \T} f_e} (\lambda f\ x.\ f_e (x+x))$
 \end{prooftree}
 
-即简单来说，将$f \proctr{\mathcal{N}|\mathcal{N}}{\K \T} f_e$ 作为过程条件的一部分。
+将$f \proctr{\mathcal{N}|\mathcal{N}}{\K \T} f_e$ 作为过程条件的一部分。
 
 \subsection{动态函数参数（虚函数表）}
 
-$\amlh$ 上的动态函数必须限定在确定的范围内的动态。与诸多其他编程语言类似，技术上 $\amlh$
-不允许动态编译新的函数，于是动态函数可选的范围一定是有限而固定的。
-于是所谓的动态，其实是确定的虚函数表上的动态，是指动态地选择表中的不同函数。
+$\amlh$ 上的动态函数只能在被确定的限定范围内动态。与许多传统编程语言类似，技术上 $\amlh$
+不允许动态编译新的函数，因此动态函数的动态范围必须是确定且固定的。
+%于是所谓的动态，其实是确定的虚函数表上的动态，是指动态地选择表中的不同函数。
 
-类似于静态函数参数直接就是单元素解释，动态函数参数的理解是有限序列解释，一元的解释是
+类似于静态函数参数有单元素理解实现，动态函数参数由有限序列理解实现，一元的理解是
 $\mathbf{SI}^{\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}}$，二元是
 $\mathbf{SI}^{\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}}$，
 更高元类推。
 而$\mathbf{SI}$的{\phew}所表达的序列中的序号实质是虚函数表的索引，在编译实现中将根据此索引查
 虚函数表得到函数指针而动态地调用。
 
-关键难点与静态函数参数时一样，
-也是在于$\mathbf{SI}$的本质是{\phew}过程而需要有对此{\phew}过程的超越对应。
-而解决方法也是与静态函数类似的，通过在条件中加入对{\phew}过程的超越对应的约束。
-
-同样先给出一个样例以利于读者理解。
+%关键难点与静态函数参数时一样，
+%也是在于$\mathbf{SI}$的本质是{\phew}过程而需要有对此{\phew}过程的超越对应。
+%而解决方法也是与静态函数类似的，通过在条件中加入对{\phew}过程的超越对应的约束。
+%
+%同样先给出一个样例以利于读者理解。
 
 \begin{example}[VDo2N] 
 $\mathrm{VDo2N}$ 是样例\ref{Ex.Do2N} 中 $\mathrm{Do2N}$ 的动态虚函数版本。
@@ -268,10 +270,11 @@ $\mathrm{VDo2N}$ 是样例\ref{Ex.Do2N} 中 $\mathrm{Do2N}$ 的动态虚函数�
 & \mathrm{VDo2N} \proctr{\mathbf{SI}(l_p)|\mathcal{N}|\mathcal{N}}{\lambda f\ x.\ 
   l_f \proctr{\mathcal{N}|\mathcal{N}}{\K \T} f_e\ f}
     (\lambda f\ x.\ f_e\ f\ (x+x)) \end{split} \]
-其中 $f$ 均具有类型 $\mathrm{ph}\rightarrow\mathrm{ph}$。此外类型
-$\alpha \mapsto \beta$ 表示从 $\alpha$ 到 $\beta$ 的有限映射，有限映射与普通函数
-$\alpha \rightarrow \beta$ 很像，除了有限映射的原象集是有限的。
-有限映射与函数映射在普通数学中基本不做区分，只是在 HOL 逻辑中被不同地处理。
+其中 $f$ 均具有类型 $\mathrm{ph}\rightarrow\mathrm{ph}$，
+%  此外类型
+%$\alpha \mapsto \beta$ 表示从 $\alpha$ 到 $\beta$ 的有限映射，有限映射与普通函数
+%$\alpha \rightarrow \beta$ 很像，除了有限映射的原象集是有限的。
+%有限映射与函数映射在普通数学中基本不做区分，只是在 HOL 逻辑中被不同地处理。
 $f_e$ 具有类型 $(\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}) \mapsto
 (\mathrm{num} \rightarrow \mathrm{num})$ 且 $\Dom f_e = \mathrm{Set}\ l_f$ 表示对 
 序列$l_f$ 上各个元素的超越对应。
@@ -295,9 +298,9 @@ $f_e$ 具有类型 $(\mathrm{phenomenon}\rightarrow\mathrm{phenomenon}) \mapsto
 \[ x_p \widesim{i} x_e,\ 
 f \proctr{i|l}{cond} f_e\ f,\ cond\ x_e \vdash \mathbf{V}_l \ \land\ 
     f_e\ f\ x_e \in \mathbf{Se}_l \]
-于是(1)被证明，于是可以对$\mathbf{VCall}_1$ 进行虚构基元律以定义。
+于是(1)被证明，于是可以虚构定义 $\mathbf{VCall}_1$。
 
-同样类似地定义多元版本的 $\mathbf{VCall}_2\ \cdots\ \mathbf{VCall}_n$
+同理虚构多元版本的 $\mathbf{VCall}_2\ \cdots\ \mathbf{VCall}_n$。
 \end{defin}
 
 \subsection{递归函数}
@@ -305,8 +308,8 @@ f \proctr{i|l}{cond} f_e\ f,\ cond\ x_e \vdash \mathbf{V}_l \ \land\
 本节示例性地论述如何在 $\amlh$ 上定义递归函数，以及其上递归函数定义与归纳法（Induction）的
 内在联系。
 这种对递归函数的支持说明$\amlh$是图灵完备的。
-$\amlh$ 提供两种编写递归函数的方法，第一种严谨而难以使用，困难在于递归良好性的证明（wellfound），需要有经验的数学家巧妙地技巧；
-第二种易于使用，可供普通用户使用，但无法证明停机性。
+%$\amlh$ 提供两种编写递归函数的方法，第一种严谨而难以使用，困难在于递归良好性的证明（wellfound），需要有经验的数学家巧妙地技巧；
+%第二种易于使用，可供普通用户使用，但无法证明停机性。
 
 首先要引入结构化归纳。
 
@@ -412,7 +415,7 @@ WF 命题是需要证明技巧的，在斐波那契函数的例子中可以构�
 \end{split} \tag{目标2} \label{fibg2}
 \end{align}
 
-\ref{fibg1} 显然很容易，$g = \K \mathbf{0}$ 即可。
+对\ref{fibg1} ，令 $g = \K \mathbf{0}$ 即可。
 对于\ref{fibg2} 取 $g'$ 为满足存在性条件 $(\exists g.\ \forall s.\ s \in \{p\mbar p 
     \widesim{\mathcal{N}} x,\ x \leq n\}\ \Rightarrow (g\ s = F\ g\ s))$ 的值。
 分类讨论\ref{fibg2}
@@ -431,8 +434,8 @@ WF 命题是需要证明技巧的，在斐波那契函数的例子中可以构�
 \end{split} \label{fibg4} \tag{目标4}
 \end{align*}
 
-\ref{fibg3} 也是显然的，同样是 $g = \K \mathbf{0}$；
-\ref{fibg4} 也是成立的，令
+\ref{fibg3} 也成立，同样令 $g = \K \mathbf{0}$；
+\ref{fibg4} 中，令
 \[ g = \lambda p.\ \mathrm{if}\ \ p = n + \mathbf{2}\ \ \mathrm{then}\ 
 \ \mathbf{Add}\ (g\ (n + \mathbf{1}))\ (g\ n)\ \ \mathrm{else}\ \ g\ n \]
 即可

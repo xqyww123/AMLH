@@ -1,45 +1,32 @@
 \begin{englishabstract}
 
-Firstly, the paper proposes a new axiomatic system, Noesis system
-, where theorems describe the correspondence between program and
-abstract semantics of it. Noesis system allows to 
-prove property of program by proof of 
-the abstract semantics, so that formal verification of program
-could be reduced to formal verification of the abstract semantics,
-and formal verification becomes easier as a result.
-Then, the paper produces a new method based on the Noesis
-theories, constructing programs with abstract semantics
-via deducting the Noesis theorems. Programs produced by the method
- have nice performance of time and space, and can be formal 
-analysed by formal analysis of its abstract semantics, which
-  much more easier.
-Finally, the paper implements a tool\ \Eamlh\ to apply the method.
-\Eamlh\ can generate and compile programs into EOS.IO, a
- blockchain based smart contract platform, with nice performance
-  of execution and facility for formal analysis.
+Deployed smart contracts cannot be modified, so that underlying deficiencies
+cannot be patched after deployment and causes significant loss, especially
+for the application in the financial field. Formal verification for smart contracts
+before deployment is therefore significant.
+Verification in smart contracts as well as in the other field confronts complexities
+of actual programs. 
+Logic information and wills of developer absent partially from concrete code
+representation of programs, and complete recovery from code is hard.
+If the logic information and wills were expressed completely and precisely
+to enable the acquirability in analysis, verification can be effectively simplified.
 
-Axioms of Noesis system consist of correspondence from set of
-primitive instructions and constants to abstract semantics of
-  them.
-Theorems of Noesis system represents the correspondence of
-abstract semantics for the programs composed of primitive
-  instructions and constants.
-While abstract semantics of instructions and constants in
-  axioms represent
-behavior of instructions of certain execution environment 
-  correctly, theorems reveal abstract semantic of composed
-  program correctly.
-Given the map from primitive instructions and constants to
-the destination platform, composed program in Noesis system
-could be compiled into the destination, through the map.
-%
-%Noesis 逻辑可以实现在经典逻辑上或者说作为经典逻辑的子集，
-%在本文中它被实现在 HOL 定理证明器的 HOL 逻辑上，
-%程序的抽象语义被自然地表达为 HOL 证明器上的数学对象，
-%可以使用 HOL 证明器分析与证明抽象语义的性质。
-%于是对程序的形式化验证变为对其抽象语义的形式化验证，而抽象语义是易于
-%分析的，于是形式化验证就被有效简化。
-%
+The paper presents a formal system named {\it Noesis logic} and {\it noumenal semantics} 
+on which the logic focuses mainly. In Noesis logic, noumenal semantics of a value or a procedure
+is an abstract mathematical object which is easy to analysis and expresses the developer's
+logics and wills precisely and completely. Based on the logic a smart contract construction method
+is designed, that developers deduct theorems in Noesis logic to construct program and also express
+  logics and wills in noumenal semantics. A tool \Eamlh is provided in this paper to implement
+the method, built on the famous HOL interactive theorem prover.
+Noesis logic is implemented inside HOL logic and Noesis theorems are deducted by HOL prover,
+to guarantee the correctness. Noumenal semantics are represented as arbitrary objects in HOL logic,
+enabling expressiveness for almost all logics and wills about programs.
+Therefore, it's acceptable to enforce developers express logics and wills in noumenal semantics
+precisely and completely, so that noumenal semantics contain all related properties of the program,
+and as a consequence verification of complex concrete program could be reduced to relatively easier
+verification of abstract mathematical object.
+Finally, \Eamlh can produce executable smart contracts on blockchain platform EOS.IO, with
+verified compilation procedure.
 
 \englishkeywords{axiomatic system, formal verification, 
   type system, smart contract, program semantics}
